@@ -29,7 +29,7 @@
       line-height: 1.6;
     }
 
-    /* Navbar ringkas */
+    /* Navbar */
     header {
       background: var(--dark);
       border-bottom: 3px solid var(--red);
@@ -217,7 +217,7 @@
       font-weight: bold;
     }
 
-    /* Poster images */
+    /* Poster */
     .posters {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -231,30 +231,61 @@
       border: 2px solid #333;
     }
 
-    /* Form section */
+    /* Form */
     .form-section {
       background: var(--dark);
       padding: 50px 20px;
       text-align: center;
     }
 
-    .form-section h2 {
-      margin-bottom: 15px;
-    }
-
     .form-wrapper {
-      max-width: 700px;
+      max-width: 780px;
       margin: 30px auto 0;
       background: #111;
       border-radius: 12px;
       overflow: hidden;
       border: 1px solid #333;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
     }
 
     .form-wrapper iframe {
       width: 100%;
-      height: 1400px;
+      height: 2100px;
       border: none;
+      display: block;
+    }
+
+    /* Sponsors */
+    .sponsors {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 25px 30px;
+    }
+
+    .sponsor-item {
+      background: #1a1a1a;
+      border-radius: 12px;
+      padding: 18px 22px;
+      border: 1px solid #333;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sponsor-item:hover {
+      transform: translateY(-5px);
+      border-color: var(--red);
+      box-shadow: 0 8px 20px rgba(196, 30, 58, 0.15);
+    }
+
+    .sponsor-item img {
+      max-height: 65px;
+      max-width: 150px;
+      width: auto;
+      object-fit: contain;
     }
 
     /* Footer */
@@ -283,67 +314,22 @@
       }
 
       .form-wrapper iframe {
-        height: 1600px;
+        height: 2300px;
+      }
+
+      .sponsors {
+        gap: 18px;
+      }
+
+      .sponsor-item {
+        padding: 14px 16px;
+      }
+
+      .sponsor-item img {
+        max-height: 52px;
+        max-width: 120px;
       }
     }
-
-/* Form lebih kemas */
-.form-wrapper {
-  max-width: 780px;
-  margin: 30px auto 0;
-  background: #111;
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid #333;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-}
-
-.form-wrapper iframe {
-  width: 100%;
-  border: none;
-  display: block;
-}
-
-/* Sponsors */
-.sponsors {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 30px 40px;
-}
-
-.sponsor-item {
-  background: #1a1a1a;
-  border-radius: 10px;
-  padding: 18px 25px;
-  border: 1px solid #333;
-  transition: transform 0.3s, border-color 0.3s;
-}
-
-.sponsor-item:hover {
-  transform: translateY(-4px);
-  border-color: var(--red);
-}
-
-.sponsor-item img {
-  max-height: 60px;
-  max-width: 140px;
-  object-fit: contain;
-  filter: brightness(0.95);
-}
-
-@media (max-width: 600px) {
-  .form-wrapper iframe {
-    height: 2300px;
-  }
-
-  .sponsor-item img {
-    max-height: 50px;
-    max-width: 120px;
-  }
-}
-    
   </style>
 </head>
 <body>
@@ -369,7 +355,6 @@
   <section>
     <div class="container">
       <h2 class="section-title">Maklumat Program</h2>
-
       <div class="info-grid">
         <div class="info-card">
           <div class="icon">📅</div>
@@ -399,7 +384,6 @@
   <section style="background:var(--dark);">
     <div class="container">
       <h2 class="section-title">Tentatif Program</h2>
-
       <table class="program-table">
         <thead>
           <tr>
@@ -408,42 +392,15 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>11.00 pagi</td>
-            <td>Pendaftaran peserta Konvoi Merdeka</td>
-          </tr>
-          <tr>
-            <td>12.00 – 1.15 pm</td>
-            <td>Zumba by NC Sekinchan</td>
-          </tr>
-          <tr>
-            <td>1.30 – 2.00 pm</td>
-            <td>Makan & Rehat</td>
-          </tr>
-          <tr>
-            <td>2.15 – 2.30 pm</td>
-            <td>Taklimat & pelepasan peserta Konvoi Merdeka</td>
-          </tr>
-          <tr>
-            <td>3.30 pm</td>
-            <td>Ketibaan VIP</td>
-          </tr>
-          <tr>
-            <td>3.45 pm</td>
-            <td>Ketibaan konvoi</td>
-          </tr>
-          <tr>
-            <td>4.00 pm</td>
-            <td>Ucapan aluan dari VIP & wakil NGO</td>
-          </tr>
-          <tr>
-            <td>4.30 – 5.00 pm</td>
-            <td>Cabutan bertuah dan saguhati</td>
-          </tr>
-          <tr>
-            <td>5.00 – 6.00 pm</td>
-            <td>Mula berkemas dan bersurai</td>
-          </tr>
+          <tr><td>11.00 pagi</td><td>Pendaftaran peserta Konvoi Merdeka</td></tr>
+          <tr><td>12.00 – 1.15 pm</td><td>Zumba by NC Sekinchan</td></tr>
+          <tr><td>1.30 – 2.00 pm</td><td>Makan & Rehat</td></tr>
+          <tr><td>2.15 – 2.30 pm</td><td>Taklimat & pelepasan peserta Konvoi Merdeka</td></tr>
+          <tr><td>3.30 pm</td><td>Ketibaan VIP</td></tr>
+          <tr><td>3.45 pm</td><td>Ketibaan konvoi</td></tr>
+          <tr><td>4.00 pm</td><td>Ucapan aluan dari VIP & wakil NGO</td></tr>
+          <tr><td>4.30 – 5.00 pm</td><td>Cabutan bertuah dan saguhati</td></tr>
+          <tr><td>5.00 – 6.00 pm</td><td>Mula berkemas dan bersurai</td></tr>
         </tbody>
       </table>
     </div>
@@ -453,7 +410,6 @@
   <section>
     <div class="container">
       <h2 class="section-title">Terma & Syarat Konvoi</h2>
-
       <div class="syarat-box">
         <ul>
           <li>Konvoi motosikal</li>
@@ -464,29 +420,20 @@
           <li>Mematuhi keselamatan dan mengikuti laluan yang diberikan</li>
         </ul>
       </div>
-
       <div style="text-align:center;margin-top:30px;">
-        <p style="color:var(--gold);font-size:1.2rem;font-weight:600;">
-          🎁 50 Hadiah Cabutan Bertuah!
-        </p>
+        <p style="color:var(--gold);font-size:1.2rem;font-weight:600;">🎁 50 Hadiah Cabutan Bertuah!</p>
         <p style="color:var(--light);">Pelbagai hadiah menarik menanti anda!</p>
       </div>
     </div>
   </section>
 
-  <!-- Poster (letak gambar di sini nanti) -->
+  <!-- Poster -->
   <section style="background:var(--dark);">
     <div class="container">
       <h2 class="section-title">Poster & Peta Laluan</h2>
       <p style="text-align:center;color:var(--light);margin-bottom:25px;">
         Sila rujuk poster rasmi dan peta laluan di bawah.
       </p>
-
-      <!-- 
-        Nanti kau upload 3 gambar poster ke folder merdeka69/
-        Kemudian ganti src di bawah dengan nama fail sebenar.
-        Contoh: src="poster1.jpg"
-      -->
       <div class="posters">
         <img src="poster1.jpg" alt="Poster Pendaftaran Konvoi">
         <img src="poster2.jpg" alt="Peta Konvoi Merdeka">
@@ -495,14 +442,13 @@
     </div>
   </section>
 
-    <!-- Google Form -->
+  <!-- Google Form -->
   <section class="form-section" id="daftar">
     <div class="container">
       <h2 class="section-title">Pendaftaran Peserta</h2>
       <p style="color:var(--light);margin-bottom:10px;">
         Sila isi borang di bawah untuk mendaftar.
       </p>
-
       <div class="form-wrapper">
         <iframe 
           src="https://docs.google.com/forms/d/e/1FAIpQLScUBeQyUF-AIzAwK5819RFr_ygyCRjoUXlL39N79d7SfUi5HA/viewform?embedded=true" 
@@ -510,64 +456,36 @@
           height="2100"
           frameborder="0" 
           marginheight="0" 
-          marginwidth="0"
-          style="display:block;">
+          marginwidth="0">
           Loading…
         </iframe>
       </div>
     </div>
   </section>
 
-    <!-- Penaja & Kerjasama -->
+  <!-- Penaja & Kerjasama -->
   <section style="background:#111; padding:60px 20px 50px; border-top:1px solid #333;">
     <div class="container">
-
-      <!-- PENAJA -->
       <h2 class="section-title" style="margin-bottom:35px;">Penaja Rasmi</h2>
       
       <div class="sponsors">
-        <div class="sponsor-item">
-          <img src="https://i.ibb.co/sdVdMkrm/EC27-E05-B-149-F-4-CE9-94-C4-8008-DE349-A2-B.jpg" alt="Penaja 1">
-        </div>
-        <div class="sponsor-item">
-          <img src="https://i.ibb.co/DjzTt6v/ca2830cf-9008-49c7-8861-cf2407b00215.jpg" alt="Penaja 2">
-        </div>
-        <div class="sponsor-item">
-          <img src="https://i.ibb.co/nNMYCXyP/0db599ef-401c-478c-8326-9acd96587ee5.jpg" alt="Penaja 3">
-        </div>
-        <div class="sponsor-item">
-          <img src="https://i.ibb.co/V0XKrGyq/46ffd0dc-a173-4b94-b618-826733442abb.jpg" alt="Penaja 4">
-        </div>
-        <div class="sponsor-item">
-          <img src="https://i.ibb.co/Hp459xqQ/IMG-0862.jpg" alt="Penaja 5">
-        </div>
-        <div class="sponsor-item">
-          <img src="https://i.ibb.co/shvXv2z/IMG-0864.png" alt="Penaja 6">
-        </div>
-        <div class="sponsor-item">
-          <img src="https://i.ibb.co/SXHd79h4/IMG-0894.jpg" alt="Penaja 7">
-        </div>
-        <div class="sponsor-item">
-          <img src="https://i.ibb.co/k233qPYm/2fedbb77-20d1-418f-99c9-b5dc7cda32d1.jpg" alt="Penaja 8">
-        </div>
-        <div class="sponsor-item">
-          <img src="https://i.ibb.co/zWsvDF3w/45-D870-D0-232-B-4546-9-F36-C79-DF3-B81199.jpg" alt="Penaja 9">
-        </div>
+        <div class="sponsor-item"><img src="https://i.ibb.co/sdVdMkrm/EC27-E05-B-149-F-4-CE9-94-C4-8008-DE349-A2-B.jpg" alt="Penaja 1"></div>
+        <div class="sponsor-item"><img src="https://i.ibb.co/DjzTt6v/ca2830cf-9008-49c7-8861-cf2407b00215.jpg" alt="Penaja 2"></div>
+        <div class="sponsor-item"><img src="https://i.ibb.co/nNMYCXyP/0db599ef-401c-478c-8326-9acd96587ee5.jpg" alt="Penaja 3"></div>
+        <div class="sponsor-item"><img src="https://i.ibb.co/V0XKrGyq/46ffd0dc-a173-4b94-b618-826733442abb.jpg" alt="Penaja 4"></div>
+        <div class="sponsor-item"><img src="https://i.ibb.co/Hp459xqQ/IMG-0862.jpg" alt="Penaja 5"></div>
+        <div class="sponsor-item"><img src="https://i.ibb.co/shvXv2z/IMG-0864.png" alt="Penaja 6"></div>
+        <div class="sponsor-item"><img src="https://i.ibb.co/SXHd79h4/IMG-0894.jpg" alt="Penaja 7"></div>
+        <div class="sponsor-item"><img src="https://i.ibb.co/k233qPYm/2fedbb77-20d1-418f-99c9-b5dc7cda32d1.jpg" alt="Penaja 8"></div>
+        <div class="sponsor-item"><img src="https://i.ibb.co/zWsvDF3w/45-D870-D0-232-B-4546-9-F36-C79-DF3-B81199.jpg" alt="Penaja 9"></div>
       </div>
 
-      <!-- DENGAN KERJASAMA -->
       <h2 class="section-title" style="margin-top:60px; margin-bottom:35px;">Dengan Kerjasama</h2>
       
       <div class="sponsors">
-        <div class="sponsor-item">
-          <img src="https://i.ibb.co/7t2dw1VF/IMG-0883.png" alt="Kerjasama 1">
-        </div>
-        <div class="sponsor-item">
-          <img src="https://i.ibb.co/HTBFSSnb/abe07354-2e22-4cd6-8619-7bbc6841dfc9.jpg" alt="Kerjasama 2">
-        </div>
-        <div class="sponsor-item">
-          <img src="https://i.ibb.co/DD7QKDFV/2-D42-C2-F9-9-A7-A-4921-8-E6-E-CA17-A6-A873-E0.jpg" alt="Kerjasama 3">
-        </div>
+        <div class="sponsor-item"><img src="https://i.ibb.co/7t2dw1VF/IMG-0883.png" alt="Kerjasama 1"></div>
+        <div class="sponsor-item"><img src="https://i.ibb.co/HTBFSSnb/abe07354-2e22-4cd6-8619-7bbc6841dfc9.jpg" alt="Kerjasama 2"></div>
+        <div class="sponsor-item"><img src="https://i.ibb.co/DD7QKDFV/2-D42-C2-F9-9-A7-A-4921-8-E6-E-CA17-A6-A873-E0.jpg" alt="Kerjasama 3"></div>
       </div>
 
       <p style="text-align:center; color:#888; margin-top:35px; font-size:0.95rem;">
@@ -575,6 +493,7 @@
       </p>
     </div>
   </section>
+
   <!-- Footer -->
   <footer>
     <p>© 2026 Pertubuhan Aktivis Keusahawanan (PAK) • Pakua Malaysia Selangor</p>
