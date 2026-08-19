@@ -42,33 +42,20 @@ header {
 }
 
 .logo {
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: var(--white);
+  display: flex;
+  align-items: center;
   text-decoration: none;
-  letter-spacing: 1px;
-}
-
-.logo span {
-  color: var(--red);
 }
 
 .logo-img {
-  height: 48px;          /* saiz logo */
+  height: 48px;
   width: auto;
   display: block;
-  transition: transform 0.3s;
+  transition: transform 0.3s ease;
 }
 
 .logo-img:hover {
   transform: scale(1.05);
-}
-
-/* Untuk mobile */
-@media (max-width: 768px) {
-  .logo-img {
-    height: 40px;
-  }
 }
 
 .nav-links {
@@ -297,6 +284,10 @@ footer {
     right: 0;
   }
 
+  .logo-img {
+    height: 40px;
+  }
+
   .about-grid {
     grid-template-columns: 1fr;
     gap: 30px;
@@ -320,5 +311,9 @@ footer {
 
   .section-title {
     font-size: 1.8rem;
+  }
+
+  .logo-img {
+    height: 36px;
   }
 }
