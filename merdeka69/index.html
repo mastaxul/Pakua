@@ -1,1 +1,469 @@
-<iframe src="https://docs.google.com/forms/d/e/1FAIpQLScUBeQyUF-AIzAwK5819RFr_ygyCRjoUXlL39N79d7SfUi5HA/viewform?embedded=true" width="640" height="1396" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Konvoi Kemerdekaan Ke-69 | PAK</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --black: #0d0d0d;
+      --dark: #1a1a1a;
+      --red: #c41e3a;
+      --brown: #5c4033;
+      --green: #2e7d32;
+      --white: #f5f5f5;
+      --light: #e0e0e0;
+      --gold: #d4af37;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background-color: var(--black);
+      color: var(--white);
+      line-height: 1.6;
+    }
+
+    /* Navbar ringkas */
+    header {
+      background: var(--dark);
+      border-bottom: 3px solid var(--red);
+      padding: 15px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-inner a {
+      color: var(--white);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .nav-inner a:hover {
+      color: var(--red);
+    }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85)),
+                  url('https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=1600') center/cover;
+      padding: 80px 20px 60px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 6vw, 3.5rem);
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .hero h1 span {
+      color: var(--red);
+    }
+
+    .hero .subtitle {
+      font-size: 1.3rem;
+      color: var(--gold);
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .hero p {
+      max-width: 700px;
+      margin: 0 auto 25px;
+      color: var(--light);
+    }
+
+    .badge {
+      display: inline-block;
+      background: var(--red);
+      color: white;
+      padding: 8px 20px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    section {
+      padding: 60px 0;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 1.9rem;
+      margin-bottom: 35px;
+      position: relative;
+    }
+
+    .section-title::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 4px;
+      background: var(--red);
+      margin: 10px auto 0;
+    }
+
+    /* Info cards */
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .info-card {
+      background: var(--dark);
+      border-radius: 12px;
+      padding: 25px 20px;
+      text-align: center;
+      border-top: 4px solid var(--red);
+    }
+
+    .info-card .icon {
+      font-size: 2rem;
+      margin-bottom: 12px;
+    }
+
+    .info-card h3 {
+      color: var(--gold);
+      margin-bottom: 8px;
+      font-size: 1.1rem;
+    }
+
+    .info-card p {
+      color: var(--light);
+      font-size: 0.95rem;
+    }
+
+    /* Program table */
+    .program-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--dark);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 40px;
+    }
+
+    .program-table th {
+      background: var(--red);
+      color: white;
+      padding: 14px 16px;
+      text-align: left;
+    }
+
+    .program-table td {
+      padding: 13px 16px;
+      border-bottom: 1px solid #333;
+      color: var(--light);
+    }
+
+    .program-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .program-table tr:nth-child(even) {
+      background: rgba(255,255,255,0.03);
+    }
+
+    /* Syarat */
+    .syarat-box {
+      background: var(--dark);
+      border-radius: 12px;
+      padding: 30px;
+      border-left: 5px solid var(--green);
+    }
+
+    .syarat-box ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .syarat-box li {
+      padding: 8px 0 8px 28px;
+      position: relative;
+      color: var(--light);
+    }
+
+    .syarat-box li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: var(--green);
+      font-weight: bold;
+    }
+
+    /* Poster images */
+    .posters {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin: 40px 0;
+    }
+
+    .posters img {
+      width: 100%;
+      border-radius: 10px;
+      border: 2px solid #333;
+    }
+
+    /* Form section */
+    .form-section {
+      background: var(--dark);
+      padding: 50px 20px;
+      text-align: center;
+    }
+
+    .form-section h2 {
+      margin-bottom: 15px;
+    }
+
+    .form-wrapper {
+      max-width: 700px;
+      margin: 30px auto 0;
+      background: #111;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #333;
+    }
+
+    .form-wrapper iframe {
+      width: 100%;
+      height: 1400px;
+      border: none;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 25px;
+      background: var(--black);
+      color: #777;
+      font-size: 0.9rem;
+      border-top: 1px solid #333;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .hero {
+        padding: 60px 15px 40px;
+      }
+
+      .program-table {
+        font-size: 0.9rem;
+      }
+
+      .program-table th,
+      .program-table td {
+        padding: 10px 12px;
+      }
+
+      .form-wrapper iframe {
+        height: 1600px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header>
+    <div class="nav-inner">
+      <a href="/">← Kembali ke Laman Utama</a>
+      <a href="#daftar" style="background:var(--red);padding:8px 18px;border-radius:6px;">Daftar Sekarang</a>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="badge">31 Ogos 2026</div>
+    <h1>Konvoi Kemerdekaan<br><span>Ke-69</span></h1>
+    <div class="subtitle">“Semarak Merdeka, Perpaduan Diperkasa”</div>
+    <p>PAKUA Malaysia (Selangor) Bersama PAK 2026<br>
+    Bersama kita menyemarakkan semangat patriotisme dan perpaduan demi Malaysia Madani</p>
+  </section>
+
+  <!-- Maklumat Utama -->
+  <section>
+    <div class="container">
+      <h2 class="section-title">Maklumat Program</h2>
+
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="icon">📅</div>
+          <h3>Tarikh</h3>
+          <p>31 Ogos 2026<br>(Isnin)</p>
+        </div>
+        <div class="info-card">
+          <div class="icon">⏰</div>
+          <h3>Masa</h3>
+          <p>11.00 pagi – 5.00 petang</p>
+        </div>
+        <div class="info-card">
+          <div class="icon">📍</div>
+          <h3>Tempat Berkumpul</h3>
+          <p>Kampung Bagan Pasir</p>
+        </div>
+        <div class="info-card">
+          <div class="icon">🏁</div>
+          <h3>Checkpoint</h3>
+          <p>Bagan Pasir</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tentatif Program -->
+  <section style="background:var(--dark);">
+    <div class="container">
+      <h2 class="section-title">Tentatif Program</h2>
+
+      <table class="program-table">
+        <thead>
+          <tr>
+            <th>Masa</th>
+            <th>Aktiviti</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>11.00 pagi</td>
+            <td>Pendaftaran peserta Konvoi Merdeka</td>
+          </tr>
+          <tr>
+            <td>12.00 – 1.15 pm</td>
+            <td>Zumba by NC Sekinchan</td>
+          </tr>
+          <tr>
+            <td>1.30 – 2.00 pm</td>
+            <td>Makan & Rehat</td>
+          </tr>
+          <tr>
+            <td>2.15 – 2.30 pm</td>
+            <td>Taklimat & pelepasan peserta Konvoi Merdeka</td>
+          </tr>
+          <tr>
+            <td>3.30 pm</td>
+            <td>Ketibaan VIP</td>
+          </tr>
+          <tr>
+            <td>3.45 pm</td>
+            <td>Ketibaan konvoi</td>
+          </tr>
+          <tr>
+            <td>4.00 pm</td>
+            <td>Ucapan aluan dari VIP & wakil NGO</td>
+          </tr>
+          <tr>
+            <td>4.30 – 5.00 pm</td>
+            <td>Cabutan bertuah dan saguhati</td>
+          </tr>
+          <tr>
+            <td>5.00 – 6.00 pm</td>
+            <td>Mula berkemas dan bersurai</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Terma & Syarat -->
+  <section>
+    <div class="container">
+      <h2 class="section-title">Terma & Syarat Konvoi</h2>
+
+      <div class="syarat-box">
+        <ul>
+          <li>Konvoi motosikal</li>
+          <li>Berumur 16 tahun ke atas</li>
+          <li>Motosikal mempunyai LKM yang sah</li>
+          <li>Motosikal hendaklah mengikuti spesifikasi yang sah dengan undang-undang</li>
+          <li>Mempunyai lesen memandu yang sah</li>
+          <li>Mematuhi keselamatan dan mengikuti laluan yang diberikan</li>
+        </ul>
+      </div>
+
+      <div style="text-align:center;margin-top:30px;">
+        <p style="color:var(--gold);font-size:1.2rem;font-weight:600;">
+          🎁 50 Hadiah Cabutan Bertuah!
+        </p>
+        <p style="color:var(--light);">Pelbagai hadiah menarik menanti anda!</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Poster (letak gambar di sini nanti) -->
+  <section style="background:var(--dark);">
+    <div class="container">
+      <h2 class="section-title">Poster & Peta Laluan</h2>
+      <p style="text-align:center;color:var(--light);margin-bottom:25px;">
+        Sila rujuk poster rasmi dan peta laluan di bawah.
+      </p>
+
+      <!-- 
+        Nanti kau upload 3 gambar poster ke folder merdeka69/
+        Kemudian ganti src di bawah dengan nama fail sebenar.
+        Contoh: src="poster1.jpg"
+      -->
+      <div class="posters">
+        <img src="poster1.jpg" alt="Poster Pendaftaran Konvoi">
+        <img src="poster2.jpg" alt="Peta Konvoi Merdeka">
+        <img src="poster3.jpg" alt="Tentatif Program">
+      </div>
+    </div>
+  </section>
+
+  <!-- Google Form -->
+  <section class="form-section" id="daftar">
+    <div class="container">
+      <h2 class="section-title">Pendaftaran Peserta</h2>
+      <p style="color:var(--light);margin-bottom:10px;">
+        Sila isi borang di bawah untuk mendaftar.
+      </p>
+
+      <div class="form-wrapper">
+        <iframe 
+          src="https://docs.google.com/forms/d/e/1FAIpQLScUBeQyUF-AIzAwK5819RFr_ygyCRjoUXlL39N79d7SfUi5HA/viewform?embedded=true" 
+          width="100%" 
+          height="1400" 
+          frameborder="0" 
+          marginheight="0" 
+          marginwidth="0">
+          Loading…
+        </iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2026 Pertubuhan Aktivis Keusahawanan (PAK) • Pakua Malaysia Selangor</p>
+    <p style="margin-top:6px;font-size:0.85rem;">Satu Hati, Satu Jiwa, Demi Malaysia Tercinta</p>
+  </footer>
+
+</body>
+</html>
