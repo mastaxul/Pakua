@@ -101,7 +101,7 @@ header {
   text-align: center;
   padding: 100px 20px 60px;
   background: 
-    linear-gradient(rgba(13, 13, 13, 0.85), rgba(13, 13, 13, 0.9)),
+    linear-gradient(rgba(13, 13, 13, 0.7), rgba(13, 13, 13, 0.9)),
     url('logo.png') center center / 55% no-repeat,
     linear-gradient(135deg, var(--black) 0%, var(--dark) 50%, #2a1a1a 100%);
 }
