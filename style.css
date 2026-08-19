@@ -53,6 +53,24 @@ header {
   color: var(--red);
 }
 
+.logo-img {
+  height: 48px;          /* saiz logo */
+  width: auto;
+  display: block;
+  transition: transform 0.3s;
+}
+
+.logo-img:hover {
+  transform: scale(1.05);
+}
+
+/* Untuk mobile */
+@media (max-width: 768px) {
+  .logo-img {
+    height: 40px;
+  }
+}
+
 .nav-links {
   display: flex;
   list-style: none;
