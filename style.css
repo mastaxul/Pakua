@@ -100,7 +100,10 @@ header {
   justify-content: center;
   text-align: center;
   padding: 100px 20px 60px;
-  background: linear-gradient(135deg, var(--black) 0%, var(--dark) 50%, #2a1a1a 100%);
+  background: 
+    linear-gradient(rgba(13, 13, 13, 0.85), rgba(13, 13, 13, 0.9)),
+    url('logo.png') center center / 55% no-repeat,
+    linear-gradient(135deg, var(--black) 0%, var(--dark) 50%, #2a1a1a 100%);
 }
 
 .hero-content h1 {
@@ -288,6 +291,13 @@ footer {
     height: 40px;
   }
 
+  .hero {
+    background: 
+      linear-gradient(rgba(13, 13, 13, 0.88), rgba(13, 13, 13, 0.92)),
+      url('logo.png') center center / 80% no-repeat,
+      linear-gradient(135deg, var(--black) 0%, var(--dark) 50%, #2a1a1a 100%);
+  }
+
   .about-grid {
     grid-template-columns: 1fr;
     gap: 30px;
@@ -315,5 +325,12 @@ footer {
 
   .logo-img {
     height: 36px;
+  }
+
+  .hero {
+    background: 
+      linear-gradient(rgba(13, 13, 13, 0.9), rgba(13, 13, 13, 0.94)),
+      url('logo.png') center center / 90% no-repeat,
+      linear-gradient(135deg, var(--black) 0%, var(--dark) 50%, #2a1a1a 100%);
   }
 }
