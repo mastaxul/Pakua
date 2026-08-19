@@ -1,9 +1,99 @@
 <!DOCTYPE html>
-<html>
+<html lang="ms">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pakua Sel</title>
-</head>
-<body>
-  <h1>Selamat datang ke Pakua Sel</h1>
-</body>
-</html>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --black: #0d0d0d;
+      --dark: #1a1a1a;
+      --red: #c41e3a;
+      --brown: #5c4033;
+      --green: #2e7d32;
+      --white: #f5f5f5;
+      --light: #e0e0e0;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background-color: var(--black);
+      color: var(--white);
+      line-height: 1.6;
+    }
+
+    /* ========== NAVBAR ========== */
+    header {
+      background-color: var(--dark);
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 2px solid var(--red);
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 70px;
+    }
+
+    .logo {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--white);
+      text-decoration: none;
+      letter-spacing: 1px;
+    }
+
+    .logo span {
+      color: var(--red);
+    }
+
+    .nav-links {
+      display: flex;
+      list-style: none;
+      gap: 35px;
+    }
+
+    .nav-links a {
+      color: var(--light);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 1rem;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: var(--red);
+    }
+
+    /* Hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+      gap: 6px;
+    }
+
+    .hamburger span {
+      width: 28px;
+      height: 3px;
+      background: var(--white);
+      border-radius: 3px;
+      transition: all 0.3s;
+    }
+
+    /* ========== HERO ========== */
+    .hero {
+      min-
