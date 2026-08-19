@@ -96,4 +96,329 @@
 
     /* ========== HERO ========== */
     .hero {
-      min-
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 100px 20px 60px;
+      background: linear-gradient(135deg, var(--black) 0%, var(--dark) 50%, #2a1a1a 100%);
+    }
+
+    .hero-content h1 {
+      font-size: clamp(2.5rem, 6vw, 4.2rem);
+      margin-bottom: 20px;
+      line-height: 1.2;
+    }
+
+    .hero-content h1 span {
+      color: var(--red);
+    }
+
+    .hero-content p {
+      font-size: 1.25rem;
+      color: var(--light);
+      max-width: 600px;
+      margin: 0 auto 35px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 14px 36px;
+      background: var(--red);
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 1.05rem;
+      transition: all 0.3s;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background: #a01830;
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--green);
+      color: var(--green);
+      margin-left: 12px;
+    }
+
+    .btn-outline:hover {
+      background: var(--green);
+      color: white;
+    }
+
+    /* ========== SECTIONS ========== */
+    section {
+      padding: 80px 20px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 2.2rem;
+      margin-bottom: 50px;
+      position: relative;
+    }
+
+    .section-title::after {
+      content: '';
+      display: block;
+      width: 70px;
+      height: 4px;
+      background: var(--red);
+      margin: 12px auto 0;
+      border-radius: 2px;
+    }
+
+    /* About */
+    .about {
+      background: var(--dark);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 50px;
+      align-items: center;
+    }
+
+    .about-text h3 {
+      color: var(--green);
+      margin-bottom: 15px;
+      font-size: 1.4rem;
+    }
+
+    .about-text p {
+      color: var(--light);
+      margin-bottom: 15px;
+    }
+
+    .about-box {
+      background: var(--black);
+      padding: 40px;
+      border-radius: 12px;
+      border-left: 5px solid var(--brown);
+    }
+
+    /* Cards */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+    }
+
+    .card {
+      background: var(--dark);
+      padding: 35px 28px;
+      border-radius: 12px;
+      border-top: 4px solid var(--red);
+      transition: transform 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+    }
+
+    .card h3 {
+      color: var(--white);
+      margin-bottom: 12px;
+      font-size: 1.3rem;
+    }
+
+    .card p {
+      color: var(--light);
+      font-size: 0.98rem;
+    }
+
+    .card .icon {
+      font-size: 2.2rem;
+      margin-bottom: 18px;
+      color: var(--green);
+    }
+
+    /* Contact / Footer */
+    .contact {
+      background: var(--dark);
+      text-align: center;
+    }
+
+    footer {
+      background: var(--black);
+      text-align: center;
+      padding: 25px;
+      color: #888;
+      font-size: 0.95rem;
+      border-top: 1px solid #333;
+    }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 768px) {
+      .hamburger {
+        display: flex;
+      }
+
+      .nav-links {
+        position: fixed;
+        top: 70px;
+        right: -100%;
+        width: 70%;
+        max-width: 300px;
+        height: calc(100vh - 70px);
+        background: var(--dark);
+        flex-direction: column;
+        padding: 40px 30px;
+        gap: 25px;
+        transition: right 0.35s ease;
+        border-left: 3px solid var(--red);
+      }
+
+      .nav-links.active {
+        right: 0;
+      }
+
+      .about-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+
+      .btn-outline {
+        margin-left: 0;
+        margin-top: 12px;
+        display: inline-block;
+      }
+
+      .hero-content p {
+        font-size: 1.1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-content h1 {
+        font-size: 2.3rem;
+      }
+
+      .section-title {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header>
+    <div class="nav-container">
+      <a href="#" class="logo">Pakua<span>Sel</span></a>
+      
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#home">Laman Utama</a></li>
+        <li><a href="#about">Tentang Kami</a></li>
+        <li><a href="#services">Perkhidmatan</a></li>
+        <li><a href="#contact">Hubungi</a></li>
+      </ul>
+
+      <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero" id="home">
+    <div class="hero-content">
+      <h1>Selamat Datang ke<br><span>Pakua Sel</span></h1>
+      <p>Website rasmi Pakua Sel. Kami hadir dengan semangat, ketegasan dan keindahan alam.</p>
+      <div>
+        <a href="#about" class="btn">Ketahui Lebih Lanjut</a>
+        <a href="#contact" class="btn btn-outline">Hubungi Kami</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="about" id="about">
+    <div class="container">
+      <h2 class="section-title">Tentang Kami</h2>
+      <div class="about-grid">
+        <div class="about-text">
+          <h3>Siapa Kami?</h3>
+          <p>Pakua Sel adalah platform yang dibina dengan semangat kekuatan, keharmonian dan keindahan alam semula jadi.</p>
+          <p>Kami menggabungkan elemen tradisional dan moden untuk menyampaikan pengalaman yang bermakna kepada setiap pengunjung.</p>
+        </div>
+        <div class="about-box">
+          <h3 style="color: var(--red); margin-bottom: 15px;">Visi Kami</h3>
+          <p>Menjadi rujukan utama yang menghubungkan masyarakat dengan nilai-nilai kekitaan, alam dan warisan.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section id="services">
+    <div class="container">
+      <h2 class="section-title">Perkhidmatan</h2>
+      <div class="cards">
+        <div class="card">
+          <div class="icon">🌿</div>
+          <h3>Alam & Kelestarian</h3>
+          <p>Fokus kepada pemeliharaan alam semula jadi dan amalan mesra alam.</p>
+        </div>
+        <div class="card">
+          <div class="icon">🔥</div>
+          <h3>Komuniti</h3>
+          <p>Membina komuniti yang kuat, saling membantu dan bersatu padu.</p>
+        </div>
+        <div class="card">
+          <div class="icon">🛡️</div>
+          <h3>Warisan</h3>
+          <p>Memartabatkan warisan budaya dan nilai-nilai tradisional.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="contact" id="contact">
+    <div class="container">
+      <h2 class="section-title">Hubungi Kami</h2>
+      <p style="margin-bottom: 30px; color: var(--light);">Ada pertanyaan? Jangan segan untuk menghubungi kami.</p>
+      <a href="mailto:info@pakua-sel.my" class="btn">Hantar Email</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2026 Pakua Sel. Hak Cipta Terpelihara.</p>
+  </footer>
+
+  <script>
+    // Hamburger Menu
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('navLinks');
+
+    hamburger.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+    });
+
+    // Close menu when clicking a link
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('active');
+      });
+    });
+  </script>
+
+</body>
+</html>
