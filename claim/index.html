@@ -6,16 +6,16 @@
 
   <!-- Primary Meta Tags -->
   <title>Tuntutan Hadiah | PAKUA Selangor & PAK</title>
-  <meta name="title" content="Tuntutan Hadiah | PAKUA Selangor & PAK">
-  <meta name="description" content="Borang tuntutan hadiah untuk program anjuran PAKUA Malaysia (Selangor) dan PAK. Sila isi maklumat dengan lengkap.">
+  <meta name="title" content="Tuntutan | PAKUA Selangor & PAK">
+  <meta name="description" content="Borang tuntutan untuk program anjuran PAKUA Malaysia (Selangor) dan PAK. Sila isi maklumat dengan lengkap.">
   <meta name="robots" content="index, follow">
   <meta name="author" content="Pertubuhan Aktivis Keusahawanan (PAK)">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://pakua-sel.my/claim/">
-  <meta property="og:title" content="Tuntutan Hadiah | PAKUA Selangor & PAK">
-  <meta property="og:description" content="Borang tuntutan hadiah. Sila isi maklumat dengan lengkap.">
+  <meta property="og:title" content="Tuntutan | PAKUA Selangor & PAK">
+  <meta property="og:description" content="Borang tuntutan. Sila isi maklumat dengan lengkap.">
   <meta property="og:locale" content="ms_MY">
 
   <!-- Favicon -->
@@ -47,8 +47,11 @@
       color: var(--white);
       line-height: 1.6;
       min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
+    /* Navbar */
     header {
       background: var(--dark);
       border-bottom: 3px solid var(--red);
@@ -76,9 +79,10 @@
       color: var(--red);
     }
 
+    /* Hero */
     .hero {
       background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
-      padding: 70px 20px 50px;
+      padding: 60px 20px 40px;
       text-align: center;
       border-bottom: 1px solid #333;
     }
@@ -99,30 +103,72 @@
       font-size: 1.1rem;
     }
 
+    /* Action Card Section */
     .form-section {
-      padding: 50px 20px 70px;
+      padding: 60px 20px;
+      flex: 1;
     }
 
     .container {
-      max-width: 850px;
+      max-width: 650px;
       margin: 0 auto;
     }
 
-    .form-wrapper {
-      background: #111;
-      border-radius: 14px;
-      overflow: hidden;
+    .action-card {
+      background: #151515;
+      border-radius: 16px;
       border: 1px solid #333;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.45);
+      padding: 40px 30px;
+      text-align: center;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.5);
     }
 
-    .form-wrapper iframe {
-      width: 100%;
-      height: 2200px;
-      border: none;
-      display: block;
+    .action-card .icon {
+      font-size: 3rem;
+      margin-bottom: 15px;
+      display: inline-block;
     }
 
+    .action-card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+      color: var(--white);
+    }
+
+    .action-card p {
+      color: #aaa;
+      margin-bottom: 30px;
+      font-size: 0.98rem;
+    }
+
+    .btn-submit {
+      display: inline-block;
+      background: var(--red);
+      color: var(--white);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1.1rem;
+      padding: 16px 36px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 15px rgba(196, 30, 58, 0.4);
+    }
+
+    .btn-submit:hover {
+      background: #a0182e;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(196, 30, 58, 0.6);
+    }
+
+    .notice {
+      margin-top: 25px;
+      font-size: 0.85rem;
+      color: #777;
+      border-top: 1px dashed #333;
+      padding-top: 20px;
+    }
+
+    /* Footer */
     footer {
       text-align: center;
       padding: 25px 20px;
@@ -134,17 +180,20 @@
 
     @media (max-width: 600px) {
       .hero {
-        padding: 50px 15px 40px;
+        padding: 40px 15px 30px;
       }
-
-      .form-wrapper iframe {
-        height: 2400px;
+      .action-card {
+        padding: 30px 20px;
+      }
+      .btn-submit {
+        width: 100%;
       }
     }
   </style>
 </head>
 <body>
 
+  <!-- Navbar -->
   <header>
     <div class="nav-inner">
       <a href="/">← Kembali ke Laman Utama</a>
@@ -152,31 +201,36 @@
     </div>
   </header>
 
+  <!-- Hero -->
   <section class="hero">
     <h1>Tuntutan <span>Hadiah</span></h1>
-    <p>Sila isi borang di bawah dengan lengkap untuk menuntut hadiah anda.</p>
+    <p>Sila isi borang rasmi untuk menuntut hadiah anda.</p>
   </section>
 
+  <!-- Form Action Card -->
   <section class="form-section">
     <div class="container">
-      <div class="form-wrapper">
-        <iframe 
-          src="https://docs.google.com/forms/d/e/1FAIpQLScj6VLzW6aGevShZAqlTLJYEXFnwuy4A9CKUueqFOt9QYDZBw/viewform?embedded=true" 
-          width="100%" 
-          height="2200"
-          frameborder="0" 
-          marginheight="0" 
-          marginwidth="0"
-          style="border:none;">
-          Loading…
-        </iframe>
+      <div class="action-card">
+        <div class="icon">📝</div>
+        <h2>Isi Borang Tuntutan Rasmi</h2>
+        <p>Borang ini memerlukan pemuatan naik fail (seperti gambar/resit). Sila tekan butang di bawah untuk membuka borang rasmi Google Form.</p>
+        
+        <a href="https://forms.gle/wK6megetgKuW561F6" target="_blank" rel="noopener" class="btn-submit">
+          Buka Borang Tuntutan ↗
+        </a>
+
+        <div class="notice">
+          ℹ️ Anda mungkin perlu log masuk (*Sign In*) ke akaun Google/Gmail untuk memuat naik fail tuntutan.
+        </div>
       </div>
     </div>
   </section>
 
+  <!-- Footer -->
   <footer>
     <p>© 2026 Pertubuhan Aktivis Keusahawanan (PAK) • Pakua Malaysia Selangor</p>
   </footer>
 
 </body>
 </html>
+
