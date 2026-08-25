@@ -4,71 +4,109 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pertubuhan Aktivis Keusahawanan | PAK</title>
-
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
-  <!-- Favicon -->
   <link rel="icon" type="image/png" href="https://i.ibb.co/DD7QKDFV/2-D42-C2-F9-9-A7-A-4921-8-E6-E-CA17-A6-A873-E0.jpg">
-
   <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<div class="box">
+  <!-- Header + Hamburger -->
+  <header>
+    <div class="header-inner">
+      <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <div class="logo-text">PAK</div>
+    </div>
+  </header>
 
-  <!-- MENU UTAMA -->
-  <div id="utama">
-    <h2>🤝 Pertubuhan Aktivis Keusahawanan</h2>
-    <p>Selamat datang ke Mini App rasmi pertubuhan.</p>
+  <!-- Side Menu -->
+  <nav class="side-menu" id="sideMenu">
+    <div class="side-menu-header">
+      <span>Menu</span>
+      <button class="close-btn" id="closeMenu">✕</button>
+    </div>
+    <ul>
+      <li><a href="#" onclick="bukaPage('utama'); return false;">🏠 Menu Utama</a></li>
+      <li><a href="#" onclick="daftarAhli(); return false;">📝 Daftar Ahli</a></li>
+      <li><a href="#" onclick="bukaPage('status'); return false;">🔎 Semak Status</a></li>
+      <li><a href="#" onclick="bukaPage('pengumuman'); return false;">📢 Pengumuman</a></li>
+      <li><a href="/merdeka69/" target="_blank">🎉 Konvoi Merdeka</a></li>
+      <li><a href="/claim/" target="_blank">🎁 Tuntutan Hadiah</a></li>
+      <li><a href="#" onclick="bukaPage('tentang'); return false;">ℹ️ Tentang PAK</a></li>
+      <li><a href="#" onclick="bukaPage('admin'); return false;">📞 Hubungi Admin</a></li>
+      <li><a href="https://pakua-sel.my/" target="_blank">🌐 Website Rasmi</a></li>
+    </ul>
+  </nav>
+  <div class="overlay" id="overlay"></div>
 
-    <button class="btn btn-merah" onclick="daftarAhli()">📝 Daftar Ahli</button>
-    <button class="btn btn-hitam" onclick="bukaPage('status')">🔎 Semak Status Ahli</button>
-    <button class="btn btn-coklat" onclick="bukaPage('pengumuman')">📢 Pengumuman</button>
-    <button class="btn btn-putih" onclick="bukaPage('tentang')">ℹ️ Tentang Pertubuhan</button>
-    <button class="btn btn-hijau" onclick="bukaPage('admin')">📞 Hubungi Admin</button>
-  </div>
+  <div class="container">
 
-  <!-- STATUS AHLI -->
-  <div id="status" class="page" style="display:none">
-    <h2>🔎 Semak Status Ahli</h2>
+    <!-- MENU UTAMA -->
+    <div id="utama" class="page active">
+      <h1 class="welcome">SELAMAT DATANG KE<br>PERTUBUHAN AKTIVIS KEUSAHAWANAN</h1>
+      <p class="reg-no">(PPM-014-10-23022026)</p>
+      <p class="subtitle">Mini App rasmi pertubuhan</p>
 
-    <input id="phoneInput" type="text" placeholder="Masukkan nombor telefon">
-
-    <button class="btn btn-merah" onclick="semakAhli()">🔍 Semak</button>
-
-    <div id="hasilStatus" class="result">
-      Masukkan nombor telefon untuk semakan.
+      <div class="btn-group">
+        <button class="btn btn-merah" onclick="daftarAhli()">📝 Daftar Ahli</button>
+        <button class="btn btn-hitam" onclick="bukaPage('status')">🔎 Semak Status Ahli</button>
+        <button class="btn btn-coklat" onclick="bukaPage('pengumuman')">📢 Pengumuman</button>
+        <a href="/merdeka69/" class="btn btn-merah" target="_blank">🎉 Konvoi Merdeka Ke-69</a>
+        <a href="/claim/" class="btn btn-hijau" target="_blank">🎁 Tuntutan Hadiah</a>
+        <button class="btn btn-putih" onclick="bukaPage('tentang')">ℹ️ Tentang Pertubuhan</button>
+        <button class="btn btn-hijau" onclick="bukaPage('admin')">📞 Hubungi Admin</button>
+      </div>
     </div>
 
-    <button class="btn btn-hitam" onclick="kembali()">⬅️ Kembali</button>
+    <!-- STATUS AHLI -->
+    <div id="status" class="page">
+      <h2>🔎 Semak Status Ahli</h2>
+      <input id="phoneInput" type="text" placeholder="Masukkan nombor telefon">
+      <button class="btn btn-merah" onclick="semakAhli()">🔍 Semak</button>
+      <div id="hasilStatus" class="result">Masukkan nombor telefon untuk semakan.</div>
+      <button class="btn btn-hitam" onclick="bukaPage('utama')">⬅️ Kembali</button>
+    </div>
+
+    <!-- PENGUMUMAN -->
+    <div id="pengumuman" class="page">
+      <h2>📢 Pengumuman</h2>
+      <div class="info-box">
+        <p><strong>PAKUA SELANGOR</strong> diurus dan dikendalikan oleh <strong>PAK</strong>.</p>
+      </div>
+      <button class="btn btn-hitam" onclick="bukaPage('utama')">⬅️ Kembali</button>
+    </div>
+
+    <!-- TENTANG -->
+    <div id="tentang" class="page">
+      <h2>ℹ️ Tentang Pertubuhan</h2>
+      <div class="info-box">
+        <p>Pertubuhan Aktivis Keusahawanan (PAK) membina komuniti, kerjasama dan pembangunan usahawan.</p>
+        <p style="margin-top:12px;">No. Pendaftaran: <strong>PPM-014-10-23022026</strong></p>
+      </div>
+      <button class="btn btn-hitam" onclick="bukaPage('utama')">⬅️ Kembali</button>
+    </div>
+
+    <!-- ADMIN -->
+    <div id="admin" class="page">
+      <h2>📞 Hubungi Admin</h2>
+      <div class="info-box">
+        <p>Hubungi pentadbiran pertubuhan melalui Telegram:</p>
+        <a href="https://t.me/MastaXul" class="btn btn-merah" target="_blank" style="margin-top:15px;">
+          💬 @MastaXul
+        </a>
+      </div>
+      <button class="btn btn-hitam" onclick="bukaPage('utama')">⬅️ Kembali</button>
+    </div>
+
   </div>
 
-  <!-- PENGUMUMAN -->
-  <div id="pengumuman" class="page" style="display:none">
-    <h2>📢 Pengumuman</h2>
-    <p>Tiada pengumuman terkini.</p>
-    <button class="btn btn-hitam" onclick="kembali()">⬅️ Kembali</button>
-  </div>
-
-  <!-- TENTANG -->
-  <div id="tentang" class="page" style="display:none">
-    <h2>ℹ️ Tentang Pertubuhan</h2>
-    <p>
-      Pertubuhan Aktivis Keusahawanan membina komuniti,
-      kerjasama dan pembangunan usahawan.
-    </p>
-    <button class="btn btn-hitam" onclick="kembali()">⬅️ Kembali</button>
-  </div>
-
-  <!-- ADMIN -->
-  <div id="admin" class="page" style="display:none">
-    <h2>📞 Hubungi Admin</h2>
-    <p>Hubungi pentadbiran pertubuhan melalui Telegram.</p>
-    <button class="btn btn-hitam" onclick="kembali()">⬅️ Kembali</button>
-  </div>
-
-</div>
+  <!-- Footer -->
+  <footer>
+    <p>© 2026 PERTUBUHAN AKTIVIS KEUSAHAWANAN. Hak Cipta Terpelihara.</p>
+  </footer>
 
 <script>
   // Telegram WebApp
@@ -79,10 +117,28 @@
     Telegram.WebApp.setBackgroundColor("#0d0d0d");
   }
 
-  // Buka Google Form
-  function daftarAhli() {
-    let url = "https://docs.google.com/forms/d/e/1FAIpQLSfWIVNDCtVXQ33tChiVPfiF-XcKJpNUUzN8M700CdXpDUqjgQ/viewform";
+  // Hamburger Menu
+  const hamburger = document.getElementById('hamburger');
+  const sideMenu = document.getElementById('sideMenu');
+  const overlay = document.getElementById('overlay');
+  const closeMenu = document.getElementById('closeMenu');
 
+  function bukaMenu() {
+    sideMenu.classList.add('open');
+    overlay.classList.add('show');
+  }
+  function tutupMenu() {
+    sideMenu.classList.remove('open');
+    overlay.classList.remove('show');
+  }
+
+  hamburger.addEventListener('click', bukaMenu);
+  closeMenu.addEventListener('click', tutupMenu);
+  overlay.addEventListener('click', tutupMenu);
+
+  // Daftar Ahli
+  function daftarAhli() {
+    const url = "https://docs.google.com/forms/d/e/1FAIpQLSfWIVNDCtVXQ33tChiVPfiF-XcKJpNUUzN8M700CdXpDUqjgQ/viewform";
     if (window.Telegram && Telegram.WebApp) {
       Telegram.WebApp.openLink(url);
     } else {
@@ -90,47 +146,37 @@
     }
   }
 
-  // Semak ahli
+  // Semak Ahli
   function semakAhli() {
-    let phone = document.getElementById("phoneInput").value.trim();
-
-    if (phone == "") {
+    const phone = document.getElementById("phoneInput").value.trim();
+    if (!phone) {
       document.getElementById("hasilStatus").innerHTML = "⚠️ Sila masukkan nombor telefon.";
       return;
     }
-
     document.getElementById("hasilStatus").innerHTML = "⏳ Sedang mencari rekod...";
 
     fetch("https://script.google.com/macros/s/AKfycbwcjuolO7uwdoCYuYXFNthmmUIr2Kb5RTcH2tvbl7_XVf5dr-czlZ8Doil3tsofuSbdKQ/exec?phone=" + encodeURIComponent(phone))
-      .then(response => response.json())
+      .then(r => r.json())
       .then(data => {
         if (data.found) {
           document.getElementById("hasilStatus").innerHTML =
-            "👤 Nama: " + data.nama +
-            "<br><br>🆔 ID Ahli: " + data.id +
-            "<br><br>📌 Status: " + data.status;
+            `👤 Nama: ${data.nama}<br><br>🆔 ID Ahli: ${data.id}<br><br>📌 Status: ${data.status}`;
         } else {
           document.getElementById("hasilStatus").innerHTML = "❌ Rekod ahli tidak dijumpai.";
         }
       })
-      .catch(error => {
+      .catch(() => {
         document.getElementById("hasilStatus").innerHTML = "⚠️ Ralat sambungan API.";
       });
   }
 
   // Navigasi
-  function bukaPage(page) {
-    document.getElementById("utama").style.display = "none";
-    document.getElementById(page).style.display = "block";
-  }
-
-  function kembali() {
-    ["status", "pengumuman", "tentang", "admin"].forEach(function(page) {
-      document.getElementById(page).style.display = "none";
-    });
-    document.getElementById("utama").style.display = "block";
+  function bukaPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+    tutupMenu();
+    window.scrollTo(0, 0);
   }
 </script>
-
 </body>
 </html>
