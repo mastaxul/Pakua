@@ -138,13 +138,19 @@
 
   // Daftar Ahli
   function daftarAhli() {
-    const url = "https://docs.google.com/forms/d/e/1FAIpQLSfWIVNDCtVXQ33tChiVPfiF-XcKJpNUUzN8M700CdXpDUqjgQ/viewform";
-    if (window.Telegram && Telegram.WebApp) {
+  const url = "https://docs.google.com/forms/d/e/1FAIpQLSfWIVNDCtVXQ33tChiVPfiF-XcKJpNUUzN8M700CdXpDUqjgQ/viewform";
+
+  if (window.Telegram && Telegram.WebApp) {
+    try {
       Telegram.WebApp.openLink(url);
-    } else {
-      window.open(url, "_blank");
+    } catch (e) {
+      // Fallback kalau openLink gagal
+      window.location.href = url;
     }
+  } else {
+    window.open(url, "_blank");
   }
+}
 
   // Semak Ahli
   function semakAhli() {
