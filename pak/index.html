@@ -182,7 +182,7 @@
     document.getElementById("hasilStatus").innerHTML = "Masukkan nombor untuk semakan.";
   }
 
-  // Semak Ahli (URL BARU)
+  // Semak Ahli
   function semakAhli() {
     let nilai = document.getElementById("cariInput").value.trim();
     nilai = nilai.replace(/[\s\-\(\)]/g, '');
@@ -225,8 +225,16 @@
       .then(response => response.json())
       .then(data => {
         if (data.found) {
-          document.getElementById("hasilStatus").innerHTML =
-            `👤 Nama: ${data.nama}<br><br>🆔 ID Ahli: ${data.id}<br><br>📌 Status: ${data.status}`;
+          document.getElementById("hasilStatus").innerHTML = `
+            👤 <strong>Nama:</strong> ${data.nama}<br><br>
+            🆔 <strong>ID Ahli:</strong> ${data.id}<br><br>
+            📌 <strong>Status:</strong> ${data.status}<br><br>
+            📱 <strong>Telefon:</strong> ${data.phone || '-'}<br><br>
+            🪪 <strong>No. KP:</strong> ${data.ic || '-'}<br><br>
+            👨 <strong>Nama Ayah:</strong> ${data.namaAyah || '-'}<br><br>
+            👦 <strong>Nama Abang:</strong> ${data.namaAbang || '-'}<br><br>
+            🏠 <strong>Alamat:</strong> ${data.alamat || '-'}
+          `;
         } else {
           document.getElementById("hasilStatus").innerHTML = "❌ Rekod ahli tidak dijumpai.";
         }
