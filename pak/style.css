@@ -255,3 +255,28 @@ footer {
     font-size: 1.25rem;
   }
 }
+
+.pilih-jenis {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.jenis-btn {
+  flex: 1;
+  padding: 11px;
+  border: 1px solid #444;
+  background: #222;
+  color: var(--light);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.jenis-btn.active {
+  background: var(--red);
+  border-color: var(--red);
+  color: white;
+}
