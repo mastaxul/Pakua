@@ -62,13 +62,24 @@
     </div>
 
     <!-- STATUS AHLI -->
-    <div id="status" class="page">
-      <h2>🔎 Semak Status Ahli</h2>
-      <input id="phoneInput" type="text" placeholder="Masukkan nombor telefon">
-      <button class="btn btn-merah" onclick="semakAhli()">🔍 Semak</button>
-      <div id="hasilStatus" class="result">Masukkan nombor telefon untuk semakan.</div>
-      <button class="btn btn-hitam" onclick="bukaPage('utama')">⬅️ Kembali</button>
-    </div>
+<div id="status" class="page">
+  <h2>🔎 Semak Status Ahli</h2>
+
+  <div class="pilih-jenis">
+    <button type="button" class="jenis-btn active" data-jenis="phone" onclick="pilihJenis('phone')">📱 Telefon</button>
+    <button type="button" class="jenis-btn" data-jenis="ic" onclick="pilihJenis('ic')">🆔 No. KP</button>
+  </div>
+
+  <input id="cariInput" type="text" placeholder="Masukkan nombor telefon">
+
+  <button class="btn btn-merah" onclick="semakAhli()">🔍 Semak</button>
+
+  <div id="hasilStatus" class="result">
+    Masukkan nombor untuk semakan.
+  </div>
+
+  <button class="btn btn-hitam" onclick="bukaPage('utama')">⬅️ Kembali</button>
+</div>
 
     <!-- PENGUMUMAN -->
     <div id="pengumuman" class="page">
@@ -153,28 +164,83 @@
 }
 
   // Semak Ahli
-  function semakAhli() {
-    const phone = document.getElementById("phoneInput").value.trim();
-    if (!phone) {
-      document.getElementById("hasilStatus").innerHTML = "⚠️ Sila masukkan nombor telefon.";
+  let jenisCarian = "phone"; // default
+
+function pilihJenis(jenis) {
+  jenisCarian = jenis;
+
+  // Update butang active
+  document.querySelectorAll('.jenis-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  document.querySelector(`[data-jenis="${jenis}"]`).classList.add('active');
+
+  // Update placeholder & clear input
+  const input = document.getElementById("cariInput");
+  input.value = "";
+  input.placeholder = jenis === "phone" 
+    ? "Masukkan nombor telefon (contoh: 0123456789)" 
+    : "Masukkan nombor kad pengenalan (12 digit)";
+  
+  document.getElementById("hasilStatus").innerHTML = "Masukkan nombor untuk semakan.";
+}
+
+function semakAhli() {
+  let nilai = document.getElementById("cariInput").value.trim();
+  nilai = nilai.replace(/[\s\-\(\)]/g, ''); // buang jarak & simbol
+
+  if (!nilai) {
+    document.getElementById("hasilStatus").innerHTML = "⚠️ Sila masukkan nombor.";
+    return;
+  }
+
+  if (jenisCarian === "phone") {
+    // Validasi telefon
+    if (!/^\d+$/.test(nilai)) {
+      document.getElementById("hasilStatus").innerHTML = "⚠️ Nombor telefon hanya boleh mengandungi digit.";
       return;
     }
-    document.getElementById("hasilStatus").innerHTML = "⏳ Sedang mencari rekod...";
-
-    fetch("https://script.google.com/macros/s/AKfycbwcjuolO7uwdoCYuYXFNthmmUIr2Kb5RTcH2tvbl7_XVf5dr-czlZ8Doil3tsofuSbdKQ/exec?phone=" + encodeURIComponent(phone))
-      .then(r => r.json())
-      .then(data => {
-        if (data.found) {
-          document.getElementById("hasilStatus").innerHTML =
-            `👤 Nama: ${data.nama}<br><br>🆔 ID Ahli: ${data.id}<br><br>📌 Status: ${data.status}`;
-        } else {
-          document.getElementById("hasilStatus").innerHTML = "❌ Rekod ahli tidak dijumpai.";
-        }
-      })
-      .catch(() => {
-        document.getElementById("hasilStatus").innerHTML = "⚠️ Ralat sambungan API.";
-      });
+    if (nilai.length < 10 || nilai.length > 11) {
+      document.getElementById("hasilStatus").innerHTML = "⚠️ Nombor telefon mesti 10 atau 11 digit.";
+      return;
+    }
+    if (!nilai.startsWith("01")) {
+      document.getElementById("hasilStatus").innerHTML = "⚠️ Nombor telefon mesti bermula dengan 01.";
+      return;
+    }
+  } else {
+    // Validasi No. KP (MyKad)
+    if (!/^\d+$/.test(nilai)) {
+      document.getElementById("hasilStatus").innerHTML = "⚠️ Nombor KP hanya boleh mengandungi digit.";
+      return;
+    }
+    if (nilai.length !== 12) {
+      document.getElementById("hasilStatus").innerHTML = "⚠️ Nombor kad pengenalan mesti 12 digit.";
+      return;
+    }
   }
+
+  // Semua validasi lulus
+  document.getElementById("hasilStatus").innerHTML = "⏳ Sedang mencari rekod...";
+
+  // Bina URL API
+  const param = jenisCarian === "phone" ? "phone" : "ic";
+  const apiUrl = `https://script.google.com/macros/s/AKfycbwcjuolO7uwdoCYuYXFNthmmUIr2Kb5RTcH2tvbl7_XVf5dr-czlZ8Doil3tsofuSbdKQ/exec?${param}=` + encodeURIComponent(nilai);
+
+  fetch(apiUrl)
+    .then(response => response.json())
+    .then(data => {
+      if (data.found) {
+        document.getElementById("hasilStatus").innerHTML =
+          `👤 Nama: ${data.nama}<br><br>🆔 ID Ahli: ${data.id}<br><br>📌 Status: ${data.status}`;
+      } else {
+        document.getElementById("hasilStatus").innerHTML = "❌ Rekod ahli tidak dijumpai.";
+      }
+    })
+    .catch(() => {
+      document.getElementById("hasilStatus").innerHTML = "⚠️ Ralat sambungan API.";
+    });
+}
 
   // Navigasi
   function bukaPage(pageId) {
