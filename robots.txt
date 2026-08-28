@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://pakua-sel.my/sitemap.xml
