@@ -34,6 +34,52 @@
   <link rel="canonical" href="https://pakua-sel.my/merdeka69/">
 
   <style>
+
+    /* Slideshow */
+.slideshow {
+  max-width: 800px;
+  margin: 0 auto 30px;
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 2px solid #333;
+  background: #111;
+  aspect-ratio: 16/10;
+}
+
+.slideshow img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.slideshow img.active {
+  opacity: 1;
+  position: relative;
+}
+
+.slide-dots {
+  text-align: center;
+  margin-top: 14px;
+}
+
+.slide-dots span {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin: 0 4px;
+  border-radius: 50%;
+  background: #555;
+  cursor: pointer;
+}
+
+.slide-dots span.active {
+  background: var(--red);
+}
     * {
       margin: 0;
       padding: 0;
@@ -603,11 +649,86 @@
     </div>
   </section>
 
+    <!-- Galeri Slideshow -->
+  <section style="background:var(--dark); padding:60px 20px; border-top:1px solid #333;">
+    <div class="container">
+      <h2 class="section-title">Galeri Aktiviti</h2>
+      <p style="text-align:center; color:var(--light); margin-bottom:28px;">
+        Sebahagian gambar aktiviti. Koleksi penuh di Google Drive & Telegram.
+      </p>
+
+      <div class="slideshow" id="slideshow">
+        <img class="active" src="https://drive.google.com/uc?export=view&id=1egOO95pv4eX1girutU-tqt9oye9r2ADH" alt="Galeri 1">
+        <img src="https://drive.google.com/uc?export=view&id=1z9PuA8i1tvYoPAj0bjMG6Y6M3MdN9J2n" alt="Galeri 2">
+        <img src="https://drive.google.com/uc?export=view&id=1nhhCx3S6agYpT4dtP68vB-5dS1F1ezHJ" alt="Galeri 3">
+        <img src="https://drive.google.com/uc?export=view&id=1NijLNp6_w5iXwRm2TJb1Ph70jJjoZ4Lj" alt="Galeri 4">
+        <img src="https://drive.google.com/uc?export=view&id=1m5VmCy-8HUBUrms-hhdsA5hIjBtFJCaf" alt="Galeri 5">
+        <img src="https://drive.google.com/uc?export=view&id=10KlaV_3Cgwp_h9ZuQm2UUYg1N1Nn3b-X" alt="Galeri 6">
+        <img src="https://drive.google.com/uc?export=view&id=1rEZUF0oQfVtcpybqBe0NqkR47bwXELiG" alt="Galeri 7">
+        <img src="https://drive.google.com/uc?export=view&id=1v4lFNUttWemvKs9bzjWb2TWC0Sy_F8jY" alt="Galeri 8">
+        <img src="https://drive.google.com/uc?export=view&id=1Yb3GHnhv5QAxKulGJCdIZRi4V5iN610-" alt="Galeri 9">
+        <img src="https://drive.google.com/uc?export=view&id=1oo3L0ZYOjdQ4JnP9gZwb4GNnOV0Ot87d" alt="Galeri 10">
+      </div>
+
+      <div class="slide-dots" id="slideDots"></div>
+
+      <div style="text-align:center; margin-top:30px; display:flex; flex-wrap:wrap; gap:12px; justify-content:center;">
+        <a href="https://drive.google.com/drive/folders/1FuCopB0qU9Zgw_FKYFYOfIVQDwI9EGRc?usp=sharing"
+           target="_blank" rel="noopener"
+           style="display:inline-block; background:var(--red); color:white; padding:14px 26px;
+                  border-radius:10px; font-weight:700; text-decoration:none;">
+          Lihat Semua di Google Drive
+        </a>
+        <a href="https://t.me/PakuaSelangor" target="_blank" rel="noopener"
+           style="display:inline-block; background:#0088cc; color:white; padding:14px 26px;
+                  border-radius:10px; font-weight:700; text-decoration:none;">
+          Channel Telegram
+        </a>
+      </div>
+    </div>
+  </section>
+
   <!-- Footer -->
   <footer>
     <p>© 2026 Pertubuhan Aktivis Keusahawanan (PAK) • Pakua Malaysia Selangor</p>
     <p style="margin-top:6px;font-size:0.85rem;">Satu Hati, Satu Jiwa, Demi Malaysia Tercinta</p>
   </footer>
 
+<script>
+  (function () {
+    const slides = document.querySelectorAll('#slideshow img');
+    const dotsBox = document.getElementById('slideDots');
+    let index = 0;
+
+    // Buat dots
+    slides.forEach((_, i) => {
+      const dot = document.createElement('span');
+      if (i === 0) dot.classList.add('active');
+      dot.addEventListener('click', () => {
+        index = i;
+        showSlide();
+      });
+      dotsBox.appendChild(dot);
+    });
+
+    const dots = dotsBox.querySelectorAll('span');
+
+    function showSlide() {
+      slides.forEach((img, i) => {
+        img.classList.toggle('active', i === index);
+      });
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === index);
+      });
+    }
+
+    // Auto setiap 2 saat, ulang dari awal
+    setInterval(() => {
+      index = (index + 1) % slides.length;
+      showSlide();
+    }, 2000);
+  })();
+</script>
+  
 </body>
 </html>
