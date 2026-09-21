@@ -3,310 +3,468 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kewangan | PAKUA Selangor & PAK</title>
+  <title>Kewangan | PAK</title>
   <meta name="robots" content="noindex, nofollow">
   <link rel="icon" type="image/png" href="https://i.ibb.co/DD7QKDFV/2-D42-C2-F9-9-A7-A-4921-8-E6-E-CA17-A6-A873-E0.jpg">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --black: #0d0d0d;
-      --dark: #1a1a1a;
-      --red: #c41e3a;
-      --green: #2e7d32;
-      --white: #f5f5f5;
-      --light: #e0e0e0;
-      --gold: #d4af37;
+      --black: #0d0d0d; --dark: #1a1a1a; --red: #c41e3a;
+      --green: #2e7d32; --white: #f5f5f5; --light: #e0e0e0; --gold: #d4af37;
     }
     body {
       font-family: 'Segoe UI', system-ui, sans-serif;
-      background: var(--black);
-      color: var(--white);
-      line-height: 1.5;
-      min-height: 100vh;
+      background: #2a2a2a; color: var(--white); line-height: 1.45; min-height: 100vh;
     }
     header {
-      background: var(--dark);
-      border-bottom: 3px solid var(--red);
-      padding: 14px 18px;
-      position: sticky;
-      top: 0;
-      z-index: 50;
+      background: var(--dark); border-bottom: 3px solid var(--red);
+      padding: 12px 16px; position: sticky; top: 0; z-index: 50;
     }
     .nav-inner {
-      max-width: 900px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      max-width: 1200px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
     }
-    .nav-inner a {
-      color: var(--white);
-      text-decoration: none;
-      font-weight: 600;
+    .nav-inner a { color: #fff; text-decoration: none; font-weight: 600; }
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 16px 12px 40px; }
+
+    .lock-box {
+      max-width: 380px; margin: 80px auto; background: var(--dark);
+      border: 1px solid #444; border-radius: 14px; padding: 28px 22px; text-align: center;
     }
-    .nav-inner a:hover { color: var(--red); }
-    .wrap {
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 24px 16px 50px;
+    .lock-box input {
+      width: 100%; padding: 12px; margin: 14px 0; border-radius: 8px;
+      border: 1px solid #555; background: #111; color: #fff; font-size: 1.1rem; text-align: center;
     }
-    h1 {
-      text-align: center;
-      font-size: 1.6rem;
-      margin-bottom: 6px;
+    .lock-box button {
+      width: 100%; padding: 12px; border: none; border-radius: 8px;
+      background: var(--red); color: #fff; font-weight: 700; cursor: pointer;
     }
-    .sub {
-      text-align: center;
-      color: var(--light);
-      margin-bottom: 24px;
-      font-size: 0.95rem;
+
+    .dash-title {
+      display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+      gap: 12px; margin-bottom: 16px;
     }
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-bottom: 28px;
+    .dash-title h1 { font-size: 1.35rem; color: #c9b6ff; }
+    .filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .filters select, .filters button {
+      padding: 8px 12px; border-radius: 8px; border: 1px solid #555;
+      background: #222; color: #fff; font-size: 0.9rem;
     }
-    .card {
-      background: var(--dark);
-      border: 1px solid #333;
-      border-radius: 12px;
-      padding: 16px 12px;
-      text-align: center;
+    .filters button { background: var(--red); border-color: var(--red); cursor: pointer; font-weight: 600; }
+
+    .kpi {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px; margin-bottom: 16px;
     }
-    .card .label { font-size: 0.8rem; color: #aaa; margin-bottom: 6px; }
-    .card .value { font-size: 1.15rem; font-weight: 700; }
-    .card.masuk .value { color: #4caf50; }
-    .card.keluar .value { color: var(--red); }
-    .card.baki .value { color: var(--gold); }
-    .panel {
-      background: var(--dark);
-      border: 1px solid #333;
-      border-radius: 14px;
-      padding: 22px 18px;
+    .kpi .card {
+      background: #fff; color: #222; border-radius: 12px; padding: 14px 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     }
-    .panel h2 {
-      font-size: 1.2rem;
-      margin-bottom: 16px;
-      text-align: center;
+    .kpi .card .lbl { font-size: 0.8rem; color: #666; }
+    .kpi .card .val { font-size: 1.4rem; font-weight: 800; margin-top: 4px; }
+    .kpi .masuk .val { color: #2e7d32; }
+    .kpi .keluar .val { color: #c41e3a; }
+    .kpi .baki .val { color: #6a1b9a; }
+
+    .grid2 {
+      display: grid; grid-template-columns: 1.2fr 1fr; gap: 12px; margin-bottom: 16px;
     }
-    label {
-      display: block;
-      font-size: 0.9rem;
-      margin: 12px 0 6px;
-      color: var(--light);
+    @media (max-width: 800px) { .grid2 { grid-template-columns: 1fr; } }
+
+    .box {
+      background: #fff; color: #222; border-radius: 12px; padding: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     }
+    .box h3 { font-size: 0.95rem; margin-bottom: 10px; color: #555; }
+
+    .bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 0.85rem; }
+    .bar-row .name { width: 110px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .bar-track { flex: 1; height: 14px; background: #eee; border-radius: 6px; overflow: hidden; }
+    .bar-fill { height: 100%; background: linear-gradient(90deg, #ff7043, #c41e3a); }
+    .bar-row .amt { width: 70px; text-align: right; font-weight: 600; }
+
+    .pie-legend { font-size: 0.85rem; }
+    .pie-legend div { margin: 4px 0; }
+
+    table {
+      width: 100%; border-collapse: collapse; font-size: 0.85rem; background: #fff; color: #222;
+      border-radius: 12px; overflow: hidden;
+    }
+    th, td { padding: 8px 10px; border-bottom: 1px solid #eee; text-align: left; }
+    th { background: #f3e5f5; color: #4a148c; }
+    tr:hover { background: #fafafa; }
+    .thumb {
+      width: 40px; height: 40px; object-fit: cover; border-radius: 6px; cursor: pointer;
+      border: 1px solid #ddd;
+    }
+    .badge-in { color: #2e7d32; font-weight: 700; }
+    .badge-out { color: #c41e3a; font-weight: 700; }
+
+    .form-panel {
+      background: var(--dark); border: 1px solid #444; border-radius: 14px;
+      padding: 18px; margin-top: 20px;
+    }
+    .form-panel h2 { text-align: center; margin-bottom: 12px; font-size: 1.15rem; }
+    label { display: block; font-size: 0.88rem; margin: 10px 0 5px; color: var(--light); }
     input, select, textarea {
-      width: 100%;
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid #444;
-      background: #111;
-      color: var(--white);
-      font-size: 1rem;
+      width: 100%; padding: 11px; border-radius: 8px; border: 1px solid #555;
+      background: #111; color: #fff; font-size: 0.95rem;
     }
-    textarea { resize: vertical; min-height: 70px; }
-    small { display: block; color: #888; font-size: 0.8rem; margin-top: 4px; }
+    textarea { min-height: 64px; resize: vertical; }
+    small { color: #888; font-size: 0.78rem; }
+    .pass-row { display: flex; gap: 10px; align-items: center; }
+    .pass-row input { flex: 1; }
     .btn {
-      display: inline-block;
-      width: 100%;
-      margin-top: 18px;
-      padding: 14px;
-      border: none;
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: 1rem;
-      cursor: pointer;
-      color: white;
+      padding: 12px 16px; border: none; border-radius: 8px; font-weight: 700;
+      cursor: pointer; color: #fff; background: var(--red);
     }
-    .btn-save { background: var(--red); }
-    .btn-print {
-      background: #333;
-      border: 1px solid #555;
-      margin-top: 10px;
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+    .btn-sec { background: #444; }
+    #msg { text-align: center; margin-top: 12px; min-height: 22px; }
+    .preview { max-width: 140px; margin-top: 8px; border-radius: 8px; display: none; }
+
+    .lightbox {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+      z-index: 100; align-items: center; justify-content: center; padding: 20px;
     }
-    .btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-    #msg {
-      text-align: center;
-      margin-top: 14px;
-      min-height: 24px;
-      font-size: 0.95rem;
-    }
-    .preview {
-      margin-top: 10px;
-      max-width: 180px;
-      border-radius: 8px;
-      display: none;
-      border: 1px solid #444;
-    }
-    .pass-row {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-    .pass-row input {
-      flex: 1;
-    }
-    .pass-row .btn-save {
-      width: auto;
-      margin-top: 0;
-      min-width: 140px;
-    }
-    .actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 12px;
-    }
-    .actions .btn { width: auto; flex: 1; margin-top: 0; }
-    @media (max-width: 600px) {
-      .cards { grid-template-columns: 1fr; }
-      .pass-row {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .pass-row .btn-save {
-        width: 100%;
-      }
-    }
-    @media print {
-      header, .no-print { display: none !important; }
-      body { background: white; color: black; }
-      .panel { border: 1px solid #ccc; }
-    }
+    .lightbox.open { display: flex; }
+    .lightbox img { max-width: 95vw; max-height: 90vh; border-radius: 10px; }
+
+    .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
-  <header class="no-print">
-    <div class="nav-inner">
-      <a href="/">← Laman Utama</a>
-      <a href="/pak/">Mini App</a>
-    </div>
-  </header>
+<header>
+  <div class="nav-inner">
+    <a href="/">← Laman Utama</a>
+    <span style="font-weight:700;color:#c9b6ff;">PAK Kewangan</span>
+    <a href="#" id="btnLogout" class="hidden">Log keluar</a>
+  </div>
+</header>
 
-  <div class="wrap">
-    <h1>Dashboard Kewangan</h1>
-    <p class="sub">Pertubuhan Aktivis Keusahawanan (PAK)</p>
+<!-- LOCK SCREEN -->
+<div id="lockScreen" class="lock-box">
+  <div style="font-size:2rem;margin-bottom:8px;">🔒</div>
+  <h2>Dashboard Kewangan</h2>
+  <p style="color:#aaa;margin-top:6px;font-size:0.9rem;">Masukkan password admin</p>
+  <input type="password" id="lockPass" placeholder="Password" autocomplete="off">
+  <button type="button" id="btnUnlock">Buka Dashboard</button>
+  <p id="lockMsg" style="margin-top:10px;color:#f88;font-size:0.9rem;"></p>
+</div>
 
-    <div class="cards no-print">
-      <div class="card masuk">
-        <div class="label">Duit Masuk</div>
-        <div class="value" id="sumMasuk">—</div>
-      </div>
-      <div class="card keluar">
-        <div class="label">Duit Keluar</div>
-        <div class="value" id="sumKeluar">—</div>
-      </div>
-      <div class="card baki">
-        <div class="label">Baki</div>
-        <div class="value" id="sumBaki">—</div>
-      </div>
-    </div>
+<!-- DASHBOARD -->
+<div id="app" class="wrap hidden">
 
-    <div class="panel">
-      <h2>Borang Rekod Kewangan</h2>
-
-      <form id="borangKewangan">
-        <label>Tarikh</label>
-        <input type="date" id="tarikh" required>
-
-        <label>Masa</label>
-        <input type="time" id="masa" required>
-
-        <label>Cara Bayar</label>
-        <select id="caraBayar" required>
-          <option value="">-- Pilih --</option>
-          <option value="Bank">Bank</option>
-          <option value="Tunai">Tunai</option>
-        </select>
-
-        <label>Kategori</label>
-        <select id="kategori" required>
-          <option value="">-- Pilih --</option>
-          <option>Yuran</option>
-          <option>Sumbangan</option>
-          <option>Tajaan</option>
-          <option>Geran</option>
-          <option>Jualan</option>
-          <option>Program</option>
-          <option>Makanan & Minuman</option>
-          <option>Pengangkutan</option>
-          <option>Sewa</option>
-          <option>Alat Tulis</option>
-          <option>Peralatan</option>
-          <option>Utiliti</option>
-          <option>Elaun</option>
-          <option>Runcit</option>
-          <option>Lain-lain</option>
-        </select>
-
-        <label>Keterangan</label>
-        <textarea id="keterangan" required placeholder="Contoh: Bayaran yuran ahli / Belanja program"></textarea>
-
-        <label>Jumlah (RM)</label>
-        <input type="number" id="jumlah" step="0.01" min="0" required>
-
-        <label>Pembayar / Penerima</label>
-        <input type="text" id="pembayarPenerima" required>
-
-        <label>Jenis Transaksi</label>
-        <select id="jenis" required>
-          <option value="">-- Pilih --</option>
-          <option value="Duit Masuk">Duit Masuk</option>
-          <option value="Duit Keluar">Duit Keluar</option>
-        </select>
-
-        <label>Nombor Resit</label>
-        <input type="text" id="noResit" placeholder="Contoh: R-001">
-
-        <label>Bukti Transaksi (gambar resit)</label>
-        <input type="file" id="buktiFile" accept="image/*" class="no-print">
-        <small>Gambar akan diupload ke ImgBB automatik</small>
-        <img id="buktiPreview" class="preview" alt="Preview resit">
-        <input type="hidden" id="buktiUrl">
-
-        <label>Penama Key-in</label>
-        <input type="text" id="penama" required placeholder="Nama anda">
-
-        <label>Password Admin</label>
-        <div class="pass-row">
-          <input type="password" id="password" placeholder="Masukkan password" autocomplete="off">
-          <button type="submit" class="btn btn-save" id="btnSimpan" disabled>
-            Simpan Rekod
-          </button>
-        </div>
-        <small>Masukkan password betul untuk aktifkan butang simpan</small>
-      </form>
-
-      <p id="msg"></p>
-
-      <div class="actions no-print">
-        <button type="button" class="btn btn-print" onclick="window.print()">🖨️ Print</button>
-        <button type="button" class="btn btn-print" onclick="sharePage()">📤 Share</button>
-      </div>
+  <div class="dash-title">
+    <h1>📊 Dashboard Kewangan PAK</h1>
+    <div class="filters">
+      <select id="filterTahun"></select>
+      <select id="filterBulan">
+        <option value="all">Semua Bulan</option>
+        <option value="01">Jan</option><option value="02">Feb</option>
+        <option value="03">Mac</option><option value="04">Apr</option>
+        <option value="05">Mei</option><option value="06">Jun</option>
+        <option value="07">Jul</option><option value="08">Ogo</option>
+        <option value="09">Sep</option><option value="10">Okt</option>
+        <option value="11">Nov</option><option value="12">Dis</option>
+      </select>
+      <select id="filterJenis">
+        <option value="all">Semua Jenis</option>
+        <option value="Duit Masuk">Duit Masuk</option>
+        <option value="Duit Keluar">Duit Keluar</option>
+      </select>
+      <button type="button" id="btnPdf">⬇️ PDF Laporan</button>
     </div>
   </div>
+
+  <div class="kpi">
+    <div class="card masuk"><div class="lbl">DUIT MASUK</div><div class="val" id="kpiMasuk">RM 0</div></div>
+    <div class="card keluar"><div class="lbl">DUIT KELUAR</div><div class="val" id="kpiKeluar">RM 0</div></div>
+    <div class="card baki"><div class="lbl">BAKI</div><div class="val" id="kpiBaki">RM 0</div></div>
+    <div class="card"><div class="lbl">BIL. TRANSAKSI</div><div class="val" id="kpiCount" style="color:#1565c0">0</div></div>
+  </div>
+
+  <div class="grid2">
+    <div class="box">
+      <h3>📁 Mengikut Kategori</h3>
+      <div id="catBars"></div>
+    </div>
+    <div class="box">
+      <h3>💳 Cara Bayar</h3>
+      <div id="payLegend" class="pie-legend"></div>
+      <h3 style="margin-top:16px;">📌 Top Kategori</h3>
+      <div id="topCat" style="font-size:0.9rem;font-weight:700;color:#6a1b9a;"></div>
+    </div>
+  </div>
+
+  <div class="box" style="margin-bottom:16px; overflow-x:auto;">
+    <h3>📋 Senarai Transaksi (<span id="listCount">0</span>)</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Tarikh</th>
+          <th>Jenis</th>
+          <th>Kategori</th>
+          <th>Keterangan</th>
+          <th>Jumlah</th>
+          <th>Bayar</th>
+          <th>Resit</th>
+        </tr>
+      </thead>
+      <tbody id="txBody"></tbody>
+    </table>
+  </div>
+
+  <!-- BORANG -->
+  <div class="form-panel">
+    <h2>Borang Rekod Baharu</h2>
+    <form id="borangKewangan">
+      <label>Tarikh</label>
+      <input type="date" id="tarikh" required>
+      <label>Masa</label>
+      <input type="time" id="masa" required>
+      <label>Cara Bayar</label>
+      <select id="caraBayar" required>
+        <option value="">-- Pilih --</option>
+        <option>Bank</option><option>Tunai</option>
+      </select>
+      <label>Kategori</label>
+      <select id="kategori" required>
+        <option value="">-- Pilih --</option>
+        <option>Yuran</option><option>Sumbangan</option><option>Tajaan</option>
+        <option>Geran</option><option>Jualan</option><option>Program</option>
+        <option>Makanan & Minuman</option><option>Pengangkutan</option><option>Sewa</option>
+        <option>Alat Tulis</option><option>Peralatan</option><option>Utiliti</option>
+        <option>Elaun</option><option>Runcit</option><option>Lain-lain</option>
+      </select>
+      <label>Keterangan</label>
+      <textarea id="keterangan" required></textarea>
+      <label>Jumlah (RM)</label>
+      <input type="number" id="jumlah" step="0.01" min="0" required>
+      <label>Pembayar / Penerima</label>
+      <input type="text" id="pembayarPenerima" required>
+      <label>Jenis Transaksi</label>
+      <select id="jenis" required>
+        <option value="">-- Pilih --</option>
+        <option>Duit Masuk</option><option>Duit Keluar</option>
+      </select>
+      <label>Nombor Resit</label>
+      <input type="text" id="noResit">
+      <label>Bukti Transaksi</label>
+      <input type="file" id="buktiFile" accept="image/*">
+      <small>Upload automatik ke ImgBB</small>
+      <img id="buktiPreview" class="preview" alt="">
+      <input type="hidden" id="buktiUrl">
+      <label>Penama Key-in</label>
+      <input type="text" id="penama" required>
+      <label>Password (untuk simpan)</label>
+      <div class="pass-row">
+        <input type="password" id="password" placeholder="Password" autocomplete="off">
+        <button type="submit" class="btn" id="btnSimpan" disabled>Simpan Rekod</button>
+      </div>
+    </form>
+    <p id="msg"></p>
+  </div>
+</div>
+
+<div class="lightbox" id="lightbox"><img id="lbImg" alt="Resit"></div>
 
 <script>
   const API_URL = "https://script.google.com/macros/s/AKfycbxpvotU6UMQSpmxcdKVTQs4Eoi-rDZf-sXLWOfQRsf0ntY8kNnwQUHz9SbpsDhjG03n/exec";
   const IMGBB_KEY = "5dde53aa49e23970db10b1af62fff130";
   const ADMIN_PASSWORD = "3281";
 
-  document.getElementById("tarikh").value = new Date().toISOString().slice(0, 10);
-  document.getElementById("masa").value = new Date().toTimeString().slice(0, 5);
+  let allData = [];
 
+  // ----- LOCK -----
+  document.getElementById("btnUnlock").onclick = () => {
+    if (document.getElementById("lockPass").value === ADMIN_PASSWORD) {
+      sessionStorage.setItem("pak_kewangan_ok", "1");
+      bukaApp();
+    } else {
+      document.getElementById("lockMsg").textContent = "Password salah";
+    }
+  };
+  document.getElementById("lockPass").addEventListener("keydown", e => {
+    if (e.key === "Enter") document.getElementById("btnUnlock").click();
+  });
+  document.getElementById("btnLogout").onclick = (e) => {
+    e.preventDefault();
+    sessionStorage.removeItem("pak_kewangan_ok");
+    location.reload();
+  };
+
+  function bukaApp() {
+    document.getElementById("lockScreen").classList.add("hidden");
+    document.getElementById("app").classList.remove("hidden");
+    document.getElementById("btnLogout").classList.remove("hidden");
+    document.getElementById("tarikh").value = new Date().toISOString().slice(0, 10);
+    document.getElementById("masa").value = new Date().toTimeString().slice(0, 5);
+    loadData();
+  }
+  if (sessionStorage.getItem("pak_kewangan_ok") === "1") bukaApp();
+
+  // ----- LOAD DATA -----
+  async function loadData() {
+    try {
+      const res = await fetch(API_URL + "?t=" + Date.now());
+      const json = await res.json();
+      if (!json.success) throw new Error(json.error || "Gagal");
+      allData = json.data || [];
+      isiTahun();
+      render();
+    } catch (e) {
+      document.getElementById("msg").textContent = "⚠️ Gagal muat data. Deploy semula Apps Script (New version).";
+      console.error(e);
+    }
+  }
+
+  function isiTahun() {
+    const years = new Set();
+    allData.forEach(r => {
+      if (r.tarikh && r.tarikh.length >= 4) years.add(r.tarikh.substring(0, 4));
+    });
+    const sel = document.getElementById("filterTahun");
+    const cur = new Date().getFullYear().toString();
+    sel.innerHTML = '<option value="all">Semua Tahun</option>';
+    [...years].sort().reverse().forEach(y => {
+      sel.innerHTML += `<option value="${y}" ${y === cur ? "selected" : ""}>${y}</option>`;
+    });
+    if (![...years].includes(cur)) {
+      sel.innerHTML += `<option value="${cur}" selected>${cur}</option>`;
+    }
+  }
+
+  function getFiltered() {
+    const y = document.getElementById("filterTahun").value;
+    const m = document.getElementById("filterBulan").value;
+    const j = document.getElementById("filterJenis").value;
+    return allData.filter(r => {
+      if (!r.tarikh) return false;
+      if (y !== "all" && r.tarikh.substring(0, 4) !== y) return false;
+      if (m !== "all" && r.tarikh.substring(5, 7) !== m) return false;
+      if (j !== "all" && r.jenis !== j) return false;
+      return true;
+    });
+  }
+
+  function rm(n) {
+    return "RM " + (Number(n) || 0).toLocaleString("ms-MY", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  function render() {
+    const rows = getFiltered();
+    let masuk = 0, keluar = 0;
+    const catMap = {}, payMap = {};
+
+    rows.forEach(r => {
+      const amt = Number(r.jumlah) || 0;
+      if (r.jenis === "Duit Masuk") masuk += amt;
+      else if (r.jenis === "Duit Keluar") keluar += amt;
+      catMap[r.kategori || "Lain-lain"] = (catMap[r.kategori || "Lain-lain"] || 0) + amt;
+      payMap[r.caraBayar || "-"] = (payMap[r.caraBayar || "-"] || 0) + amt;
+    });
+
+    document.getElementById("kpiMasuk").textContent = rm(masuk);
+    document.getElementById("kpiKeluar").textContent = rm(keluar);
+    document.getElementById("kpiBaki").textContent = rm(masuk - keluar);
+    document.getElementById("kpiCount").textContent = rows.length;
+    document.getElementById("listCount").textContent = rows.length;
+
+    // Category bars
+    const maxCat = Math.max(...Object.values(catMap), 1);
+    const catSorted = Object.entries(catMap).sort((a, b) => b[1] - a[1]);
+    document.getElementById("catBars").innerHTML = catSorted.slice(0, 8).map(([name, val]) => `
+      <div class="bar-row">
+        <div class="name" title="${name}">${name}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${(val / maxCat) * 100}%"></div></div>
+        <div class="amt">${val.toLocaleString("ms-MY", { maximumFractionDigits: 0 })}</div>
+      </div>
+    `).join("") || "<div style='color:#888'>Tiada data</div>";
+
+    document.getElementById("topCat").textContent = catSorted[0]
+      ? catSorted[0][0] + " — " + rm(catSorted[0][1]) : "—";
+
+    const payTotal = Object.values(payMap).reduce((a, b) => a + b, 0) || 1;
+    document.getElementById("payLegend").innerHTML = Object.entries(payMap).map(([k, v]) =>
+      `<div>▪ <strong>${k}</strong>: ${rm(v)} (${Math.round(v / payTotal * 100)}%)</div>`
+    ).join("") || "—";
+
+    // Table
+    const tbody = document.getElementById("txBody");
+    tbody.innerHTML = rows.slice().reverse().map(r => `
+      <tr>
+        <td>${r.tarikh}${r.masa ? "<br><small>" + r.masa + "</small>" : ""}</td>
+        <td class="${r.jenis === "Duit Masuk" ? "badge-in" : "badge-out"}">${r.jenis || "-"}</td>
+        <td>${r.kategori || "-"}</td>
+        <td>${r.keterangan || "-"}</td>
+        <td><strong>${rm(r.jumlah)}</strong></td>
+        <td>${r.caraBayar || "-"}</td>
+        <td>${r.buktiUrl ? `<img class="thumb" src="${r.buktiUrl}" data-full="${r.buktiUrl}" alt="resit">` : "-"}</td>
+      </tr>
+    `).join("") || `<tr><td colspan="7" style="text-align:center;color:#888">Tiada rekod</td></tr>`;
+  }
+
+  ["filterTahun", "filterBulan", "filterJenis"].forEach(id => {
+    document.getElementById(id).addEventListener("change", render);
+  });
+
+  // Lightbox resit
+  document.getElementById("txBody").addEventListener("click", e => {
+    if (e.target.classList.contains("thumb")) {
+      document.getElementById("lbImg").src = e.target.dataset.full;
+      document.getElementById("lightbox").classList.add("open");
+    }
+  });
+  document.getElementById("lightbox").onclick = () => {
+    document.getElementById("lightbox").classList.remove("open");
+  };
+
+  // PDF
+  document.getElementById("btnPdf").onclick = () => {
+    const rows = getFiltered();
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const y = document.getElementById("filterTahun").value;
+    const m = document.getElementById("filterBulan").value;
+    const title = "Laporan Kewangan PAK — " +
+      (y === "all" ? "Semua Tahun" : y) +
+      (m === "all" ? "" : " / Bulan " + m);
+
+    doc.setFontSize(14);
+    doc.text(title, 14, 16);
+    doc.setFontSize(10);
+    doc.text("Dijana: " + new Date().toLocaleString("ms-MY"), 14, 22);
+
+    let masuk = 0, keluar = 0;
+    rows.forEach(r => {
+      if (r.jenis === "Duit Masuk") masuk += Number(r.jumlah) || 0;
+      if (r.jenis === "Duit Keluar") keluar += Number(r.jumlah) || 0;
+    });
+    doc.text("Masuk: RM " + masuk.toFixed(2) + "  |  Keluar: RM " + keluar.toFixed(2) + "  |  Baki: RM " + (masuk - keluar).toFixed(2), 14, 28);
+
+    doc.autoTable({
+      startY: 34,
+      head: [["Tarikh", "Jenis", "Kategori", "Keterangan", "Jumlah", "Bayar"]],
+      body: rows.map(r => [
+        r.tarikh, r.jenis, r.kategori, (r.keterangan || "").substring(0, 40),
+        Number(r.jumlah).toFixed(2), r.caraBayar
+      ]),
+      styles: { fontSize: 8 },
+      headStyles: { fillColor: [196, 30, 58] }
+    });
+
+    doc.save("Laporan_Kewangan_PAK_" + (y === "all" ? "semua" : y) + (m !== "all" ? "_" + m : "") + ".pdf");
+  };
+
+  // Form password
   const passwordInput = document.getElementById("password");
   const btnSimpan = document.getElementById("btnSimpan");
-
   function semakPassword() {
-    if (passwordInput.value === ADMIN_PASSWORD) {
-      btnSimpan.disabled = false;
-    } else {
-      btnSimpan.disabled = true;
-    }
+    btnSimpan.disabled = passwordInput.value !== ADMIN_PASSWORD;
   }
   passwordInput.addEventListener("input", semakPassword);
 
@@ -314,53 +472,35 @@
     const file = this.files[0];
     const msg = document.getElementById("msg");
     const preview = document.getElementById("buktiPreview");
-    const buktiUrl = document.getElementById("buktiUrl");
-
-    buktiUrl.value = "";
+    document.getElementById("buktiUrl").value = "";
     preview.style.display = "none";
     if (!file) return;
-
     preview.src = URL.createObjectURL(file);
     preview.style.display = "block";
-
-    msg.textContent = "⏳ Memuat naik resit ke ImgBB...";
+    msg.textContent = "⏳ Upload resit...";
     btnSimpan.disabled = true;
-
     try {
-      const formData = new FormData();
-      formData.append("image", file);
-
-      const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`, {
-        method: "POST",
-        body: formData
-      });
+      const fd = new FormData();
+      fd.append("image", file);
+      const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`, { method: "POST", body: fd });
       const json = await res.json();
-
       if (json.success) {
-        buktiUrl.value = json.data.display_url || json.data.url;
-        msg.textContent = "✅ Resit berjaya dimuat naik";
-      } else {
-        msg.textContent = "❌ Gagal upload resit. Cuba lagi.";
-      }
-    } catch (e) {
-      msg.textContent = "❌ Ralat upload resit.";
-    }
-
+        document.getElementById("buktiUrl").value = json.data.display_url || json.data.url;
+        msg.textContent = "✅ Resit dimuat naik";
+      } else msg.textContent = "❌ Upload gagal";
+    } catch { msg.textContent = "❌ Ralat upload"; }
     semakPassword();
   });
 
   document.getElementById("borangKewangan").addEventListener("submit", async function (e) {
     e.preventDefault();
     const msg = document.getElementById("msg");
-
     if (passwordInput.value !== ADMIN_PASSWORD) {
-      msg.textContent = "❌ Password salah. Tidak boleh simpan.";
+      msg.textContent = "❌ Password salah";
       return;
     }
-
-    msg.textContent = "⏳ Menyimpan rekod...";
+    msg.textContent = "⏳ Menyimpan...";
     btnSimpan.disabled = true;
-
     const payload = {
       tarikh: document.getElementById("tarikh").value,
       masa: document.getElementById("masa").value,
@@ -374,7 +514,6 @@
       buktiUrl: document.getElementById("buktiUrl").value,
       penama: document.getElementById("penama").value
     };
-
     try {
       await fetch(API_URL, {
         method: "POST",
@@ -382,30 +521,20 @@
         headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: JSON.stringify(payload)
       });
-
-      msg.textContent = "✅ Rekod berjaya disimpan!";
-      document.getElementById("borangKewangan").reset();
+      msg.textContent = "✅ Rekod disimpan!";
+      this.reset();
       document.getElementById("buktiUrl").value = "";
       document.getElementById("buktiPreview").style.display = "none";
       document.getElementById("tarikh").value = new Date().toISOString().slice(0, 10);
       document.getElementById("masa").value = new Date().toTimeString().slice(0, 5);
       passwordInput.value = "";
       semakPassword();
-    } catch (err) {
-      msg.textContent = "❌ Gagal menyimpan. Semak sambungan.";
+      setTimeout(loadData, 1500);
+    } catch {
+      msg.textContent = "❌ Gagal simpan";
       semakPassword();
     }
   });
-
-  function sharePage() {
-    const url = window.location.href;
-    if (navigator.share) {
-      navigator.share({ title: "Kewangan PAK", url: url });
-    } else {
-      navigator.clipboard.writeText(url);
-      document.getElementById("msg").textContent = "🔗 Link disalin!";
-    }
-  }
 </script>
 </body>
 </html>
