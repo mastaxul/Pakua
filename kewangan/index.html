@@ -6,6 +6,7 @@
   <title>Kewangan | PAK</title>
   <meta name="robots" content="noindex, nofollow">
   <link rel="icon" type="image/png" href="https://i.ibb.co/DD7QKDFV/2-D42-C2-F9-9-A7-A-4921-8-E6-E-CA17-A6-A873-E0.jpg">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
   <style>
@@ -189,6 +190,18 @@
     <div class="card"><div class="lbl">BIL. TRANSAKSI</div><div class="val" id="kpiCount" style="color:#1565c0">0</div></div>
   </div>
 
+  <!-- GRAF -->
+  <div class="grid2">
+    <div class="box">
+      <h3>📊 Bar — Masuk vs Keluar</h3>
+      <canvas id="chartBar" height="220"></canvas>
+    </div>
+    <div class="box">
+      <h3>📈 Line — Tren Bulanan</h3>
+      <canvas id="chartLine" height="220"></canvas>
+    </div>
+  </div>
+
   <div class="box" style="overflow-x:auto;">
     <h3>📅 Ringkasan 12 Bulan (<span id="yearLabel">—</span>)</h3>
     <table>
@@ -286,9 +299,9 @@
         <option value="Disemak">Disemak</option>
         <option value="Diluluskan">Diluluskan</option>
       </select>
-      <label>Bukti Transaksi (pilihan — ImgBB sementara tidak stabil)</label>
+      <label>Bukti Transaksi (pilihan)</label>
       <input type="file" id="buktiFile" accept="image/*">
-      <small>Atau paste link gambar / Google Drive di bawah</small>
+      <small>Atau paste link gambar / Google Drive</small>
       <input type="url" id="buktiUrlManual" placeholder="https://... (link manual)">
       <img id="buktiPreview" class="preview" alt="">
       <input type="hidden" id="buktiUrl">
@@ -316,6 +329,8 @@
   ];
 
   let allData = [];
+  let chartBar = null;
+  let chartLine = null;
 
   document.getElementById("btnUnlock").onclick = () => {
     if (document.getElementById("lockPass").value === ADMIN_PASSWORD) {
@@ -386,7 +401,6 @@
       if (y !== "all" && r.tarikh.substring(0, 4) !== y) return false;
       if (m !== "all" && r.tarikh.substring(5, 7) !== m) return false;
       if (j !== "all" && r.jenis !== j) return false;
-
       if (q) {
         const haystack = [
           r.noRujukan, r.keterangan, r.kategori, r.pembayarPenerima,
@@ -400,6 +414,75 @@
 
   function rm(n) {
     return "RM " + (Number(n) || 0).toLocaleString("ms-MY", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  function renderCharts() {
+    const yFilter = document.getElementById("filterTahun").value;
+    const year = yFilter === "all" ? new Date().getFullYear().toString() : yFilter;
+    const labels = ["Jan","Feb","Mac","Apr","Mei","Jun","Jul","Ogo","Sep","Okt","Nov","Dis"];
+    const masukArr = Array(12).fill(0);
+    const keluarArr = Array(12).fill(0);
+
+    allData.forEach(r => {
+      if (!r.tarikh || r.tarikh.length < 7) return;
+      if (r.tarikh.substring(0, 4) !== year) return;
+      const mi = parseInt(r.tarikh.substring(5, 7), 10) - 1;
+      if (mi < 0 || mi > 11) return;
+      const amt = Number(r.jumlah) || 0;
+      if (r.jenis === "Duit Masuk") masukArr[mi] += amt;
+      if (r.jenis === "Duit Keluar") keluarArr[mi] += amt;
+    });
+
+    const commonOpts = {
+      responsive: true,
+      plugins: { legend: { position: "bottom" } },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { callback: v => "RM " + Number(v).toLocaleString("ms-MY") }
+        }
+      }
+    };
+
+    if (chartBar) chartBar.destroy();
+    chartBar = new Chart(document.getElementById("chartBar"), {
+      type: "bar",
+      data: {
+        labels,
+        datasets: [
+          { label: "Duit Masuk", data: masukArr, backgroundColor: "#2e7d32" },
+          { label: "Duit Keluar", data: keluarArr, backgroundColor: "#c41e3a" }
+        ]
+      },
+      options: commonOpts
+    });
+
+    if (chartLine) chartLine.destroy();
+    chartLine = new Chart(document.getElementById("chartLine"), {
+      type: "line",
+      data: {
+        labels,
+        datasets: [
+          {
+            label: "Duit Masuk",
+            data: masukArr,
+            borderColor: "#2e7d32",
+            backgroundColor: "rgba(46,125,50,0.15)",
+            fill: true,
+            tension: 0.3
+          },
+          {
+            label: "Duit Keluar",
+            data: keluarArr,
+            borderColor: "#c41e3a",
+            backgroundColor: "rgba(196,30,58,0.12)",
+            fill: true,
+            tension: 0.3
+          }
+        ]
+      },
+      options: commonOpts
+    });
   }
 
   function renderMonthly() {
@@ -509,6 +592,7 @@
     `).join("") || `<tr><td colspan="9" style="text-align:center;color:#888">Tiada rekod</td></tr>`;
 
     renderMonthly();
+    renderCharts();
   }
 
   ["filterTahun", "filterBulan", "filterJenis", "filterCari"].forEach(id => {
@@ -542,7 +626,6 @@
     doc.setFontSize(11);
     doc.text("Laporan Kewangan", 14, 20);
     doc.setTextColor(0, 0, 0);
-
     doc.setFontSize(10);
     doc.text("Tempoh: " + tempoh, 14, 38);
     doc.text("Dijana: " + new Date().toLocaleString("ms-MY"), 14, 44);
@@ -553,7 +636,6 @@
       if (r.jenis === "Duit Masuk") masuk += Number(r.jumlah) || 0;
       if (r.jenis === "Duit Keluar") keluar += Number(r.jumlah) || 0;
     });
-
     doc.setFontSize(11);
     doc.text("Jumlah Masuk: RM " + masuk.toFixed(2), 14, 60);
     doc.text("Jumlah Keluar: RM " + keluar.toFixed(2), 14, 66);
@@ -563,14 +645,9 @@
       startY: 78,
       head: [["Rujukan", "Tarikh", "Jenis", "Kategori", "Keterangan", "Jumlah", "Status", "Key-in"]],
       body: rows.map(r => [
-        r.noRujukan || "-",
-        r.tarikh,
-        r.jenis,
-        r.kategori,
-        (r.keterangan || "").substring(0, 30),
-        Number(r.jumlah).toFixed(2),
-        r.status || "Direkod",
-        r.penama || "-"
+        r.noRujukan || "-", r.tarikh, r.jenis, r.kategori,
+        (r.keterangan || "").substring(0, 30), Number(r.jumlah).toFixed(2),
+        r.status || "Direkod", r.penama || "-"
       ]),
       styles: { fontSize: 7 },
       headStyles: { fillColor: [196, 30, 58] }
@@ -650,7 +727,7 @@
         document.getElementById("buktiUrl").value = json.data.display_url || json.data.url;
         msg.textContent = "✅ Resit dimuat naik";
       } else {
-        msg.textContent = "❌ ImgBB gagal. Paste link manual di bawah.";
+        msg.textContent = "❌ ImgBB gagal. Paste link manual.";
       }
     } catch {
       msg.textContent = "❌ ImgBB tidak respons. Paste link manual.";
