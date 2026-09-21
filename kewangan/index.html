@@ -328,25 +328,23 @@
     "Julai", "Ogos", "September", "Oktober", "November", "Disember"
   ];
   const WARNA_KATEGORI = {
-    "Yuran": "#1976d2",
-    "Sumbangan": "#1565c0",
-    "Tajaan": "#6a1b9a",
-    "Geran": "#00838f",
-    "Jualan": "#ef6c00",
-    "Program": "#2e7d32",
-    "Makanan & Minuman": "#f9a825",
-    "Pengangkutan": "#5d4037",
-    "Sewa": "#c41e3a",
-    "Alat Tulis": "#455a64",
-    "Peralatan": "#0277bd",
-    "Utiliti": "#00897b",
-    "Elaun": "#7b1fa2",
-    "Runcit": "#f57c00",
-    "Lain-lain": "#757575"
+    "Yuran": "#1976d2", "Sumbangan": "#1565c0", "Tajaan": "#6a1b9a", "Geran": "#00838f",
+    "Jualan": "#ef6c00", "Program": "#2e7d32", "Makanan & Minuman": "#f9a825",
+    "Pengangkutan": "#5d4037", "Sewa": "#c41e3a", "Alat Tulis": "#455a64",
+    "Peralatan": "#0277bd", "Utiliti": "#00897b", "Elaun": "#7b1fa2",
+    "Runcit": "#f57c00", "Lain-lain": "#757575"
   };
 
   function warnaKategori(nama) {
     return WARNA_KATEGORI[nama] || "#9e9e9e";
+  }
+
+  function sortByTarikhMasa(rows) {
+    return rows.slice().sort((a, b) => {
+      const da = (a.tarikh || "") + " " + (a.masa || "");
+      const db = (b.tarikh || "") + " " + (b.masa || "");
+      return da.localeCompare(db);
+    });
   }
 
   let allData = [];
@@ -507,26 +505,14 @@
         labels,
         datasets: [
           {
-            label: "Duit Masuk",
-            data: masukArr,
-            borderColor: "#2e7d32",
-            backgroundColor: "rgba(46, 125, 50, 0.25)",
-            pointBackgroundColor: "#2e7d32",
-            pointBorderColor: "#2e7d32",
-            borderWidth: 3,
-            fill: true,
-            tension: 0.3
+            label: "Duit Masuk", data: masukArr, borderColor: "#2e7d32",
+            backgroundColor: "rgba(46,125,50,0.25)", pointBackgroundColor: "#2e7d32",
+            pointBorderColor: "#2e7d32", borderWidth: 3, fill: true, tension: 0.3
           },
           {
-            label: "Duit Keluar",
-            data: keluarArr,
-            borderColor: "#c41e3a",
-            backgroundColor: "rgba(196, 30, 58, 0.20)",
-            pointBackgroundColor: "#c41e3a",
-            pointBorderColor: "#c41e3a",
-            borderWidth: 3,
-            fill: true,
-            tension: 0.3
+            label: "Duit Keluar", data: keluarArr, borderColor: "#c41e3a",
+            backgroundColor: "rgba(196,30,58,0.20)", pointBackgroundColor: "#c41e3a",
+            pointBorderColor: "#c41e3a", borderWidth: 3, fill: true, tension: 0.3
           }
         ]
       },
@@ -628,7 +614,8 @@
       `<div>▪ <strong>${k}</strong>: ${rm(v)} (${Math.round(v / payTotal * 100)}%)</div>`
     ).join("") || "—";
 
-    document.getElementById("txBody").innerHTML = rows.slice().reverse().map(r => `
+    const sortedDesc = sortByTarikhMasa(rows).reverse();
+    document.getElementById("txBody").innerHTML = sortedDesc.map(r => `
       <tr>
         <td><small>${r.noRujukan || "-"}</small></td>
         <td>${r.tarikh}${r.masa ? "<br><small>" + r.masa + "</small>" : ""}</td>
@@ -662,7 +649,7 @@
   };
 
   document.getElementById("btnPdf").onclick = () => {
-    const rows = getFiltered();
+    const rows = sortByTarikhMasa(getFiltered());
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
     const y = document.getElementById("filterTahun").value;
@@ -681,6 +668,7 @@
     doc.text("Tempoh: " + tempoh, 14, 38);
     doc.text("Dijana: " + new Date().toLocaleString("ms-MY"), 14, 44);
     doc.text("No. Pendaftaran: PPM-014-10-23022026", 14, 50);
+    doc.text("Susunan: ikut tarikh & masa", 14, 56);
 
     let masuk = 0, keluar = 0;
     rows.forEach(r => {
@@ -688,12 +676,12 @@
       if (r.jenis === "Duit Keluar") keluar += Number(r.jumlah) || 0;
     });
     doc.setFontSize(11);
-    doc.text("Jumlah Masuk: RM " + masuk.toFixed(2), 14, 60);
-    doc.text("Jumlah Keluar: RM " + keluar.toFixed(2), 14, 66);
-    doc.text("Baki: RM " + (masuk - keluar).toFixed(2), 14, 72);
+    doc.text("Jumlah Masuk: RM " + masuk.toFixed(2), 14, 66);
+    doc.text("Jumlah Keluar: RM " + keluar.toFixed(2), 14, 72);
+    doc.text("Baki: RM " + (masuk - keluar).toFixed(2), 14, 78);
 
     doc.autoTable({
-      startY: 78,
+      startY: 84,
       head: [["Rujukan", "Tarikh", "Jenis", "Kategori", "Keterangan", "Jumlah", "Status", "Key-in"]],
       body: rows.map(r => [
         r.noRujukan || "-", r.tarikh, r.jenis, r.kategori,
@@ -717,12 +705,9 @@
   };
 
   document.getElementById("btnPdfResit").onclick = async () => {
-    let rows = getFiltered().filter(r => r.buktiUrl && String(r.buktiUrl).trim() !== "");
-    rows = rows.slice().sort((a, b) => {
-      const da = (a.tarikh || "") + " " + (a.masa || "");
-      const db = (b.tarikh || "") + " " + (b.masa || "");
-      return da.localeCompare(db);
-    });
+    let rows = sortByTarikhMasa(
+      getFiltered().filter(r => r.buktiUrl && String(r.buktiUrl).trim() !== "")
+    );
 
     if (rows.length === 0) {
       alert("Tiada resit dalam tapisan semasa.");
@@ -741,7 +726,7 @@
     doc.setFontSize(14);
     doc.text("PAK — Kompilasi Resit", 14, 12);
     doc.setFontSize(10);
-    doc.text("Tempoh: " + tempoh + "  |  Jumlah resit: " + rows.length + "  |  Susunan: tarikh & masa", 14, 20);
+    doc.text("Tempoh: " + tempoh + "  |  Jumlah: " + rows.length + "  |  Susunan: tarikh & masa", 14, 20);
     doc.setTextColor(0, 0, 0);
 
     let y = 34;
@@ -769,32 +754,39 @@
       doc.text(ket, 14, y);
       y += ket.length * 5 + 2;
       doc.text("Key-in: " + (r.penama || "-") + "  |  Status: " + (r.status || "-"), 14, y);
-      y += 5;
-      doc.setTextColor(30, 100, 200);
-      doc.textWithLink("Buka resit online", 14, y, { url: r.buktiUrl });
-      doc.setTextColor(0, 0, 0);
       y += 6;
+
+      // FULL LINK — sentiasa nampak & boleh klik
+      doc.setFontSize(8);
+      doc.setTextColor(30, 100, 200);
+      const linkLines = doc.splitTextToSize("Link resit: " + r.buktiUrl, 180);
+      doc.textWithLink(linkLines[0], 14, y, { url: r.buktiUrl });
+      y += 4;
+      for (let li = 1; li < linkLines.length; li++) {
+        doc.text(linkLines[li], 14, y);
+        y += 4;
+      }
+      doc.setTextColor(0, 0, 0);
+      doc.setFontSize(9);
+      y += 3;
 
       try {
         const dataUrl = await loadImageAsDataUrl(r.buktiUrl);
         if (dataUrl) {
-          if (y > 180) {
-            doc.addPage();
-            y = 20;
-          }
+          if (y > 180) { doc.addPage(); y = 20; }
           doc.addImage(dataUrl, "JPEG", 14, y, 70, 50);
           y += 56;
         } else {
           doc.setFontSize(8);
           doc.setTextColor(150);
-          doc.text("(Gambar tidak dapat dibenam — buka link di atas)", 14, y);
+          doc.text("(Gambar tidak dapat dibenam dalam PDF — buka link di atas)", 14, y);
           doc.setTextColor(0, 0, 0);
           y += 6;
         }
       } catch (e) {
         doc.setFontSize(8);
         doc.setTextColor(150);
-        doc.text("(Gambar tidak dapat dibenam — buka link di atas)", 14, y);
+        doc.text("(Gambar tidak dapat dibenam dalam PDF — buka link di atas)", 14, y);
         doc.setTextColor(0, 0, 0);
         y += 6;
       }
@@ -808,7 +800,7 @@
   };
 
   document.getElementById("btnCsv").onclick = () => {
-    const rows = getFiltered();
+    const rows = sortByTarikhMasa(getFiltered());
     const y = document.getElementById("filterTahun").value;
     const m = document.getElementById("filterBulan").value;
     let csv = "No_Rujukan,Tarikh,Masa,Jenis,Kategori,Keterangan,Jumlah,Cara_Bayar,Pembayar_Penerima,No_Resit,Status,Penama,Bukti_URL\n";
