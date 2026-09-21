@@ -75,7 +75,7 @@
 
     .box {
       background: #fff; color: #222; border-radius: 12px; padding: 14px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15); margin-bottom: 16px;
     }
     .box h3 { font-size: 0.95rem; margin-bottom: 10px; color: #555; }
 
@@ -95,6 +95,7 @@
     th, td { padding: 8px 10px; border-bottom: 1px solid #eee; text-align: left; }
     th { background: #f3e5f5; color: #4a148c; }
     tr:hover { background: #fafafa; }
+    tfoot td { background: #f3e5f5; font-weight: 800; }
     .thumb {
       width: 40px; height: 40px; object-fit: cover; border-radius: 6px; cursor: pointer;
       border: 1px solid #ddd;
@@ -121,7 +122,6 @@
       cursor: pointer; color: #fff; background: var(--red);
     }
     .btn:disabled { opacity: 0.45; cursor: not-allowed; }
-    .btn-sec { background: #444; }
     #msg { text-align: center; margin-top: 12px; min-height: 22px; }
     .preview { max-width: 140px; margin-top: 8px; border-radius: 8px; display: none; }
 
@@ -145,7 +145,6 @@
   </div>
 </header>
 
-<!-- LOCK SCREEN -->
 <div id="lockScreen" class="lock-box">
   <div style="font-size:2rem;margin-bottom:8px;">🔒</div>
   <h2>Dashboard Kewangan</h2>
@@ -155,7 +154,6 @@
   <p id="lockMsg" style="margin-top:10px;color:#f88;font-size:0.9rem;"></p>
 </div>
 
-<!-- DASHBOARD -->
 <div id="app" class="wrap hidden">
 
   <div class="dash-title">
@@ -187,6 +185,31 @@
     <div class="card"><div class="lbl">BIL. TRANSAKSI</div><div class="val" id="kpiCount" style="color:#1565c0">0</div></div>
   </div>
 
+  <!-- RINGKASAN 12 BULAN -->
+  <div class="box" style="overflow-x:auto;">
+    <h3>📅 Ringkasan 12 Bulan (<span id="yearLabel">—</span>)</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Bulan</th>
+          <th>Duit Masuk</th>
+          <th>Duit Keluar</th>
+          <th>Baki Bulan</th>
+        </tr>
+      </thead>
+      <tbody id="monthlyBody"></tbody>
+      <tfoot>
+        <tr>
+          <td>JUMLAH TAHUN</td>
+          <td id="yearMasuk">RM 0.00</td>
+          <td id="yearKeluar">RM 0.00</td>
+          <td id="yearBaki">RM 0.00</td>
+        </tr>
+      </tfoot>
+    </table>
+    <p style="font-size:0.8rem;color:#888;margin-top:8px;">💡 Klik baris bulan untuk tapis transaksi bulan tersebut</p>
+  </div>
+
   <div class="grid2">
     <div class="box">
       <h3>📁 Mengikut Kategori</h3>
@@ -200,7 +223,7 @@
     </div>
   </div>
 
-  <div class="box" style="margin-bottom:16px; overflow-x:auto;">
+  <div class="box" style="overflow-x:auto;">
     <h3>📋 Senarai Transaksi (<span id="listCount">0</span>)</h3>
     <table>
       <thead>
@@ -218,7 +241,6 @@
     </table>
   </div>
 
-  <!-- BORANG -->
   <div class="form-panel">
     <h2>Borang Rekod Baharu</h2>
     <form id="borangKewangan">
@@ -276,10 +298,13 @@
   const API_URL = "https://script.google.com/macros/s/AKfycbxpvotU6UMQSpmxcdKVTQs4Eoi-rDZf-sXLWOfQRsf0ntY8kNnwQUHz9SbpsDhjG03n/exec";
   const IMGBB_KEY = "5dde53aa49e23970db10b1af62fff130";
   const ADMIN_PASSWORD = "3281";
+  const BULAN_NAMA = [
+    "", "Januari", "Februari", "Mac", "April", "Mei", "Jun",
+    "Julai", "Ogos", "September", "Oktober", "November", "Disember"
+  ];
 
   let allData = [];
 
-  // ----- LOCK -----
   document.getElementById("btnUnlock").onclick = () => {
     if (document.getElementById("lockPass").value === ADMIN_PASSWORD) {
       sessionStorage.setItem("pak_kewangan_ok", "1");
@@ -307,7 +332,6 @@
   }
   if (sessionStorage.getItem("pak_kewangan_ok") === "1") bukaApp();
 
-  // ----- LOAD DATA -----
   async function loadData() {
     try {
       const res = await fetch(API_URL + "?t=" + Date.now());
@@ -331,11 +355,12 @@
     const cur = new Date().getFullYear().toString();
     sel.innerHTML = '<option value="all">Semua Tahun</option>';
     [...years].sort().reverse().forEach(y => {
-      sel.innerHTML += `<option value="${y}" ${y === cur ? "selected" : ""}>${y}</option>`;
+      sel.innerHTML += `<option value="${y}">${y}</option>`;
     });
     if (![...years].includes(cur)) {
-      sel.innerHTML += `<option value="${cur}" selected>${cur}</option>`;
+      sel.innerHTML += `<option value="${cur}">${cur}</option>`;
     }
+    sel.value = [...years].includes(cur) ? cur : (sel.options[1] ? sel.options[1].value : "all");
   }
 
   function getFiltered() {
@@ -353,6 +378,60 @@
 
   function rm(n) {
     return "RM " + (Number(n) || 0).toLocaleString("ms-MY", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  function renderMonthly() {
+    const yFilter = document.getElementById("filterTahun").value;
+    const year = yFilter === "all" ? new Date().getFullYear().toString() : yFilter;
+    document.getElementById("yearLabel").textContent = year;
+
+    const months = {};
+    for (let i = 1; i <= 12; i++) {
+      months[String(i).padStart(2, "0")] = { masuk: 0, keluar: 0 };
+    }
+
+    allData.forEach(r => {
+      if (!r.tarikh || r.tarikh.length < 7) return;
+      if (r.tarikh.substring(0, 4) !== year) return;
+      const m = r.tarikh.substring(5, 7);
+      if (!months[m]) return;
+      const amt = Number(r.jumlah) || 0;
+      if (r.jenis === "Duit Masuk") months[m].masuk += amt;
+      if (r.jenis === "Duit Keluar") months[m].keluar += amt;
+    });
+
+    let totalMasuk = 0, totalKeluar = 0;
+    const tbody = document.getElementById("monthlyBody");
+    tbody.innerHTML = "";
+
+    for (let i = 1; i <= 12; i++) {
+      const key = String(i).padStart(2, "0");
+      const masuk = months[key].masuk;
+      const keluar = months[key].keluar;
+      const baki = masuk - keluar;
+      totalMasuk += masuk;
+      totalKeluar += keluar;
+
+      const tr = document.createElement("tr");
+      tr.style.cursor = "pointer";
+      tr.title = "Klik untuk tapis bulan ini";
+      tr.innerHTML = `
+        <td>${BULAN_NAMA[i]}</td>
+        <td class="badge-in">${rm(masuk)}</td>
+        <td class="badge-out">${rm(keluar)}</td>
+        <td style="font-weight:700;color:${baki >= 0 ? "#2e7d32" : "#c41e3a"}">${rm(baki)}</td>
+      `;
+      tr.addEventListener("click", () => {
+        document.getElementById("filterTahun").value = year;
+        document.getElementById("filterBulan").value = key;
+        render();
+      });
+      tbody.appendChild(tr);
+    }
+
+    document.getElementById("yearMasuk").textContent = rm(totalMasuk);
+    document.getElementById("yearKeluar").textContent = rm(totalKeluar);
+    document.getElementById("yearBaki").textContent = rm(totalMasuk - totalKeluar);
   }
 
   function render() {
@@ -374,7 +453,6 @@
     document.getElementById("kpiCount").textContent = rows.length;
     document.getElementById("listCount").textContent = rows.length;
 
-    // Category bars
     const maxCat = Math.max(...Object.values(catMap), 1);
     const catSorted = Object.entries(catMap).sort((a, b) => b[1] - a[1]);
     document.getElementById("catBars").innerHTML = catSorted.slice(0, 8).map(([name, val]) => `
@@ -393,9 +471,7 @@
       `<div>▪ <strong>${k}</strong>: ${rm(v)} (${Math.round(v / payTotal * 100)}%)</div>`
     ).join("") || "—";
 
-    // Table
-    const tbody = document.getElementById("txBody");
-    tbody.innerHTML = rows.slice().reverse().map(r => `
+    document.getElementById("txBody").innerHTML = rows.slice().reverse().map(r => `
       <tr>
         <td>${r.tarikh}${r.masa ? "<br><small>" + r.masa + "</small>" : ""}</td>
         <td class="${r.jenis === "Duit Masuk" ? "badge-in" : "badge-out"}">${r.jenis || "-"}</td>
@@ -406,13 +482,14 @@
         <td>${r.buktiUrl ? `<img class="thumb" src="${r.buktiUrl}" data-full="${r.buktiUrl}" alt="resit">` : "-"}</td>
       </tr>
     `).join("") || `<tr><td colspan="7" style="text-align:center;color:#888">Tiada rekod</td></tr>`;
+
+    renderMonthly();
   }
 
   ["filterTahun", "filterBulan", "filterJenis"].forEach(id => {
     document.getElementById(id).addEventListener("change", render);
   });
 
-  // Lightbox resit
   document.getElementById("txBody").addEventListener("click", e => {
     if (e.target.classList.contains("thumb")) {
       document.getElementById("lbImg").src = e.target.dataset.full;
@@ -423,7 +500,6 @@
     document.getElementById("lightbox").classList.remove("open");
   };
 
-  // PDF
   document.getElementById("btnPdf").onclick = () => {
     const rows = getFiltered();
     const { jsPDF } = window.jspdf;
@@ -444,7 +520,7 @@
       if (r.jenis === "Duit Masuk") masuk += Number(r.jumlah) || 0;
       if (r.jenis === "Duit Keluar") keluar += Number(r.jumlah) || 0;
     });
-    doc.text("Masuk: RM " + masuk.toFixed(2) + "  |  Keluar: RM " + keluar.toFixed(2) + "  |  Baki: RM " + (masuk - keluar).toFixed(2), 14, 28);
+    doc.text("Masuk: RM " + masuk.toFixed(2) + " | Keluar: RM " + keluar.toFixed(2) + " | Baki: RM " + (masuk - keluar).toFixed(2), 14, 28);
 
     doc.autoTable({
       startY: 34,
@@ -460,7 +536,6 @@
     doc.save("Laporan_Kewangan_PAK_" + (y === "all" ? "semua" : y) + (m !== "all" ? "_" + m : "") + ".pdf");
   };
 
-  // Form password
   const passwordInput = document.getElementById("password");
   const btnSimpan = document.getElementById("btnSimpan");
   function semakPassword() {
