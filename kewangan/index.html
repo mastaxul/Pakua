@@ -89,10 +89,10 @@
     .pie-legend div { margin: 4px 0; }
 
     table {
-      width: 100%; border-collapse: collapse; font-size: 0.85rem; background: #fff; color: #222;
+      width: 100%; border-collapse: collapse; font-size: 0.82rem; background: #fff; color: #222;
       border-radius: 12px; overflow: hidden;
     }
-    th, td { padding: 8px 10px; border-bottom: 1px solid #eee; text-align: left; }
+    th, td { padding: 8px 8px; border-bottom: 1px solid #eee; text-align: left; }
     th { background: #f3e5f5; color: #4a148c; }
     tr:hover { background: #fafafa; }
     tfoot td { background: #f3e5f5; font-weight: 800; }
@@ -174,7 +174,9 @@
         <option value="Duit Masuk">Duit Masuk</option>
         <option value="Duit Keluar">Duit Keluar</option>
       </select>
-      <button type="button" id="btnPdf">⬇️ PDF Laporan</button>
+      <button type="button" id="btnPdf">⬇️ PDF</button>
+      <button type="button" id="btnCsv">⬇️ CSV/Excel</button>
+      <button type="button" id="btnShare">📤 Kongsi</button>
     </div>
   </div>
 
@@ -185,7 +187,6 @@
     <div class="card"><div class="lbl">BIL. TRANSAKSI</div><div class="val" id="kpiCount" style="color:#1565c0">0</div></div>
   </div>
 
-  <!-- RINGKASAN 12 BULAN -->
   <div class="box" style="overflow-x:auto;">
     <h3>📅 Ringkasan 12 Bulan (<span id="yearLabel">—</span>)</h3>
     <table>
@@ -228,12 +229,14 @@
     <table>
       <thead>
         <tr>
+          <th>Rujukan</th>
           <th>Tarikh</th>
           <th>Jenis</th>
           <th>Kategori</th>
           <th>Keterangan</th>
           <th>Jumlah</th>
-          <th>Bayar</th>
+          <th>Status</th>
+          <th>Key-in</th>
           <th>Resit</th>
         </tr>
       </thead>
@@ -275,6 +278,12 @@
       </select>
       <label>Nombor Resit</label>
       <input type="text" id="noResit">
+      <label>Status</label>
+      <select id="status">
+        <option value="Direkod">Direkod</option>
+        <option value="Disemak">Disemak</option>
+        <option value="Diluluskan">Diluluskan</option>
+      </select>
       <label>Bukti Transaksi</label>
       <input type="file" id="buktiFile" accept="image/*">
       <small>Upload automatik ke ImgBB</small>
@@ -473,15 +482,17 @@
 
     document.getElementById("txBody").innerHTML = rows.slice().reverse().map(r => `
       <tr>
+        <td><small>${r.noRujukan || "-"}</small></td>
         <td>${r.tarikh}${r.masa ? "<br><small>" + r.masa + "</small>" : ""}</td>
         <td class="${r.jenis === "Duit Masuk" ? "badge-in" : "badge-out"}">${r.jenis || "-"}</td>
         <td>${r.kategori || "-"}</td>
         <td>${r.keterangan || "-"}</td>
         <td><strong>${rm(r.jumlah)}</strong></td>
-        <td>${r.caraBayar || "-"}</td>
+        <td>${r.status || "Direkod"}</td>
+        <td><small>${r.penama || "-"}</small></td>
         <td>${r.buktiUrl ? `<img class="thumb" src="${r.buktiUrl}" data-full="${r.buktiUrl}" alt="resit">` : "-"}</td>
       </tr>
-    `).join("") || `<tr><td colspan="7" style="text-align:center;color:#888">Tiada rekod</td></tr>`;
+    `).join("") || `<tr><td colspan="9" style="text-align:center;color:#888">Tiada rekod</td></tr>`;
 
     renderMonthly();
   }
@@ -500,40 +511,114 @@
     document.getElementById("lightbox").classList.remove("open");
   };
 
+  // PDF formal
   document.getElementById("btnPdf").onclick = () => {
     const rows = getFiltered();
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
     const y = document.getElementById("filterTahun").value;
     const m = document.getElementById("filterBulan").value;
-    const title = "Laporan Kewangan PAK — " +
-      (y === "all" ? "Semua Tahun" : y) +
-      (m === "all" ? "" : " / Bulan " + m);
+    const tempoh = (y === "all" ? "Semua Tahun" : y) + (m === "all" ? "" : " / Bulan " + m);
 
-    doc.setFontSize(14);
-    doc.text(title, 14, 16);
+    doc.setFillColor(196, 30, 58);
+    doc.rect(0, 0, 210, 28, "F");
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(16);
+    doc.text("PERTUBUHAN AKTIVIS KEUSAHAWANAN (PAK)", 14, 12);
+    doc.setFontSize(11);
+    doc.text("Laporan Kewangan", 14, 20);
+    doc.setTextColor(0, 0, 0);
+
     doc.setFontSize(10);
-    doc.text("Dijana: " + new Date().toLocaleString("ms-MY"), 14, 22);
+    doc.text("Tempoh: " + tempoh, 14, 38);
+    doc.text("Dijana: " + new Date().toLocaleString("ms-MY"), 14, 44);
+    doc.text("No. Pendaftaran: PPM-014-10-23022026", 14, 50);
 
     let masuk = 0, keluar = 0;
     rows.forEach(r => {
       if (r.jenis === "Duit Masuk") masuk += Number(r.jumlah) || 0;
       if (r.jenis === "Duit Keluar") keluar += Number(r.jumlah) || 0;
     });
-    doc.text("Masuk: RM " + masuk.toFixed(2) + " | Keluar: RM " + keluar.toFixed(2) + " | Baki: RM " + (masuk - keluar).toFixed(2), 14, 28);
+
+    doc.setFontSize(11);
+    doc.text("Jumlah Masuk: RM " + masuk.toFixed(2), 14, 60);
+    doc.text("Jumlah Keluar: RM " + keluar.toFixed(2), 14, 66);
+    doc.text("Baki: RM " + (masuk - keluar).toFixed(2), 14, 72);
 
     doc.autoTable({
-      startY: 34,
-      head: [["Tarikh", "Jenis", "Kategori", "Keterangan", "Jumlah", "Bayar"]],
+      startY: 78,
+      head: [["Rujukan", "Tarikh", "Jenis", "Kategori", "Keterangan", "Jumlah", "Status", "Key-in"]],
       body: rows.map(r => [
-        r.tarikh, r.jenis, r.kategori, (r.keterangan || "").substring(0, 40),
-        Number(r.jumlah).toFixed(2), r.caraBayar
+        r.noRujukan || "-",
+        r.tarikh,
+        r.jenis,
+        r.kategori,
+        (r.keterangan || "").substring(0, 30),
+        Number(r.jumlah).toFixed(2),
+        r.status || "Direkod",
+        r.penama || "-"
       ]),
-      styles: { fontSize: 8 },
+      styles: { fontSize: 7 },
       headStyles: { fillColor: [196, 30, 58] }
     });
 
+    const finalY = doc.lastAutoTable.finalY + 16;
+    doc.setFontSize(9);
+    doc.text("Disediakan oleh: _____________________", 14, finalY);
+    doc.text("Disemak oleh: _____________________", 110, finalY);
+    doc.text("Tarikh: _______________", 14, finalY + 10);
+    doc.text("Cop rasmi PAK", 110, finalY + 10);
+
+    doc.setFontSize(8);
+    doc.setTextColor(120);
+    doc.text("Dokumen dijana dari sistem kewangan PAK — pakua-sel.my/kewangan", 14, 285);
+
     doc.save("Laporan_Kewangan_PAK_" + (y === "all" ? "semua" : y) + (m !== "all" ? "_" + m : "") + ".pdf");
+  };
+
+  // CSV / Excel
+  document.getElementById("btnCsv").onclick = () => {
+    const rows = getFiltered();
+    const y = document.getElementById("filterTahun").value;
+    const m = document.getElementById("filterBulan").value;
+
+    let csv = "No_Rujukan,Tarikh,Masa,Jenis,Kategori,Keterangan,Jumlah,Cara_Bayar,Pembayar_Penerima,No_Resit,Status,Penama,Bukti_URL\n";
+    rows.forEach(r => {
+      csv += [
+        r.noRujukan || "",
+        r.tarikh || "",
+        r.masa || "",
+        r.jenis || "",
+        r.kategori || "",
+        '"' + (r.keterangan || "").replace(/"/g, '""') + '"',
+        r.jumlah || 0,
+        r.caraBayar || "",
+        r.pembayarPenerima || "",
+        r.noResit || "",
+        r.status || "",
+        r.penama || "",
+        r.buktiUrl || ""
+      ].join(",") + "\n";
+    });
+
+    const blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8;" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "Kewangan_PAK_" + (y === "all" ? "semua" : y) + (m !== "all" ? "_" + m : "") + ".csv";
+    a.click();
+  };
+
+  // Kongsi
+  document.getElementById("btnShare").onclick = async () => {
+    const url = window.location.href;
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: "Kewangan PAK", text: "Dashboard Kewangan PAK", url: url });
+      } catch (e) {}
+    } else {
+      await navigator.clipboard.writeText(url);
+      alert("Link dashboard disalin!");
+    }
   };
 
   const passwordInput = document.getElementById("password");
@@ -586,6 +671,7 @@
       pembayarPenerima: document.getElementById("pembayarPenerima").value,
       jenis: document.getElementById("jenis").value,
       noResit: document.getElementById("noResit").value,
+      status: document.getElementById("status").value,
       buktiUrl: document.getElementById("buktiUrl").value,
       penama: document.getElementById("penama").value
     };
