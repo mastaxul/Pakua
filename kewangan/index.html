@@ -48,10 +48,11 @@
     }
     .dash-title h1 { font-size: 1.35rem; color: #c9b6ff; }
     .filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-    .filters select, .filters button {
+    .filters select, .filters button, .filters input[type="search"] {
       padding: 8px 12px; border-radius: 8px; border: 1px solid #555;
       background: #222; color: #fff; font-size: 0.9rem;
     }
+    .filters input[type="search"] { min-width: 200px; }
     .filters button { background: var(--red); border-color: var(--red); cursor: pointer; font-weight: 600; }
 
     .kpi {
@@ -174,6 +175,7 @@
         <option value="Duit Masuk">Duit Masuk</option>
         <option value="Duit Keluar">Duit Keluar</option>
       </select>
+      <input type="search" id="filterCari" placeholder="Cari rujukan, keterangan, nama...">
       <button type="button" id="btnPdf">⬇️ PDF</button>
       <button type="button" id="btnCsv">⬇️ CSV/Excel</button>
       <button type="button" id="btnShare">📤 Kongsi</button>
@@ -284,9 +286,10 @@
         <option value="Disemak">Disemak</option>
         <option value="Diluluskan">Diluluskan</option>
       </select>
-      <label>Bukti Transaksi</label>
+      <label>Bukti Transaksi (pilihan — ImgBB sementara tidak stabil)</label>
       <input type="file" id="buktiFile" accept="image/*">
-      <small>Upload automatik ke ImgBB</small>
+      <small>Atau paste link gambar / Google Drive di bawah</small>
+      <input type="url" id="buktiUrlManual" placeholder="https://... (link manual)">
       <img id="buktiPreview" class="preview" alt="">
       <input type="hidden" id="buktiUrl">
       <label>Penama Key-in</label>
@@ -376,11 +379,21 @@
     const y = document.getElementById("filterTahun").value;
     const m = document.getElementById("filterBulan").value;
     const j = document.getElementById("filterJenis").value;
+    const q = (document.getElementById("filterCari").value || "").trim().toLowerCase();
+
     return allData.filter(r => {
       if (!r.tarikh) return false;
       if (y !== "all" && r.tarikh.substring(0, 4) !== y) return false;
       if (m !== "all" && r.tarikh.substring(5, 7) !== m) return false;
       if (j !== "all" && r.jenis !== j) return false;
+
+      if (q) {
+        const haystack = [
+          r.noRujukan, r.keterangan, r.kategori, r.pembayarPenerima,
+          r.penama, r.noResit, r.status, r.caraBayar, r.jenis, String(r.jumlah)
+        ].join(" ").toLowerCase();
+        if (!haystack.includes(q)) return false;
+      }
       return true;
     });
   }
@@ -433,6 +446,7 @@
       tr.addEventListener("click", () => {
         document.getElementById("filterTahun").value = year;
         document.getElementById("filterBulan").value = key;
+        document.getElementById("filterCari").value = "";
         render();
       });
       tbody.appendChild(tr);
@@ -497,7 +511,8 @@
     renderMonthly();
   }
 
-  ["filterTahun", "filterBulan", "filterJenis"].forEach(id => {
+  ["filterTahun", "filterBulan", "filterJenis", "filterCari"].forEach(id => {
+    document.getElementById(id).addEventListener("input", render);
     document.getElementById(id).addEventListener("change", render);
   });
 
@@ -511,7 +526,6 @@
     document.getElementById("lightbox").classList.remove("open");
   };
 
-  // PDF formal
   document.getElementById("btnPdf").onclick = () => {
     const rows = getFiltered();
     const { jsPDF } = window.jspdf;
@@ -568,39 +582,25 @@
     doc.text("Disemak oleh: _____________________", 110, finalY);
     doc.text("Tarikh: _______________", 14, finalY + 10);
     doc.text("Cop rasmi PAK", 110, finalY + 10);
-
     doc.setFontSize(8);
     doc.setTextColor(120);
     doc.text("Dokumen dijana dari sistem kewangan PAK — pakua-sel.my/kewangan", 14, 285);
-
     doc.save("Laporan_Kewangan_PAK_" + (y === "all" ? "semua" : y) + (m !== "all" ? "_" + m : "") + ".pdf");
   };
 
-  // CSV / Excel
   document.getElementById("btnCsv").onclick = () => {
     const rows = getFiltered();
     const y = document.getElementById("filterTahun").value;
     const m = document.getElementById("filterBulan").value;
-
     let csv = "No_Rujukan,Tarikh,Masa,Jenis,Kategori,Keterangan,Jumlah,Cara_Bayar,Pembayar_Penerima,No_Resit,Status,Penama,Bukti_URL\n";
     rows.forEach(r => {
       csv += [
-        r.noRujukan || "",
-        r.tarikh || "",
-        r.masa || "",
-        r.jenis || "",
-        r.kategori || "",
+        r.noRujukan || "", r.tarikh || "", r.masa || "", r.jenis || "", r.kategori || "",
         '"' + (r.keterangan || "").replace(/"/g, '""') + '"',
-        r.jumlah || 0,
-        r.caraBayar || "",
-        r.pembayarPenerima || "",
-        r.noResit || "",
-        r.status || "",
-        r.penama || "",
-        r.buktiUrl || ""
+        r.jumlah || 0, r.caraBayar || "", r.pembayarPenerima || "", r.noResit || "",
+        r.status || "", r.penama || "", r.buktiUrl || ""
       ].join(",") + "\n";
     });
-
     const blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8;" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
@@ -608,13 +608,11 @@
     a.click();
   };
 
-  // Kongsi
   document.getElementById("btnShare").onclick = async () => {
     const url = window.location.href;
     if (navigator.share) {
-      try {
-        await navigator.share({ title: "Kewangan PAK", text: "Dashboard Kewangan PAK", url: url });
-      } catch (e) {}
+      try { await navigator.share({ title: "Kewangan PAK", text: "Dashboard Kewangan PAK", url }); }
+      catch (e) {}
     } else {
       await navigator.clipboard.writeText(url);
       alert("Link dashboard disalin!");
@@ -635,9 +633,13 @@
     document.getElementById("buktiUrl").value = "";
     preview.style.display = "none";
     if (!file) return;
+    if (file.size > 10 * 1024 * 1024) {
+      msg.textContent = "❌ Fail terlalu besar (max 10MB)";
+      return;
+    }
     preview.src = URL.createObjectURL(file);
     preview.style.display = "block";
-    msg.textContent = "⏳ Upload resit...";
+    msg.textContent = "⏳ Upload resit (ImgBB)...";
     btnSimpan.disabled = true;
     try {
       const fd = new FormData();
@@ -647,8 +649,12 @@
       if (json.success) {
         document.getElementById("buktiUrl").value = json.data.display_url || json.data.url;
         msg.textContent = "✅ Resit dimuat naik";
-      } else msg.textContent = "❌ Upload gagal";
-    } catch { msg.textContent = "❌ Ralat upload"; }
+      } else {
+        msg.textContent = "❌ ImgBB gagal. Paste link manual di bawah.";
+      }
+    } catch {
+      msg.textContent = "❌ ImgBB tidak respons. Paste link manual.";
+    }
     semakPassword();
   });
 
@@ -659,6 +665,9 @@
       msg.textContent = "❌ Password salah";
       return;
     }
+    const manual = document.getElementById("buktiUrlManual").value.trim();
+    if (manual) document.getElementById("buktiUrl").value = manual;
+
     msg.textContent = "⏳ Menyimpan...";
     btnSimpan.disabled = true;
     const payload = {
