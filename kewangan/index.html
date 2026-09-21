@@ -125,7 +125,10 @@
       border: 1px solid #555;
       margin-top: 10px;
     }
-    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
     #msg {
       text-align: center;
       margin-top: 14px;
@@ -139,6 +142,19 @@
       display: none;
       border: 1px solid #444;
     }
+    .pass-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .pass-row input {
+      flex: 1;
+    }
+    .pass-row .btn-save {
+      width: auto;
+      margin-top: 0;
+      min-width: 140px;
+    }
     .actions {
       display: flex;
       gap: 10px;
@@ -147,6 +163,13 @@
     .actions .btn { width: auto; flex: 1; margin-top: 0; }
     @media (max-width: 600px) {
       .cards { grid-template-columns: 1fr; }
+      .pass-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .pass-row .btn-save {
+        width: 100%;
+      }
     }
     @media print {
       header, .no-print { display: none !important; }
@@ -168,7 +191,6 @@
     <h1>Dashboard Kewangan</h1>
     <p class="sub">Pertubuhan Aktivis Keusahawanan (PAK)</p>
 
-    <!-- Ringkasan (manual / akan auto kemudian) -->
     <div class="cards no-print">
       <div class="card masuk">
         <div class="label">Duit Masuk</div>
@@ -249,7 +271,14 @@
         <label>Penama Key-in</label>
         <input type="text" id="penama" required placeholder="Nama anda">
 
-        <button type="submit" class="btn btn-save" id="btnSimpan">Simpan Rekod</button>
+        <label>Password Admin</label>
+        <div class="pass-row">
+          <input type="password" id="password" placeholder="Masukkan password" autocomplete="off">
+          <button type="submit" class="btn btn-save" id="btnSimpan" disabled>
+            Simpan Rekod
+          </button>
+        </div>
+        <small>Masukkan password betul untuk aktifkan butang simpan</small>
       </form>
 
       <p id="msg"></p>
@@ -264,30 +293,38 @@
 <script>
   const API_URL = "https://script.google.com/macros/s/AKfycbxpvotU6UMQSpmxcdKVTQs4Eoi-rDZf-sXLWOfQRsf0ntY8kNnwQUHz9SbpsDhjG03n/exec";
   const IMGBB_KEY = "5dde53aa49e23970db10b1af62fff130";
+  const ADMIN_PASSWORD = "3281";
 
-  // Default tarikh & masa hari ini
   document.getElementById("tarikh").value = new Date().toISOString().slice(0, 10);
   document.getElementById("masa").value = new Date().toTimeString().slice(0, 5);
 
-  // Preview + upload ImgBB bila pilih fail
+  const passwordInput = document.getElementById("password");
+  const btnSimpan = document.getElementById("btnSimpan");
+
+  function semakPassword() {
+    if (passwordInput.value === ADMIN_PASSWORD) {
+      btnSimpan.disabled = false;
+    } else {
+      btnSimpan.disabled = true;
+    }
+  }
+  passwordInput.addEventListener("input", semakPassword);
+
   document.getElementById("buktiFile").addEventListener("change", async function () {
     const file = this.files[0];
     const msg = document.getElementById("msg");
     const preview = document.getElementById("buktiPreview");
     const buktiUrl = document.getElementById("buktiUrl");
-    const btn = document.getElementById("btnSimpan");
 
     buktiUrl.value = "";
     preview.style.display = "none";
-
     if (!file) return;
 
-    // Preview lokal
     preview.src = URL.createObjectURL(file);
     preview.style.display = "block";
 
     msg.textContent = "⏳ Memuat naik resit ke ImgBB...";
-    btn.disabled = true;
+    btnSimpan.disabled = true;
 
     try {
       const formData = new FormData();
@@ -309,17 +346,20 @@
       msg.textContent = "❌ Ralat upload resit.";
     }
 
-    btn.disabled = false;
+    semakPassword();
   });
 
-  // Simpan ke Google Sheet
   document.getElementById("borangKewangan").addEventListener("submit", async function (e) {
     e.preventDefault();
     const msg = document.getElementById("msg");
-    const btn = document.getElementById("btnSimpan");
+
+    if (passwordInput.value !== ADMIN_PASSWORD) {
+      msg.textContent = "❌ Password salah. Tidak boleh simpan.";
+      return;
+    }
 
     msg.textContent = "⏳ Menyimpan rekod...";
-    btn.disabled = true;
+    btnSimpan.disabled = true;
 
     const payload = {
       tarikh: document.getElementById("tarikh").value,
@@ -349,11 +389,12 @@
       document.getElementById("buktiPreview").style.display = "none";
       document.getElementById("tarikh").value = new Date().toISOString().slice(0, 10);
       document.getElementById("masa").value = new Date().toTimeString().slice(0, 5);
+      passwordInput.value = "";
+      semakPassword();
     } catch (err) {
       msg.textContent = "❌ Gagal menyimpan. Semak sambungan.";
+      semakPassword();
     }
-
-    btn.disabled = false;
   });
 
   function sharePage() {
