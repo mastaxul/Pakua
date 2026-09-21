@@ -178,6 +178,7 @@
       </select>
       <input type="search" id="filterCari" placeholder="Cari rujukan, keterangan, nama...">
       <button type="button" id="btnPdf">⬇️ PDF</button>
+      <button type="button" id="btnPdfResit">📎 PDF Resit</button>
       <button type="button" id="btnCsv">⬇️ CSV/Excel</button>
       <button type="button" id="btnShare">📤 Kongsi</button>
     </div>
@@ -190,7 +191,6 @@
     <div class="card"><div class="lbl">BIL. TRANSAKSI</div><div class="val" id="kpiCount" style="color:#1565c0">0</div></div>
   </div>
 
-  <!-- GRAF -->
   <div class="grid2">
     <div class="box">
       <h3>📊 Bar — Masuk vs Keluar</h3>
@@ -416,6 +416,28 @@
     return "RM " + (Number(n) || 0).toLocaleString("ms-MY", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
 
+  function loadImageAsDataUrl(url) {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => {
+        try {
+          const canvas = document.createElement("canvas");
+          const maxW = 600;
+          const scale = Math.min(1, maxW / img.width);
+          canvas.width = img.width * scale;
+          canvas.height = img.height * scale;
+          canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+          resolve(canvas.toDataURL("image/jpeg", 0.85));
+        } catch (e) {
+          resolve(null);
+        }
+      };
+      img.onerror = () => resolve(null);
+      img.src = url + (url.includes("?") ? "&" : "?") + "t=" + Date.now();
+    });
+  }
+
   function renderCharts() {
     const yFilter = document.getElementById("filterTahun").value;
     const year = yFilter === "all" ? new Date().getFullYear().toString() : yFilter;
@@ -464,20 +486,12 @@
         labels,
         datasets: [
           {
-            label: "Duit Masuk",
-            data: masukArr,
-            borderColor: "#2e7d32",
-            backgroundColor: "rgba(46,125,50,0.15)",
-            fill: true,
-            tension: 0.3
+            label: "Duit Masuk", data: masukArr, borderColor: "#2e7d32",
+            backgroundColor: "rgba(46,125,50,0.15)", fill: true, tension: 0.3
           },
           {
-            label: "Duit Keluar",
-            data: keluarArr,
-            borderColor: "#c41e3a",
-            backgroundColor: "rgba(196,30,58,0.12)",
-            fill: true,
-            tension: 0.3
+            label: "Duit Keluar", data: keluarArr, borderColor: "#c41e3a",
+            backgroundColor: "rgba(196,30,58,0.12)", fill: true, tension: 0.3
           }
         ]
       },
@@ -663,6 +677,98 @@
     doc.setTextColor(120);
     doc.text("Dokumen dijana dari sistem kewangan PAK — pakua-sel.my/kewangan", 14, 285);
     doc.save("Laporan_Kewangan_PAK_" + (y === "all" ? "semua" : y) + (m !== "all" ? "_" + m : "") + ".pdf");
+  };
+
+  // PDF RESIT — susun ikut tarikh & masa
+  document.getElementById("btnPdfResit").onclick = async () => {
+    let rows = getFiltered().filter(r => r.buktiUrl && String(r.buktiUrl).trim() !== "");
+    rows = rows.slice().sort((a, b) => {
+      const da = (a.tarikh || "") + " " + (a.masa || "");
+      const db = (b.tarikh || "") + " " + (b.masa || "");
+      return da.localeCompare(db);
+    });
+
+    if (rows.length === 0) {
+      alert("Tiada resit dalam tapisan semasa.");
+      return;
+    }
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const ySel = document.getElementById("filterTahun").value;
+    const mSel = document.getElementById("filterBulan").value;
+    const tempoh = (ySel === "all" ? "Semua Tahun" : ySel) + (mSel === "all" ? "" : " / Bulan " + mSel);
+
+    doc.setFillColor(196, 30, 58);
+    doc.rect(0, 0, 210, 26, "F");
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(14);
+    doc.text("PAK — Kompilasi Resit", 14, 12);
+    doc.setFontSize(10);
+    doc.text("Tempoh: " + tempoh + "  |  Jumlah resit: " + rows.length + "  |  Susunan: tarikh & masa", 14, 20);
+    doc.setTextColor(0, 0, 0);
+
+    let y = 34;
+
+    for (let i = 0; i < rows.length; i++) {
+      const r = rows[i];
+      if (y > 250) {
+        doc.addPage();
+        y = 20;
+      }
+
+      doc.setFontSize(11);
+      doc.setFont(undefined, "bold");
+      doc.text((i + 1) + ". " + (r.noRujukan || "Tiada rujukan"), 14, y);
+      doc.setFont(undefined, "normal");
+      doc.setFontSize(9);
+      y += 6;
+      doc.text("Tarikh/Masa: " + (r.tarikh || "-") + "  " + (r.masa || ""), 14, y);
+      y += 5;
+      doc.text("Jenis: " + (r.jenis || "-") + "  |  Kategori: " + (r.kategori || "-"), 14, y);
+      y += 5;
+      doc.text("Jumlah: RM " + Number(r.jumlah || 0).toFixed(2) + "  |  " + (r.caraBayar || ""), 14, y);
+      y += 5;
+      const ket = doc.splitTextToSize("Keterangan: " + (r.keterangan || "-"), 180);
+      doc.text(ket, 14, y);
+      y += ket.length * 5 + 2;
+      doc.text("Key-in: " + (r.penama || "-") + "  |  Status: " + (r.status || "-"), 14, y);
+      y += 5;
+      doc.setTextColor(30, 100, 200);
+      doc.textWithLink("Buka resit online", 14, y, { url: r.buktiUrl });
+      doc.setTextColor(0, 0, 0);
+      y += 6;
+
+      try {
+        const dataUrl = await loadImageAsDataUrl(r.buktiUrl);
+        if (dataUrl) {
+          if (y > 180) {
+            doc.addPage();
+            y = 20;
+          }
+          doc.addImage(dataUrl, "JPEG", 14, y, 70, 50);
+          y += 56;
+        } else {
+          doc.setFontSize(8);
+          doc.setTextColor(150);
+          doc.text("(Gambar tidak dapat dibenam — buka link di atas)", 14, y);
+          doc.setTextColor(0, 0, 0);
+          y += 6;
+        }
+      } catch (e) {
+        doc.setFontSize(8);
+        doc.setTextColor(150);
+        doc.text("(Gambar tidak dapat dibenam — buka link di atas)", 14, y);
+        doc.setTextColor(0, 0, 0);
+        y += 6;
+      }
+
+      doc.setDrawColor(200);
+      doc.line(14, y, 196, y);
+      y += 10;
+    }
+
+    doc.save("Resit_PAK_" + (ySel === "all" ? "semua" : ySel) + (mSel !== "all" ? "_" + mSel : "") + ".pdf");
   };
 
   document.getElementById("btnCsv").onclick = () => {
