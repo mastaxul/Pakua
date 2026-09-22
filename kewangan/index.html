@@ -9,6 +9,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
@@ -126,6 +127,12 @@
     .btn:disabled { opacity: 0.45; cursor: not-allowed; }
     #msg { text-align: center; margin-top: 12px; min-height: 22px; }
     .preview { max-width: 140px; margin-top: 8px; border-radius: 8px; display: none; }
+    .ocr-hint {
+      background: #1e3a2f; border: 1px solid #2e7d32; border-radius: 8px;
+      padding: 10px 12px; margin-top: 10px; font-size: 0.85rem; color: #a5d6a7;
+      display: none;
+    }
+    .ocr-hint.show { display: block; }
 
     .lightbox {
       display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85);
@@ -261,7 +268,18 @@
 
   <div class="form-panel">
     <h2>Borang Rekod Baharu</h2>
+    <p style="text-align:center;color:#888;font-size:0.85rem;margin-bottom:8px;">
+      💡 Upload resit dulu — sistem cuba isi auto (OCR). Semak sebelum simpan.
+    </p>
     <form id="borangKewangan">
+      <label>Bukti Transaksi / Resit (upload dulu untuk auto-isi)</label>
+      <input type="file" id="buktiFile" accept="image/*">
+      <small>Atau paste link gambar</small>
+      <input type="url" id="buktiUrlManual" placeholder="https://... (link manual)">
+      <img id="buktiPreview" class="preview" alt="">
+      <input type="hidden" id="buktiUrl">
+      <div class="ocr-hint" id="ocrHint"></div>
+
       <label>Tarikh</label>
       <input type="date" id="tarikh" required>
       <label>Masa</label>
@@ -299,12 +317,6 @@
         <option value="Disemak">Disemak</option>
         <option value="Diluluskan">Diluluskan</option>
       </select>
-      <label>Bukti Transaksi (pilihan)</label>
-      <input type="file" id="buktiFile" accept="image/*">
-      <small>Atau paste link gambar / Google Drive</small>
-      <input type="url" id="buktiUrlManual" placeholder="https://... (link manual)">
-      <img id="buktiPreview" class="preview" alt="">
-      <input type="hidden" id="buktiUrl">
       <label>Penama Key-in</label>
       <input type="text" id="penama" required>
       <label>Password (untuk simpan)</label>
@@ -455,6 +467,120 @@
       img.onerror = () => resolve(null);
       img.src = url + (url.includes("?") ? "&" : "?") + "t=" + Date.now();
     });
+  }
+
+  /* ========== OCR: parse teks resit ========== */
+  function parseResitText(text) {
+    const result = { jumlah: null, tarikh: null, keterangan: null, noResit: null };
+    if (!text) return result;
+    const t = text.replace(/\r/g, "\n");
+
+    // Jumlah: RM 200.00 / 200.00 / RM200
+    const amountPatterns = [
+      /RM\s*([\d]{1,3}(?:[,\s]\d{3})*(?:\.\d{2})?)/i,
+      /(?:jumlah|total|bayaran|amount)[^\d]{0,20}([\d]+(?:\.\d{2})?)/i,
+      /\b(\d+\.\d{2})\b/
+    ];
+    for (const re of amountPatterns) {
+      const m = t.match(re);
+      if (m) {
+        const n = parseFloat(m[1].replace(/[,\s]/g, ""));
+        if (!isNaN(n) && n > 0 && n < 1000000) {
+          result.jumlah = n;
+          break;
+        }
+      }
+    }
+
+    // Tarikh: 21/09/2026, 21-09-2026, 2026-09-21, 21 Sep 2026
+    const datePatterns = [
+      /(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/,
+      /(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/,
+      /(\d{1,2})\s+(jan|feb|mac|apr|mei|jun|jul|ogo|ogs|sep|okt|nov|dis)[a-z]*\s+(\d{4})/i
+    ];
+    const bulanMap = {
+      jan: "01", feb: "02", mac: "03", mar: "03", apr: "04", mei: "05", may: "05",
+      jun: "06", jul: "07", ogo: "08", ogs: "08", aug: "08", sep: "09",
+      okt: "10", oct: "10", nov: "11", dis: "12", dec: "12"
+    };
+    for (const re of datePatterns) {
+      const m = t.match(re);
+      if (m) {
+        if (m[2] && isNaN(m[2])) {
+          // 21 Sep 2026
+          const mm = bulanMap[m[2].toLowerCase().slice(0, 3)];
+          if (mm) {
+            result.tarikh = m[3] + "-" + mm + "-" + String(m[1]).padStart(2, "0");
+            break;
+          }
+        } else if (m[1].length === 4) {
+          result.tarikh = m[1] + "-" + String(m[2]).padStart(2, "0") + "-" + String(m[3]).padStart(2, "0");
+          break;
+        } else {
+          result.tarikh = m[3] + "-" + String(m[2]).padStart(2, "0") + "-" + String(m[1]).padStart(2, "0");
+          break;
+        }
+      }
+    }
+
+    // No resit
+    const nr = t.match(/(?:no\.?\s*resit|resit\s*no\.?|rujukan)[^\w]{0,10}([A-Z0-9\-\/]+)/i);
+    if (nr) result.noResit = nr[1].trim();
+
+    // Keterangan: ambil baris bermakna (bukan tarikh/jumlah sahaja)
+    const lines = t.split("\n").map(l => l.trim()).filter(l => l.length > 3);
+    const skip = /^(rm|jumlah|total|tarikh|date|resit|no\.|bil)/i;
+    for (const line of lines) {
+      if (!skip.test(line) && !/^\d+([.,]\d+)?$/.test(line) && line.length > 5) {
+        result.keterangan = line.substring(0, 120);
+        break;
+      }
+    }
+
+    return result;
+  }
+
+  async function runOCR(file) {
+    const hint = document.getElementById("ocrHint");
+    hint.classList.add("show");
+    hint.textContent = "🔍 Membaca resit (OCR)... Sila tunggu.";
+    try {
+      const { data: { text } } = await Tesseract.recognize(file, "eng+msa", {
+        logger: m => {
+          if (m.status === "recognizing text") {
+            hint.textContent = "🔍 Membaca resit... " + Math.round((m.progress || 0) * 100) + "%";
+          }
+        }
+      });
+      const parsed = parseResitText(text || "");
+      const filled = [];
+
+      if (parsed.jumlah != null) {
+        document.getElementById("jumlah").value = parsed.jumlah;
+        filled.push("Jumlah RM " + parsed.jumlah);
+      }
+      if (parsed.tarikh) {
+        document.getElementById("tarikh").value = parsed.tarikh;
+        filled.push("Tarikh " + parsed.tarikh);
+      }
+      if (parsed.keterangan && !document.getElementById("keterangan").value) {
+        document.getElementById("keterangan").value = parsed.keterangan;
+        filled.push("Keterangan");
+      }
+      if (parsed.noResit && !document.getElementById("noResit").value) {
+        document.getElementById("noResit").value = parsed.noResit;
+        filled.push("No. Resit");
+      }
+
+      if (filled.length) {
+        hint.textContent = "✅ Auto-isi: " + filled.join(", ") + ". Semak & lengkapkan medan lain sebelum simpan.";
+      } else {
+        hint.textContent = "⚠️ OCR tidak jumpa jumlah/tarikh. Isi manual. (Foto lebih jelas = lebih baik)";
+      }
+    } catch (e) {
+      console.error(e);
+      hint.textContent = "⚠️ OCR gagal. Isi borang secara manual.";
+    }
   }
 
   function renderCharts() {
@@ -708,12 +834,10 @@
     let rows = sortByTarikhMasa(
       getFiltered().filter(r => r.buktiUrl && String(r.buktiUrl).trim() !== "")
     );
-
     if (rows.length === 0) {
       alert("Tiada resit dalam tapisan semasa.");
       return;
     }
-
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
     const ySel = document.getElementById("filterTahun").value;
@@ -730,14 +854,9 @@
     doc.setTextColor(0, 0, 0);
 
     let y = 34;
-
     for (let i = 0; i < rows.length; i++) {
       const r = rows[i];
-      if (y > 250) {
-        doc.addPage();
-        y = 20;
-      }
-
+      if (y > 250) { doc.addPage(); y = 20; }
       doc.setFontSize(11);
       doc.setFont(undefined, "bold");
       doc.text((i + 1) + ". " + (r.noRujukan || "Tiada rujukan"), 14, y);
@@ -755,8 +874,6 @@
       y += ket.length * 5 + 2;
       doc.text("Key-in: " + (r.penama || "-") + "  |  Status: " + (r.status || "-"), 14, y);
       y += 6;
-
-      // FULL LINK — sentiasa nampak & boleh klik
       doc.setFontSize(8);
       doc.setTextColor(30, 100, 200);
       const linkLines = doc.splitTextToSize("Link resit: " + r.buktiUrl, 180);
@@ -769,7 +886,6 @@
       doc.setTextColor(0, 0, 0);
       doc.setFontSize(9);
       y += 3;
-
       try {
         const dataUrl = await loadImageAsDataUrl(r.buktiUrl);
         if (dataUrl) {
@@ -779,23 +895,21 @@
         } else {
           doc.setFontSize(8);
           doc.setTextColor(150);
-          doc.text("(Gambar tidak dapat dibenam dalam PDF — buka link di atas)", 14, y);
+          doc.text("(Gambar tidak dapat dibenam — buka link di atas)", 14, y);
           doc.setTextColor(0, 0, 0);
           y += 6;
         }
       } catch (e) {
         doc.setFontSize(8);
         doc.setTextColor(150);
-        doc.text("(Gambar tidak dapat dibenam dalam PDF — buka link di atas)", 14, y);
+        doc.text("(Gambar tidak dapat dibenam — buka link di atas)", 14, y);
         doc.setTextColor(0, 0, 0);
         y += 6;
       }
-
       doc.setDrawColor(200);
       doc.line(14, y, 196, y);
       y += 10;
     }
-
     doc.save("Resit_PAK_" + (ySel === "all" ? "semua" : ySel) + (mSel !== "all" ? "_" + mSel : "") + ".pdf");
   };
 
@@ -843,6 +957,7 @@
     const preview = document.getElementById("buktiPreview");
     document.getElementById("buktiUrl").value = "";
     preview.style.display = "none";
+    document.getElementById("ocrHint").classList.remove("show");
     if (!file) return;
     if (file.size > 10 * 1024 * 1024) {
       msg.textContent = "❌ Fail terlalu besar (max 10MB)";
@@ -850,6 +965,11 @@
     }
     preview.src = URL.createObjectURL(file);
     preview.style.display = "block";
+
+    // 1) OCR auto-isi
+    await runOCR(file);
+
+    // 2) Upload ImgBB
     msg.textContent = "⏳ Upload resit (ImgBB)...";
     btnSimpan.disabled = true;
     try {
@@ -859,7 +979,7 @@
       const json = await res.json();
       if (json.success) {
         document.getElementById("buktiUrl").value = json.data.display_url || json.data.url;
-        msg.textContent = "✅ Resit dimuat naik";
+        msg.textContent = "✅ Resit dimuat naik. Semak medan auto-isi.";
       } else {
         msg.textContent = "❌ ImgBB gagal. Paste link manual.";
       }
@@ -906,6 +1026,7 @@
       this.reset();
       document.getElementById("buktiUrl").value = "";
       document.getElementById("buktiPreview").style.display = "none";
+      document.getElementById("ocrHint").classList.remove("show");
       document.getElementById("tarikh").value = new Date().toISOString().slice(0, 10);
       document.getElementById("masa").value = new Date().toTimeString().slice(0, 5);
       passwordInput.value = "";
