@@ -73,7 +73,21 @@
       max-width: 800px;
       margin: 0 auto;
       background: #fff;
+      overflow: hidden;
     }
+    /* Watermark logo PAK — transparent */
+    .resit::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: url("https://i.ibb.co/j9bvkk05/2-D42-C2-F9-9-A7-A-4921-8-E6-E-CA17-A6-A873-E0.jpg")
+                  center center / 55% no-repeat;
+      opacity: 0.08;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .resit > * { position: relative; z-index: 1; }
+
     .resit-top {
       display: flex; justify-content: space-between; gap: 12px; align-items: flex-start;
       margin-bottom: 12px;
@@ -97,6 +111,7 @@
 
     .resit table {
       width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 12px;
+      background: rgba(255,255,255,0.75);
     }
     .resit th {
       background: #1a1a1a; color: #fff; padding: 8px; text-align: left;
@@ -142,6 +157,7 @@
         display: block !important; background: #fff; padding: 0; margin: 0;
       }
       header, .panel, .no-print { display: none !important; }
+      .resit::before { opacity: 0.07; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     }
   </style>
 </head>
@@ -301,8 +317,7 @@
 </div>
 
 <script>
-  // GANTI dengan Web App URL kau
-  const API_URL = "https://script.google.com/macros/s/GANTI_URL_WEB_APP/exec";
+  const API_URL = "https://script.google.com/macros/s/AKfycbxR373Z2bqcOkF4higYMpJ2oTyyLo5d4B665pa8JVQnMy8aycXzDoPIxv6z7mLLvs7H/exec";
 
   document.getElementById("tarikh").value = new Date().toISOString().slice(0, 10);
 
@@ -343,7 +358,6 @@
     return d.toLocaleDateString("ms-MY", { day: "2-digit", month: "short", year: "numeric" });
   }
 
-  /** Format untuk tengah cop: 22 SEP 2026 */
   function formatCopTarikh(iso) {
     if (!iso) return "";
     const d = new Date(iso + "T00:00:00");
@@ -379,7 +393,6 @@
     const total = jumlah1 + jumlah2 + jumlah3;
     const perkataan = ringgitKePerkataan(total);
 
-    // Papar resit
     document.getElementById("rNo").textContent = noResit;
     document.getElementById("rTarikh").textContent = formatTarikh(tarikh);
     document.getElementById("rDari").textContent = dari;
@@ -413,7 +426,6 @@
       penerimaNama: namaTerima, catatan
     };
 
-    // Auto simpan ke Sheet
     msg.textContent = "⏳ Menjana & menyimpan ke Sheet...";
     try {
       await fetch(API_URL, {
