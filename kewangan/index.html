@@ -546,18 +546,25 @@
         filled.push(data.jenis);
       }
 
-            if (amaran) {
+      const amaran = semakBerganda(data);
+
+      let msg = filled.length
+        ? "✅ Gemini auto-isi: " + filled.join(", ") + ". Semak sebelum simpan."
+        : "⚠️ Gemini tak jumpa data jelas. Isi manual.";
+
+      if (amaran) {
         msg += "\n" + amaran;
         hint.classList.add("warn");
-        const terus = confirm(
+        alert(
           "AMARAN: Mungkin rekod berganda!\n\n" +
           amaran.replace("⚠️ ", "") +
-          "\n\nTekan OK untuk teruskan (semak dulu).\nTekan Batal untuk kosongkan jumlah."
+          "\n\nSila semak sebelum simpan."
         );
-        if (!terus) {
-          document.getElementById("jumlah").value = "";
-        }
+      } else {
+        hint.classList.remove("warn");
       }
+
+      hint.textContent = msg;
     } catch (e) {
       console.error(e);
       hint.classList.remove("warn");
