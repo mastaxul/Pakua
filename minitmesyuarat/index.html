@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>PAK – Penjana Minit Mesyuarat</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" href="https://i.ibb.co/DD7QKDFV/2-D42-C2-F9-9-A7-A-4921-8-E6-E-CA17-A6-A873-E0.jpg">
+<style>
+:root{
+  --bg:#0d0d0d;--panel:#1a1a1a;--card:#222;--red:#c41e3a;--green:#2e7d32;
+  --purple:#6a1b9a;--text:#f5f5f5;--muted:#999;--border:#333;--gold:#d4af37;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.45;min-height:100vh}
+button,input,select,textarea{font:inherit}
+a{color:inherit}
+.hidden{display:none!important}
+.app-header{background:var(--panel);border-bottom:3px solid var(--red);padding:12px 16px;position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.app-header h1{font-size:1rem;color:#c9b6ff}
+.btn{border:none;border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer;color:#fff;background:var(--red)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn-sec{background:#333}
+.btn-green{background:var(--green)}
+.btn-purple{background:var(--purple)}
+.btn-sm{padding:6px 10px;font-size:.85rem;border-radius:8px}
+.wrap{max-width:1100px;margin:0 auto;padding:16px 12px 40px}
+.grid-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:16px 0}
+.stat{background:#fff;color:#222;border-radius:12px;padding:14px}
+.stat .lbl{font-size:.78rem;color:#666}
+.stat .val{font-size:1.35rem;font-weight:800;margin-top:4px}
+.menu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:18px}
+.menu-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 14px;text-align:center;cursor:pointer;transition:transform .15s}
+.menu-card:active{transform:scale(.98)}
+.menu-card .ico{font-size:1.6rem;margin-bottom:8px}
+.menu-card .ttl{font-weight:700}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:14px}
+.panel h2{font-size:1.05rem;margin-bottom:12px;color:#c9b6ff}
+label{display:block;font-size:.85rem;color:var(--muted);margin:8px 0 4px}
+input,select,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #555;background:#111;color:#fff}
+textarea{min-height:70px;resize:vertical}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+@media(max-width:700px){.row2,.row3{grid-template-columns:1fr}}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+table{width:100%;border-collapse:collapse;font-size:.85rem;background:#fff;color:#222;border-radius:10px;overflow:hidden}
+th,td{padding:8px;border-bottom:1px solid #eee;text-align:left;vertical-align:top}
+th{background:#f3e5f5;color:#4a148c}
+.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.75rem;font-weight:700}
+.b-hadir{background:#e8f5e9;color:#2e7d32}
+.b-th{background:#ffebee;color:#c62828}
+.b-thb{background:#fff8e1;color:#f57f17}
+.b-belum{background:#eceff1;color:#455a64}
+.b-dalam{background:#e3f2fd;color:#1565c0}
+.b-selesai{background:#e8f5e9;color:#2e7d32}
+.agenda-card{background:#1e1e1e;border:1px solid #444;border-radius:12px;padding:12px;margin-bottom:10px}
+.agenda-card h3{font-size:.95rem;margin-bottom:8px}
+.list-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px 16px;border-radius:10px;z-index:100;display:none}
+.toast.show{display:block}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:60;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{background:var(--panel);border-radius:14px;padding:18px;max-width:520px;width:100%;max-height:90vh;overflow:auto}
+.modal h3{margin-bottom:10px}
+.preview-wrap{background:#555;padding:16px;border-radius:12px;overflow:auto}
+.doc-a4{
+  width:210mm;max-width:100%;min-height:297mm;margin:0 auto;background:#fff;color:#111;
+  padding:18mm 16mm;font-family:'Times New Roman',Times,serif;font-size:11pt;line-height:1.4;
+  box-shadow:0 4px 24px rgba(0,0,0,.4)
+}
+.doc-a4 h1{text-align:center;font-size:14pt;margin:8px 0}
+.doc-a4 h2{font-size:12pt;margin:14px 0 6px;border-bottom:1px solid #333;padding-bottom:3px}
+.doc-a4 .org{text-align:center;font-size:10pt}
+.doc-a4 .logo{display:block;margin:0 auto 6px;max-height:60px}
+.doc-a4 table{width:100%;border-collapse:collapse;margin:8px 0;font-size:10pt}
+.doc-a4 th,.doc-a4 td{border:1px solid #333;padding:4px 6px}
+.doc-a4 .sign{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:36px}
+.doc-a4 .sign .box{text-align:center;min-height:90px}
+.doc-a4 .agenda-item{margin:12px 0}
+.doc-a4 .muted{color:#444;font-size:10pt}
+@media print{
+  body *{visibility:hidden}
+  #printArea,#printArea *{visibility:visible}
+  #printArea{position:absolute;left:0;top:0;width:100%}
+  .doc-a4{box-shadow:none;width:100%;padding:12mm}
+  .no-print{display:none!important}
+}
+</style>
+</head>
+<body>
+
+<header class="app-header no-print">
+  <div>
+    <h1>PAK · Penjana Minit Mesyuarat</h1>
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <button class="btn btn-sec btn-sm" type="button" data-nav="dashboard">Dashboard</button>
+    <button class="btn btn-sm" type="button" data-nav="borang">+ Minit Baharu</button>
+  </div>
+</header>
+
+<div class="wrap no-print">
+
+  <!-- DASHBOARD -->
+  <section id="page-dashboard">
+    <h2 style="margin-top:8px">Dashboard</h2>
+    <p style="color:var(--muted);font-size:.9rem">Pertubuhan Aktivis Keusahawanan (PAK)</p>
+    <div class="grid-stats">
+      <div class="stat"><div class="lbl">Jumlah Minit</div><div class="val" id="stTotal">0</div></div>
+      <div class="stat"><div class="lbl">Minit Tahun Semasa</div><div class="val" id="stYear">0</div></div>
+      <div class="stat"><div class="lbl">Mesyuarat Bulan Semasa</div><div class="val" id="stMonth">0</div></div>
+      <div class="stat"><div class="lbl">Tindakan Belum Selesai</div><div class="val" id="stTodo" style="color:#c41e3a">0</div></div>
+    </div>
+    <div class="menu-grid">
+      <div class="menu-card" data-nav="borang"><div class="ico">📝</div><div class="ttl">Minit Baharu</div></div>
+      <div class="menu-card" data-nav="rekod"><div class="ico">📂</div><div class="ttl">Rekod Minit</div></div>
+      <div class="menu-card" data-nav="ahli"><div class="ico">👥</div><div class="ttl">Senarai Ahli</div></div>
+      <div class="menu-card" data-nav="tindakan"><div class="ico">✅</div><div class="ttl">Tindakan Susulan</div></div>
+      <div class="menu-card" data-nav="tetapan"><div class="ico">⚙️</div><div class="ttl">Tetapan</div></div>
+    </div>
+  </section>
+
+  <!-- BORANG -->
+  <section id="page-borang" class="hidden">
+    <div class="toolbar">
+      <button class="btn btn-sec btn-sm" type="button" data-nav="dashboard">← Kembali</button>
+      <button class="btn btn-sm" type="button" id="btnPreview">Pratonton</button>
+      <button class="btn btn-green btn-sm" type="button" id="btnSave">💾 Simpan</button>
+      <button class="btn btn-purple btn-sm" type="button" id="btnDupFrom">Salin Minit Lain</button>
+    </div>
+
+    <div class="panel">
+      <h2>Maklumat Mesyuarat</h2>
+      <div class="row2">
+        <div><label>Nama organisasi</label><input id="fOrg"></div>
+        <div><label>No. Minit (auto)</label><input id="fNoMinit" readonly></div>
+      </div>
+      <div class="row2">
+        <div><label>Nama mesyuarat *</label><input id="fNama" placeholder="cth: Mesyuarat Jawatankuasa"></div>
+        <div><label>Bil. mesyuarat</label><input id="fBil" type="number" min="1" value="1"></div>
+      </div>
+      <div class="row3">
+        <div><label>Tahun</label><input id="fTahun" type="number"></div>
+        <div><label>Tarikh *</label><input id="fTarikh" type="date"></div>
+        <div><label>Hari</label><input id="fHari" readonly></div>
+      </div>
+      <div class="row3">
+        <div><label>Masa mula</label><input id="fMula" type="time"></div>
+        <div><label>Masa tamat</label><input id="fTamat" type="time"></div>
+        <div><label>Tempat</label><input id="fTempat"></div>
+      </div>
+      <div class="row2">
+        <div><label>Pengerusi *</label><input id="fPengerusi"></div>
+        <div><label>Setiausaha *</label><input id="fSetiausaha"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Kehadiran <span id="hadirCount" style="font-size:.85rem;color:var(--muted)"></span></h2>
+      <div class="toolbar">
+        <button class="btn btn-sm" type="button" id="btnAddHadir">+ Tambah baris</button>
+        <button class="btn btn-sec btn-sm" type="button" id="btnPickAhli">Pilih dari Senarai Ahli</button>
+      </div>
+      <div style="overflow-x:auto">
+        <table>
+          <thead><tr><th>Nama</th><th>Jawatan</th><th>Status</th><th></th></tr></thead>
+          <tbody id="hadirBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Agenda</h2>
+      <div id="agendaList"></div>
+      <button class="btn btn-sm" type="button" id="btnAddAgenda">+ Tambah Agenda</button>
+    </div>
+
+    <div class="toolbar">
+      <button class="btn btn-sm" type="button" id="btnPreview2">Pratonton Minit</button>
+      <button class="btn btn-green btn-sm" type="button" id="btnSave2">💾 Simpan</button>
+    </div>
+  </section>
+
+  <!-- PREVIEW -->
+  <section id="page-preview" class="hidden">
+    <div class="toolbar no-print">
+      <button class="btn btn-sec btn-sm" type="button" id="btnBackEdit">← Edit</button>
+      <button class="btn btn-sm" type="button" id="btnPrint">🖨️ Cetak</button>
+      <button class="btn btn-sm" type="button" id="btnPdf">📄 PDF</button>
+      <button class="btn btn-sm" type="button" id="btnWord">📝 Word</button>
+      <button class="btn btn-sec btn-sm" type="button" id="btnCopy">📋 Salin teks</button>
+      <button class="btn btn-green btn-sm" type="button" id="btnSave3">💾 Simpan</button>
+    </div>
+    <div class="preview-wrap" id="printArea"></div>
+  </section>
+
+  <!-- REKOD -->
+  <section id="page-rekod" class="hidden">
+    <div class="toolbar">
+      <button class="btn btn-sec btn-sm" type="button" data-nav="dashboard">← Kembali</button>
+      <input type="search" id="rekodCari" placeholder="Cari..." style="max-width:200px">
+      <select id="rekodTahun"><option value="all">Semua tahun</option></select>
+      <select id="rekodBulan">
+        <option value="all">Semua bulan</option>
+        <option value="01">Jan</option><option value="02">Feb</option><option value="03">Mac</option>
+        <option value="04">Apr</option><option value="05">Mei</option><option value="06">Jun</option>
+        <option value="07">Jul</option><option value="08">Ogo</option><option value="09">Sep</option>
+        <option value="10">Okt</option><option value="11">Nov</option><option value="12">Dis</option>
+      </select>
+    </div>
+    <div style="overflow-x:auto">
+      <table>
+        <thead><tr><th>No. Minit</th><th>Mesyuarat</th><th>Tarikh</th><th>Pengerusi</th><th>Status</th><th>Tindakan</th></tr></thead>
+        <tbody id="rekodBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- AHLI -->
+  <section id="page-ahli" class="hidden">
+    <div class="toolbar">
+      <button class="btn btn-sec btn-sm" type="button" data-nav="dashboard">← Kembali</button>
+      <button class="btn btn-sm" type="button" id="btnAhliBaru">+ Ahli Baharu</button>
+    </div>
+    <div style="overflow-x:auto">
+      <table>
+        <thead><tr><th>Nama</th><th>No. Ahli</th><th>Jawatan</th><th>Telefon</th><th>E-mel</th><th>Status</th><th></th></tr></thead>
+        <tbody id="ahliBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- TINDAKAN -->
+  <section id="page-tindakan" class="hidden">
+    <div class="toolbar">
+      <button class="btn btn-sec btn-sm" type="button" data-nav="dashboard">← Kembali</button>
+    </div>
+    <div style="overflow-x:auto">
+      <table>
+        <thead><tr><th>Bil</th><th>Perkara</th><th>Tindakan</th><th>PIC</th><th>Tarikh Akhir</th><th>Status</th><th>Dari Minit</th></tr></thead>
+        <tbody id="todoBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- TETAPAN -->
+  <section id="page-tetapan" class="hidden">
+    <div class="toolbar">
+      <button class="btn btn-sec btn-sm" type="button" data-nav="dashboard">← Kembali</button>
+      <button class="btn btn-green btn-sm" type="button" id="btnSaveSet">Simpan Tetapan</button>
+    </div>
+    <div class="panel">
+      <h2>Organisasi</h2>
+      <label>Nama organisasi</label><input id="sOrg">
+      <label>Alamat</label><textarea id="sAlamat"></textarea>
+      <div class="row2">
+        <div><label>Telefon</label><input id="sTel"></div>
+        <div><label>E-mel</label><input id="sEmail" type="email"></div>
+      </div>
+      <label>URL Logo (ImgBB / pautan gambar)</label><input id="sLogo" placeholder="https://...">
+      <label>Format no. minit (guna {TAHUN} dan {SEQ})</label><input id="sFormat" placeholder="PAK/MM/{TAHUN}/{SEQ}">
+      <label>Google Apps Script Web App URL</label><input id="sGas" placeholder="https://script.google.com/macros/s/.../exec">
+      <p style="color:var(--muted);font-size:.8rem;margin-top:8px">Tanpa URL, data disimpan dalam LocalStorage sahaja.</p>
+    </div>
+  </section>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function () {
+  const LS = {
+    meetings: 'pak_minit_meetings',
+    members: 'pak_minit_members',
+    settings: 'pak_minit_settings',
+    draft: 'pak_minit_draft',
+    seq: 'pak_minit_seq'
+  };
+
+  const defaultSettings = {
+    org: 'Pertubuhan Aktivis Keusahawanan (PAK)',
+    alamat: '',
+    tel: '',
+    email: '',
+    logo: 'https://i.ibb.co/DD7QKDFV/2-D42-C2-F9-9-A7-A-4921-8-E6-E-CA17-A6-A873-E0.jpg',
+    format: 'PAK/MM/{TAHUN}/{SEQ}',
+    gasUrl: ''
+  };
+
+  let settings = loadJSON(LS.settings, defaultSettings);
+  let meetings = loadJSON(LS.meetings, []);
+  let members = loadJSON(LS.members, []);
+  let current = emptyMeeting();
+  let editId = null;
+
+  function loadJSON(k, def) {
+    try { return JSON.parse(localStorage.getItem(k)) || def; } catch { return def; }
+  }
+  function saveJSON(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
+
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  function emptyMeeting() {
+    const y = new Date().getFullYear();
+    return {
+      id: 'm_' + Date.now(),
+      noMinit: '',
+      org: settings.org,
+      nama: '',
+      bil: 1,
+      tahun: y,
+      tarikh: '',
+      hari: '',
+      mula: '',
+      tamat: '',
+      tempat: '',
+      pengerusi: '',
+      setiausaha: '',
+      hadir: [],
+      agenda: [],
+      status: 'Draf',
+      updatedAt: new Date().toISOString()
+    };
+  }
+
+  function nextNoMinit(tahun) {
+    const seqKey = LS.seq + '_' + tahun;
+    let seq = parseInt(localStorage.getItem(seqKey) || '0', 10) + 1;
+    localStorage.setItem(seqKey, String(seq));
+    const fmt = settings.format || 'PAK/MM/{TAHUN}/{SEQ}';
+    return fmt.replace('{TAHUN}', tahun).replace('{SEQ}', String(seq).padStart(3, '0'));
+  }
+
+  function hariDariTarikh(iso) {
+    if (!iso) return '';
+    const d = new Date(iso + 'T12:00:00');
+    return ['Ahad','Isnin','Selasa','Rabu','Khamis','Jumaat','Sabtu'][d.getDay()];
+  }
+
+  /* NAV */
+  function showPage(name) {
+    ['dashboard','borang','preview','rekod','ahli','tindakan','tetapan'].forEach(p => {
+      const el = document.getElementById('page-' + p);
+      if (el) el.classList.toggle('hidden', p !== name);
+    });
+    if (name === 'dashboard') refreshStats();
+    if (name === 'rekod') renderRekod();
+    if (name === 'ahli') renderAhli();
+    if (name === 'tindakan') renderTodo();
+    if (name === 'tetapan') fillSettings();
+    if (name === 'borang') fillForm();
+    window.scrollTo(0, 0);
+  }
+
+  document.querySelectorAll('[data-nav]').forEach(el => {
+    el.addEventListener('click', () => {
+      const n = el.getAttribute('data-nav');
+      if (n === 'borang') {
+        editId = null;
+        current = emptyMeeting();
+        current.noMinit = nextNoMinit(current.tahun);
+        current.org = settings.org;
+      }
+      showPage(n);
+    });
+  });
+
+  /* STATS */
+  function refreshStats() {
+    const y = new Date().getFullYear();
+    const m = String(new Date().getMonth() + 1).padStart(2, '0');
+    document.getElementById('stTotal').textContent = meetings.length;
+    document.getElementById('stYear').textContent = meetings.filter(x => String(x.tahun) === String(y)).length;
+    document.getElementById('stMonth').textContent = meetings.filter(x => (x.tarikh || '').startsWith(y + '-' + m)).length;
+    let todo = 0;
+    meetings.forEach(mt => (mt.agenda || []).forEach(a => {
+      if (a.tindakan && a.statusTindakan !== 'Selesai') todo++;
+    }));
+    document.getElementById('stTodo').textContent = todo;
+  }
+
+  /* FORM */
+  function fillForm() {
+    const c = current;
+    document.getElementById('fOrg').value = c.org || settings.org;
+    document.getElementById('fNoMinit').value = c.noMinit || '';
+    document.getElementById('fNama').value = c.nama || '';
+    document.getElementById('fBil').value = c.bil || 1;
+    document.getElementById('fTahun').value = c.tahun || new Date().getFullYear();
+    document.getElementById('fTarikh').value = c.tarikh || '';
+    document.getElementById('fHari').value = c.hari || hariDariTarikh(c.tarikh);
+    document.getElementById('fMula').value = c.mula || '';
+    document.getElementById('fTamat').value = c.tamat || '';
+    document.getElementById('fTempat').value = c.tempat || '';
+    document.getElementById('fPengerusi').value = c.pengerusi || '';
+    document.getElementById('fSetiausaha').value = c.setiausaha || '';
+    renderHadir();
+    renderAgenda();
+  }
+
+  function readForm() {
+    current.org = document.getElementById('fOrg').value.trim();
+    current.noMinit = document.getElementById('fNoMinit').value.trim();
+    current.nama = document.getElementById('fNama').value.trim();
+    current.bil = parseInt(document.getElementById('fBil').value, 10) || 1;
+    current.tahun = parseInt(document.getElementById('fTahun').value, 10) || new Date().getFullYear();
+    current.tarikh = document.getElementById('fTarikh').value;
+    current.hari = document.getElementById('fHari').value;
+    current.mula = document.getElementById('fMula').value;
+    current.tamat = document.getElementById('fTamat').value;
+    current.tempat = document.getElementById('fTempat').value.trim();
+    current.pengerusi = document.getElementById('fPengerusi').value.trim();
+    current.setiausaha = document.getElementById('fSetiausaha').value.trim();
+    current.updatedAt = new Date().toISOString();
+  }
+
+  document.getElementById('fTarikh').addEventListener('change', function () {
+    document.getElementById('fHari').value = hariDariTarikh(this.value);
+    autoSaveDraft();
+  });
+
+  ['fOrg','fNama','fBil','fTahun','fMula','fTamat','fTempat','fPengerusi','fSetiausaha'].forEach(id => {
+    document.getElementById(id).addEventListener('input', autoSaveDraft);
+  });
+
+  function autoSaveDraft() {
+    readForm();
+    saveJSON(LS.draft, current);
+  }
+
+  /* HADIR */
+  function renderHadir() {
+    const tb = document.getElementById('hadirBody');
+    tb.innerHTML = '';
+    let h = 0, th = 0, thb = 0;
+    (current.hadir || []).forEach((r, i) => {
+      if (r.status === 'Hadir') h++;
+      else if (r.status === 'Tidak Hadir Bersebab') thb++;
+      else th++;
+      const tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td><input data-h="nama" data-i="' + i + '" value="' + esc(r.nama) + '"></td>' +
+        '<td><input data-h="jawatan" data-i="' + i + '" value="' + esc(r.jawatan) + '"></td>' +
+        '<td><select data-h="status" data-i="' + i + '">' +
+        ['Hadir','Tidak Hadir','Tidak Hadir Bersebab'].map(s =>
+          '<option' + (r.status === s ? ' selected' : '') + '>' + s + '</option>').join('') +
+        '</select></td>' +
+        '<td><button type="button" class="btn btn-sec btn-sm" data-del-h="' + i + '">Padam</button></td>';
+      tb.appendChild(tr);
+    });
+    document.getElementById('hadirCount').textContent =
+      '(Hadir: ' + h + ' · Tidak hadir: ' + th + ' · Bersebab: ' + thb + ')';
+
+    tb.querySelectorAll('[data-h]').forEach(inp => {
+      inp.addEventListener('change', () => {
+        const i = +inp.getAttribute('data-i');
+        const k = inp.getAttribute('data-h');
+        current.hadir[i][k] = inp.value;
+        autoSaveDraft();
+        if (k === 'status') renderHadir();
+      });
+      inp.addEventListener('input', () => {
+        const i = +inp.getAttribute('data-i');
+        const k = inp.getAttribute('data-h');
+        if (k !== 'status') current.hadir[i][k] = inp.value;
+      });
+    });
+    tb.querySelectorAll('[data-del-h]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        current.hadir.splice(+btn.getAttribute('data-del-h'), 1);
+        renderHadir();
+        autoSaveDraft();
+      });
+    });
+  }
+
+  document.getElementById('btnAddHadir').onclick = () => {
+    current.hadir.push({ nama: '', jawatan: '', status: 'Hadir' });
+    renderHadir();
+    autoSaveDraft();
+  };
+
+  document.getElementById('btnPickAhli').onclick = () => {
+    if (!members.length) { toast('Tiada ahli. Tambah di Senarai Ahli.'); return; }
+    const aktif = members.filter(m => m.status === 'Aktif');
+    const list = (aktif.length ? aktif : members);
+    list.forEach(m => {
+      if (!current.hadir.some(h => h.nama === m.nama)) {
+        current.hadir.push({ nama: m.nama, jawatan: m.jawatan || '', status: 'Hadir' });
+      }
+    });
+    renderHadir();
+    autoSaveDraft();
+    toast('Ahli dimuatkan');
+  };
+
+  /* AGENDA */
+  function renderAgenda() {
+    const box = document.getElementById('agendaList');
+    box.innerHTML = '';
+    (current.agenda || []).forEach((a, i) => {
+      const div = document.createElement('div');
+      div.className = 'agenda-card';
+      div.innerHTML =
+        '<h3>Agenda ' + (i + 1) + '</h3>' +
+        '<label>Tajuk</label><input data-a="tajuk" data-i="' + i + '" value="' + esc(a.tajuk) + '">' +
+        '<label>Perbincangan</label><textarea data-a="perbincangan" data-i="' + i + '">' + esc(a.perbincangan) + '</textarea>' +
+        '<label>Keputusan</label><textarea data-a="keputusan" data-i="' + i + '">' + esc(a.keputusan) + '</textarea>' +
+        '<label>Tindakan</label><textarea data-a="tindakan" data-i="' + i + '">' + esc(a.tindakan) + '</textarea>' +
+        '<div class="row2"><div><label>Pegawai bertanggungjawab</label>' +
+        '<input data-a="pic" data-i="' + i + '" value="' + esc(a.pic) + '"></div>' +
+        '<div><label>Tarikh akhir</label>' +
+        '<input type="date" data-a="tarikhAkhir" data-i="' + i + '" value="' + esc(a.tarikhAkhir) + '"></div></div>' +
+        '<label>Status tindakan</label><select data-a="statusTindakan" data-i="' + i + '">' +
+        ['Belum Mula','Dalam Tindakan','Selesai'].map(s =>
+          '<option' + (a.statusTindakan === s ? ' selected' : '') + '>' + s + '</option>').join('') +
+        '</select>' +
+        '<div class="list-actions">' +
+        '<button type="button" class="btn btn-sec btn-sm" data-up="' + i + '">Naik</button>' +
+        '<button type="button" class="btn btn-sec btn-sm" data-down="' + i + '">Turun</button>' +
+        '<button type="button" class="btn btn-sm" data-del-a="' + i + '" style="background:#555">Hapus</button>' +
+        '</div>';
+      box.appendChild(div);
+    });
+
+    box.querySelectorAll('[data-a]').forEach(el => {
+      const handler = () => {
+        const i = +el.getAttribute('data-i');
+        current.agenda[i][el.getAttribute('data-a')] = el.value;
+        autoSaveDraft();
+      };
+      el.addEventListener('input', handler);
+      el.addEventListener('change', handler);
+    });
+    box.querySelectorAll('[data-del-a]').forEach(btn => {
+      btn.onclick = () => {
+        current.agenda.splice(+btn.getAttribute('data-del-a'), 1);
+        renderAgenda();
+        autoSaveDraft();
+      };
+    });
+    box.querySelectorAll('[data-up]').forEach(btn => {
+      btn.onclick = () => {
+        const i = +btn.getAttribute('data-up');
+        if (i <= 0) return;
+        const t = current.agenda[i - 1];
+        current.agenda[i - 1] = current.agenda[i];
+        current.agenda[i] = t;
+        renderAgenda();
+        autoSaveDraft();
+      };
+    });
+    box.querySelectorAll('[data-down]').forEach(btn => {
+      btn.onclick = () => {
+        const i = +btn.getAttribute('data-down');
+        if (i >= current.agenda.length - 1) return;
+        const t = current.agenda[i + 1];
+        current.agenda[i + 1] = current.agenda[i];
+        current.agenda[i] = t;
+        renderAgenda();
+        autoSaveDraft();
+      };
+    });
+  }
+
+  document.getElementById('btnAddAgenda').onclick = () => {
+    current.agenda.push({
+      tajuk: '', perbincangan: '', keputusan: '', tindakan: '',
+      pic: '', tarikhAkhir: '', statusTindakan: 'Belum Mula'
+    });
+    renderAgenda();
+    autoSaveDraft();
+  };
+
+  /* VALIDATE & SAVE */
+  function validate() {
+    readForm();
+    if (!current.tarikh) { alert('Tarikh mesyuarat diperlukan.'); return false; }
+    if (!current.pengerusi) { alert('Pengerusi diperlukan.'); return false; }
+    if (!current.setiausaha) { alert('Setiausaha diperlukan.'); return false; }
+    if (!current.nama) { alert('Nama mesyuarat diperlukan.'); return false; }
+    if (!current.hadir.length) { alert('Sekurang-kurangnya seorang ahli perlu ditambah.'); return false; }
+    return true;
+  }
+
+  async function saveMeeting() {
+    if (!validate()) return;
+    current.status = 'Disimpan';
+    current.updatedAt = new Date().toISOString();
+    if (editId) {
+      const idx = meetings.findIndex(m => m.id === editId);
+      if (idx >= 0) meetings[idx] = JSON.parse(JSON.stringify(current));
+    } else {
+      meetings.unshift(JSON.parse(JSON.stringify(current)));
+      editId = current.id;
+    }
+    saveJSON(LS.meetings, meetings);
+    localStorage.removeItem(LS.draft);
+    toast('Minit disimpan (peranti ini)');
+    if (settings.gasUrl) {
+      try {
+        await fetch(settings.gasUrl, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'saveMeeting', data: current })
+        });
+        toast('Cuba sync ke Google Sheets…');
+      } catch (e) { console.warn(e); }
+    }
+    refreshStats();
+  }
+
+  document.getElementById('btnSave').onclick = saveMeeting;
+  document.getElementById('btnSave2').onclick = saveMeeting;
+  document.getElementById('btnSave3').onclick = saveMeeting;
+
+  /* PREVIEW */
+  function buildDocHTML(m) {
+    const logo = settings.logo ? '<img class="logo" src="' + esc(settings.logo) + '" alt="Logo">' : '';
+    let hadirRows = (m.hadir || []).map((h, i) =>
+      '<tr><td>' + (i + 1) + '</td><td>' + esc(h.nama) + '</td><td>' + esc(h.jawatan) + '</td><td>' + esc(h.status) + '</td></tr>'
+    ).join('');
+    let agendaHtml = (m.agenda || []).map((a, i) =>
+      '<div class="agenda-item"><strong>' + (i + 1) + '. ' + esc(a.tajuk || '(Tanpa tajuk)') + '</strong>' +
+      '<p><em>Perbincangan:</em><br>' + esc(a.perbincangan).replace(/\n/g, '<br>') + '</p>' +
+      '<p><em>Keputusan:</em><br>' + esc(a.keputusan).replace(/\n/g, '<br>') + '</p>' +
+      (a.tindakan ? '<p><em>Tindakan:</em><br>' + esc(a.tindakan).replace(/\n/g, '<br>') +
+        (a.pic ? '<br>PIC: ' + esc(a.pic) : '') +
+        (a.tarikhAkhir ? ' · Tarikh akhir: ' + esc(a.tarikhAkhir) : '') + '</p>' : '') +
+      '</div>'
+    ).join('');
+
+    return '<div class="doc-a4">' +
+      logo +
+      '<div class="org"><strong>' + esc(m.org || settings.org) + '</strong><br>' +
+      esc(settings.alamat) +
+      (settings.tel ? '<br>Tel: ' + esc(settings.tel) : '') +
+      (settings.email ? ' · ' + esc(settings.email) : '') + '</div>' +
+      '<h1>MINIT MESYUARAT<br>' + esc(m.nama) + '</h1>' +
+      '<p class="muted">No. Minit: <strong>' + esc(m.noMinit) + '</strong> &nbsp;|&nbsp; Bil: ' + esc(m.bil) +
+      ' &nbsp;|&nbsp; Tahun: ' + esc(m.tahun) + '</p>' +
+      '<table><tr><th>Tarikh</th><td>' + esc(m.tarikh) + ' (' + esc(m.hari) + ')</td></tr>' +
+      '<tr><th>Masa</th><td>' + esc(m.mula) + ' – ' + esc(m.tamat) + '</td></tr>' +
+      '<tr><th>Tempat</th><td>' + esc(m.tempat) + '</td></tr>' +
+      '<tr><th>Pengerusi</th><td>' + esc(m.pengerusi) + '</td></tr>' +
+      '<tr><th>Setiausaha</th><td>' + esc(m.setiausaha) + '</td></tr></table>' +
+      '<h2>KEHADIRAN</h2>' +
+      '<table><thead><tr><th>Bil</th><th>Nama</th><th>Jawatan</th><th>Status</th></tr></thead><tbody>' +
+      hadirRows + '</tbody></table>' +
+      '<h2>AGENDA</h2>' + agendaHtml +
+      '<div class="sign">' +
+      '<div class="box"><strong>DISEDIAKAN OLEH</strong><br>Setiausaha<br><br><br>................................<br>' +
+      esc(m.setiausaha) + '<br>Tarikh: _______________</div>' +
+      '<div class="box"><strong>DISAHKAN OLEH</strong><br>Pengerusi<br><br><br>................................<br>' +
+      esc(m.pengerusi) + '<br>Tarikh: _______________</div>' +
+      '</div>' +
+      '<p class="muted" style="margin-top:24px;text-align:center;font-size:9pt">' +
+      esc(m.noMinit) + ' · ' + esc(m.tarikh) + '</p>' +
+      '</div>';
+  }
+
+  function openPreview() {
+    if (!validate()) return;
+    document.getElementById('printArea').innerHTML = buildDocHTML(current);
+    showPage('preview');
+  }
+
+  document.getElementById('btnPreview').onclick = openPreview;
+  document.getElementById('btnPreview2').onclick = openPreview;
+  document.getElementById('btnBackEdit').onclick = () => showPage('borang');
+  document.getElementById('btnPrint').onclick = () => window.print();
+
+  document.getElementById('btnPdf').onclick = () => {
+    toast('Guna Cetak → Destination: Save as PDF');
+    setTimeout(() => window.print(), 400);
+  };
+
+  document.getElementById('btnWord').onclick = () => {
+    const html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><title>Minit</title></head><body>' +
+      document.getElementById('printArea').innerHTML + '</body></html>';
+    const blob = new Blob(['\ufeff', html], { type: 'application/msword' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = (current.noMinit || 'minit').replace(/\//g, '-') + '.doc';
+    a.click();
+  };
+
+  document.getElementById('btnCopy').onclick = async () => {
+    const text = document.getElementById('printArea').innerText;
+    try {
+      await navigator.clipboard.writeText(text);
+      toast('Teks disalin');
+    } catch {
+      alert('Salin manual dari pratonton');
+    }
+  };
+
+  /* REKOD */
+  function renderRekod() {
+    const ySel = document.getElementById('rekodTahun');
+    const years = [...new Set(meetings.map(m => String(m.tahun)))].sort().reverse();
+    const cur = ySel.value || 'all';
+    ySel.innerHTML = '<option value="all">Semua tahun</option>' +
+      years.map(y => '<option value="' + y + '">' + y + '</option>').join('');
+    ySel.value = years.includes(cur) ? cur : 'all';
+
+    const q = (document.getElementById('rekodCari').value || '').toLowerCase();
+    const y = ySel.value;
+    const m = document.getElementById('rekodBulan').value;
+    const rows = meetings.filter(r => {
+      if (y !== 'all' && String(r.tahun) !== y) return false;
+      if (m !== 'all' && !(r.tarikh || '').includes('-' + m + '-')) return false;
+      if (q) {
+        const hay = [r.noMinit, r.nama, r.pengerusi, r.tempat].join(' ').toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    });
+
+    document.getElementById('rekodBody').innerHTML = rows.map(r =>
+      '<tr><td>' + esc(r.noMinit) + '</td><td>' + esc(r.nama) + '</td><td>' + esc(r.tarikh) +
+      '</td><td>' + esc(r.pengerusi) + '</td><td>' + esc(r.status) + '</td><td>' +
+      '<button type="button" class="btn btn-sm btn-sec" data-view="' + esc(r.id) + '">Lihat</button> ' +
+      '<button type="button" class="btn btn-sm" data-edit="' + esc(r.id) + '">Edit</button> ' +
+      '<button type="button" class="btn btn-sm btn-purple" data-dup="' + esc(r.id) + '">Salin</button> ' +
+      '<button type="button" class="btn btn-sm" style="background:#555" data-del="' + esc(r.id) + '">Padam</button>' +
+      '</td></tr>'
+    ).join('') || '<tr><td colspan="6" style="text-align:center;color:#888">Tiada rekod</td></tr>';
+
+    document.querySelectorAll('[data-view]').forEach(b => {
+      b.onclick = () => {
+        const m = meetings.find(x => x.id === b.getAttribute('data-view'));
+        if (!m) return;
+        current = JSON.parse(JSON.stringify(m));
+        document.getElementById('printArea').innerHTML = buildDocHTML(current);
+        showPage('preview');
+      };
+    });
+    document.querySelectorAll('[data-edit]').forEach(b => {
+      b.onclick = () => {
+        const m = meetings.find(x => x.id === b.getAttribute('data-edit'));
+        if (!m) return;
+        current = JSON.parse(JSON.stringify(m));
+        editId = m.id;
+        showPage('borang');
+      };
+    });
+    document.querySelectorAll('[data-dup]').forEach(b => {
+      b.onclick = () => duplicateMeeting(b.getAttribute('data-dup'));
+    });
+    document.querySelectorAll('[data-del]').forEach(b => {
+      b.onclick = () => {
+        if (!confirm('Padam minit ini?')) return;
+        meetings = meetings.filter(x => x.id !== b.getAttribute('data-del'));
+        saveJSON(LS.meetings, meetings);
+        renderRekod();
+        refreshStats();
+        toast('Dipadam');
+      };
+    });
+  }
+
+  document.getElementById('rekodCari').addEventListener('input', renderRekod);
+  document.getElementById('rekodTahun').addEventListener('change', renderRekod);
+  document.getElementById('rekodBulan').addEventListener('change', renderRekod);
+
+  function duplicateMeeting(id) {
+    const src = meetings.find(x => x.id === id);
+    if (!src) return;
+    current = JSON.parse(JSON.stringify(src));
+    current.id = 'm_' + Date.now();
+    current.tahun = new Date().getFullYear();
+    current.noMinit = nextNoMinit(current.tahun);
+    current.tarikh = '';
+    current.hari = '';
+    current.mula = '';
+    current.tamat = '';
+    current.status = 'Draf';
+    current.hadir = (current.hadir || []).map(h => ({ nama: h.nama, jawatan: h.jawatan, status: 'Hadir' }));
+    current.agenda = (current.agenda || []).map(a => ({
+      tajuk: a.tajuk,
+      perbincangan: '',
+      keputusan: '',
+      tindakan: '',
+      pic: a.pic || '',
+      tarikhAkhir: '',
+      statusTindakan: 'Belum Mula'
+    }));
+    editId = null;
+    showPage('borang');
+    toast('Salinan dijadikan draf baharu');
+  }
+
+  document.getElementById('btnDupFrom').onclick = () => {
+    if (!meetings.length) { toast('Tiada minit untuk disalin'); return; }
+    const id = meetings[0].id;
+    if (confirm('Salin minit terkini sebagai template?')) duplicateMeeting(id);
+  };
+
+  /* AHLI */
+  function renderAhli() {
+    document.getElementById('ahliBody').innerHTML = members.map((m, i) =>
+      '<tr><td>' + esc(m.nama) + '</td><td>' + esc(m.noAhli) + '</td><td>' + esc(m.jawatan) +
+      '</td><td>' + esc(m.telefon) + '</td><td>' + esc(m.email) + '</td><td>' + esc(m.status) +
+      '</td><td><button type="button" class="btn btn-sec btn-sm" data-del-m="' + i + '">Padam</button></td></tr>'
+    ).join('') || '<tr><td colspan="7" style="text-align:center;color:#888">Tiada ahli</td></tr>';
+    document.querySelectorAll('[data-del-m]').forEach(b => {
+      b.onclick = () => {
+        if (!confirm('Padam ahli?')) return;
+        members.splice(+b.getAttribute('data-del-m'), 1);
+        saveJSON(LS.members, members);
+        renderAhli();
+      };
+    });
+  }
+
+  document.getElementById('btnAhliBaru').onclick = () => {
+    const nama = prompt('Nama penuh:');
+    if (!nama) return;
+    members.push({
+      nama: nama.trim(),
+      noAhli: prompt('No. ahli:') || '',
+      jawatan: prompt('Jawatan:') || '',
+      telefon: prompt('Telefon:') || '',
+      email: prompt('E-mel:') || '',
+      status: 'Aktif'
+    });
+    saveJSON(LS.members, members);
+    renderAhli();
+    if (settings.gasUrl) {
+      fetch(settings.gasUrl, {
+        method: 'POST', mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'saveMember', data: members[members.length - 1] })
+      }).catch(() => {});
+    }
+  };
+
+  /* TODO */
+  function renderTodo() {
+    const rows = [];
+    meetings.forEach(mt => {
+      (mt.agenda || []).forEach(a => {
+        if (!a.tindakan) return;
+        rows.push({
+          perkara: a.tajuk,
+          tindakan: a.tindakan,
+          pic: a.pic,
+          tarikh: a.tarikhAkhir,
+          status: a.statusTindakan || 'Belum Mula',
+          minit: mt.noMinit
+        });
+      });
+    });
+    document.getElementById('todoBody').innerHTML = rows.map((r, i) => {
+      let cls = 'b-belum';
+      if (r.status === 'Dalam Tindakan') cls = 'b-dalam';
+      if (r.status === 'Selesai') cls = 'b-selesai';
+      return '<tr><td>' + (i + 1) + '</td><td>' + esc(r.perkara) + '</td><td>' + esc(r.tindakan) +
+        '</td><td>' + esc(r.pic) + '</td><td>' + esc(r.tarikh) + '</td><td><span class="badge ' + cls + '">' +
+        esc(r.status) + '</span></td><td>' + esc(r.minit) + '</td></tr>';
+    }).join('') || '<tr><td colspan="7" style="text-align:center;color:#888">Tiada tindakan</td></tr>';
+  }
+
+  /* SETTINGS */
+  function fillSettings() {
+    document.getElementById('sOrg').value = settings.org || '';
+    document.getElementById('sAlamat').value = settings.alamat || '';
+    document.getElementById('sTel').value = settings.tel || '';
+    document.getElementById('sEmail').value = settings.email || '';
+    document.getElementById('sLogo').value = settings.logo || '';
+    document.getElementById('sFormat').value = settings.format || 'PAK/MM/{TAHUN}/{SEQ}';
+    document.getElementById('sGas').value = settings.gasUrl || '';
+  }
+
+  document.getElementById('btnSaveSet').onclick = () => {
+    settings = {
+      org: document.getElementById('sOrg').value.trim(),
+      alamat: document.getElementById('sAlamat').value.trim(),
+      tel: document.getElementById('sTel').value.trim(),
+      email: document.getElementById('sEmail').value.trim(),
+      logo: document.getElementById('sLogo').value.trim(),
+      format: document.getElementById('sFormat').value.trim() || 'PAK/MM/{TAHUN}/{SEQ}',
+      gasUrl: document.getElementById('sGas').value.trim()
+    };
+    saveJSON(LS.settings, settings);
+    toast('Tetapan disimpan');
+  };
+
+  /* DRAFT RESTORE */
+  (function checkDraft() {
+    const d = loadJSON(LS.draft, null);
+    if (d && d.nama) {
+      if (confirm('Draf sebelumnya ditemui. Sambung semula?')) {
+        current = d;
+        editId = null;
+        showPage('borang');
+        return;
+      }
+      localStorage.removeItem(LS.draft);
+    }
+    showPage('dashboard');
+  })();
+
+})();
+</script>
+</body>
+</html>
