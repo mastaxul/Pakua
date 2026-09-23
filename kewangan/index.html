@@ -53,8 +53,9 @@
       padding: 8px 12px; border-radius: 8px; border: 1px solid #555;
       background: #222; color: #fff; font-size: 0.9rem;
     }
-    .filters input[type="search"] { min-width: 200px; }
+    .filters input[type="search"] { min-width: 180px; flex: 1; }
     .filters button { background: var(--red); border-color: var(--red); cursor: pointer; font-weight: 600; }
+    .filters #btnCariAI { background: #6a1b9a; border-color: #6a1b9a; }
 
     .kpi {
       display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -124,6 +125,9 @@
     }
     .btn:disabled { opacity: 0.45; cursor: not-allowed; }
     #msg { text-align: center; margin-top: 12px; min-height: 22px; }
+    .ai-status {
+      font-size: 0.85rem; color: #ce93d8; margin: 8px 0 12px; min-height: 1.2em;
+    }
     .preview { max-width: 140px; margin-top: 8px; border-radius: 8px; display: none; }
     .ocr-hint {
       background: #1e3a2f; border: 1px solid #2e7d32; border-radius: 8px;
@@ -183,13 +187,15 @@
         <option value="Duit Masuk">Duit Masuk</option>
         <option value="Duit Keluar">Duit Keluar</option>
       </select>
-      <input type="search" id="filterCari" placeholder="Cari rujukan, keterangan, nama...">
+      <input type="search" id="filterCari" placeholder="Cari biasa ATAU tanya AI lalu Enter...">
+      <button type="button" id="btnCariAI">🤖 AI</button>
       <button type="button" id="btnPdf">⬇️ PDF</button>
       <button type="button" id="btnPdfResit">📎 PDF Resit</button>
-      <button type="button" id="btnCsv">⬇️ CSV/Excel</button>
+      <button type="button" id="btnCsv">⬇️ CSV</button>
       <button type="button" id="btnShare">📤 Kongsi</button>
     </div>
   </div>
+  <p class="ai-status" id="aiStatus"></p>
 
   <div class="kpi">
     <div class="card masuk"><div class="lbl">DUIT MASUK</div><div class="val" id="kpiMasuk">RM 0</div></div>
@@ -257,7 +263,7 @@
   <div class="form-panel">
     <h2>Borang Rekod Baharu</h2>
     <p style="text-align:center;color:#888;font-size:0.85rem;margin-bottom:8px;">
-      💡 Upload resit — Gemini isi auto (kategori, jenis, keterangan). Semak sebelum simpan.
+      💡 Upload resit — Gemini isi auto. Semak sebelum simpan.
     </p>
     <form id="borangKewangan">
       <label>Bukti / Resit (upload dulu untuk auto-isi)</label>
@@ -351,6 +357,7 @@
   let allData = [];
   let chartBar = null;
   let chartLine = null;
+  let aiFilterIds = null;
 
   document.getElementById("btnUnlock").onclick = () => {
     if (document.getElementById("lockPass").value === ADMIN_PASSWORD) {
@@ -409,17 +416,26 @@
   }
 
   function getFiltered() {
+    // Hasil carian AI
+    if (aiFilterIds) {
+      return allData.filter(r => aiFilterIds.has(String(r.noRujukan || "")));
+    }
+
     const y = document.getElementById("filterTahun").value;
     const m = document.getElementById("filterBulan").value;
     const j = document.getElementById("filterJenis").value;
     const q = (document.getElementById("filterCari").value || "").trim().toLowerCase();
+
     return allData.filter(r => {
       if (!r.tarikh) return false;
       if (y !== "all" && r.tarikh.substring(0, 4) !== y) return false;
       if (m !== "all" && r.tarikh.substring(5, 7) !== m) return false;
       if (j !== "all" && r.jenis !== j) return false;
       if (q) {
-        const hay = [r.noRujukan, r.keterangan, r.kategori, r.pembayarPenerima, r.penama, r.noResit, r.status, r.caraBayar, r.jenis, String(r.jumlah)].join(" ").toLowerCase();
+        const hay = [
+          r.noRujukan, r.keterangan, r.kategori, r.pembayarPenerima,
+          r.penama, r.noResit, r.status, r.caraBayar, r.jenis, String(r.jumlah)
+        ].join(" ").toLowerCase();
         if (!hay.includes(q)) return false;
       }
       return true;
@@ -547,7 +563,6 @@
       }
 
       const amaran = semakBerganda(data);
-
       let msg = filled.length
         ? "✅ Gemini auto-isi: " + filled.join(", ") + ". Semak sebelum simpan."
         : "⚠️ Gemini tak jumpa data jelas. Isi manual.";
@@ -571,6 +586,81 @@
       hint.textContent = "⚠️ Gemini gagal: " + (e.message || e);
     }
   }
+
+  async function cariDenganGemini() {
+    const q = (document.getElementById("filterCari").value || "").trim();
+    const status = document.getElementById("aiStatus");
+
+    if (!q) {
+      aiFilterIds = null;
+      status.textContent = "";
+      render();
+      return;
+    }
+
+    // Carian pendek → filter lokal (jimat kuota)
+    const gunaAI =
+      q.length > 10 ||
+      /berganda|duplicate|semua|lebih|kurang|bulan|merdeka|tunai|bank|siapa|berapa|tentang|program|sumbangan/i.test(q);
+
+    if (!gunaAI) {
+      aiFilterIds = null;
+      status.textContent = "🔎 Carian biasa: \"" + q + "\"";
+      render();
+      return;
+    }
+
+    status.textContent = "🤖 Gemini sedang cari...";
+    try {
+      const rekod = (allData || []).map(r => ({
+        noRujukan: r.noRujukan,
+        tarikh: r.tarikh,
+        jenis: r.jenis,
+        kategori: r.kategori,
+        keterangan: r.keterangan,
+        jumlah: r.jumlah,
+        pembayarPenerima: r.pembayarPenerima,
+        caraBayar: r.caraBayar
+      }));
+
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({
+          action: "cariKewangan",
+          query: q,
+          rekod: rekod
+        })
+      });
+      const json = await res.json();
+      if (!json.success) throw new Error(json.error || "Gagal");
+
+      aiFilterIds = new Set((json.ids || []).map(String));
+      status.textContent = json.ringkasan
+        ? "🤖 " + json.ringkasan + " — " + aiFilterIds.size + " rekod"
+        : "🤖 Jumpa " + aiFilterIds.size + " rekod";
+      render();
+    } catch (e) {
+      aiFilterIds = null;
+      status.textContent = "⚠️ AI carian gagal: " + (e.message || e) + " (guna filter biasa)";
+      render();
+    }
+  }
+
+  document.getElementById("btnCariAI").onclick = cariDenganGemini;
+  document.getElementById("filterCari").addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      cariDenganGemini();
+    }
+  });
+  document.getElementById("filterCari").addEventListener("input", function () {
+    if (!this.value.trim()) {
+      aiFilterIds = null;
+      document.getElementById("aiStatus").textContent = "";
+      render();
+    }
+  });
 
   function renderCharts() {
     const yFilter = document.getElementById("filterTahun").value;
@@ -645,6 +735,8 @@
         document.getElementById("filterTahun").value = year;
         document.getElementById("filterBulan").value = key;
         document.getElementById("filterCari").value = "";
+        aiFilterIds = null;
+        document.getElementById("aiStatus").textContent = "";
         render();
       };
       tbody.appendChild(tr);
@@ -702,9 +794,12 @@
     renderCharts();
   }
 
-  ["filterTahun","filterBulan","filterJenis","filterCari"].forEach(id => {
-    document.getElementById(id).addEventListener("input", render);
-    document.getElementById(id).addEventListener("change", render);
+  ["filterTahun","filterBulan","filterJenis"].forEach(id => {
+    document.getElementById(id).addEventListener("change", () => {
+      aiFilterIds = null;
+      document.getElementById("aiStatus").textContent = "";
+      render();
+    });
   });
 
   document.getElementById("txBody").addEventListener("click", e => {
