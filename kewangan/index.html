@@ -128,9 +128,12 @@
     .ocr-hint {
       background: #1e3a2f; border: 1px solid #2e7d32; border-radius: 8px;
       padding: 10px 12px; margin-top: 10px; font-size: 0.85rem; color: #a5d6a7;
-      display: none;
+      display: none; white-space: pre-wrap;
     }
     .ocr-hint.show { display: block; }
+    .ocr-hint.warn {
+      background: #3a1e1e; border-color: #c41e3a; color: #ffcdd2;
+    }
 
     .lightbox {
       display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85);
@@ -254,7 +257,7 @@
   <div class="form-panel">
     <h2>Borang Rekod Baharu</h2>
     <p style="text-align:center;color:#888;font-size:0.85rem;margin-bottom:8px;">
-      💡 Upload resit — Gemini baca auto (melalui server). Semak sebelum simpan.
+      💡 Upload resit — Gemini isi auto (kategori, jenis, keterangan). Semak sebelum simpan.
     </p>
     <form id="borangKewangan">
       <label>Bukti / Resit (upload dulu untuk auto-isi)</label>
@@ -317,7 +320,6 @@
 <div class="lightbox" id="lightbox"><img id="lbImg" alt="Resit"></div>
 
 <script>
-  // Web App Apps Script — TIADA Gemini key di sini
   const API_URL = "https://script.google.com/macros/s/AKfycbxpvotU6UMQSpmxcdKVTQs4Eoi-rDZf-sXLWOfQRsf0ntY8kNnwQUHz9SbpsDhjG03n/exec";
   const IMGBB_KEY = "5dde53aa49e23970db10b1af62fff130";
   const ADMIN_PASSWORD = "3281";
@@ -457,10 +459,30 @@
     });
   }
 
-  /** Gemini melalui Apps Script — key tidak dalam HTML */
+  function semakBerganda(data) {
+    const jumlah = Number(data.jumlah);
+    const tarikh = data.tarikh ? String(data.tarikh).slice(0, 10) : "";
+    const nama = (data.pembayarPenerima || "").toLowerCase().trim();
+    if (!jumlah && !tarikh) return null;
+
+    const matches = (allData || []).filter(r => {
+      const sameJumlah = Math.abs((Number(r.jumlah) || 0) - jumlah) < 0.01;
+      const sameTarikh = tarikh && r.tarikh === tarikh;
+      const sameNama = nama && (r.pembayarPenerima || "").toLowerCase().includes(nama.slice(0, 12));
+      return sameJumlah && (sameTarikh || sameNama);
+    });
+
+    if (matches.length === 0) return null;
+    const contoh = matches.slice(0, 2).map(r =>
+      (r.noRujukan || "-") + " / " + (r.tarikh || "") + " / RM " + Number(r.jumlah || 0).toFixed(2)
+    ).join("; ");
+    return "⚠️ Mungkin rekod berganda (" + matches.length + " serupa): " + contoh;
+  }
+
   async function runGeminiResit(file) {
     const hint = document.getElementById("ocrHint");
     hint.classList.add("show");
+    hint.classList.remove("warn");
     hint.textContent = "🤖 Gemini sedang baca resit...";
 
     try {
@@ -483,6 +505,10 @@
       const data = json.data || {};
       const filled = [];
 
+      if (data.keterangan) {
+        document.getElementById("keterangan").value = String(data.keterangan);
+        filled.push("Keterangan");
+      }
       if (data.jumlah != null && !isNaN(Number(data.jumlah))) {
         document.getElementById("jumlah").value = Number(data.jumlah);
         filled.push("Jumlah RM " + Number(data.jumlah));
@@ -490,10 +516,6 @@
       if (data.tarikh) {
         document.getElementById("tarikh").value = String(data.tarikh).slice(0, 10);
         filled.push("Tarikh");
-      }
-      if (data.keterangan) {
-        document.getElementById("keterangan").value = String(data.keterangan);
-        filled.push("Keterangan");
       }
       if (data.noResit) {
         document.getElementById("noResit").value = String(data.noResit);
@@ -511,13 +533,32 @@
         document.getElementById("pembayarPenerima").value = String(data.pembayarPenerima);
         filled.push("Pembayar/Penerima");
       }
+      if (data.kategori) {
+        const kat = String(data.kategori).trim();
+        const sel = document.getElementById("kategori");
+        if ([...sel.options].some(o => o.value === kat)) {
+          sel.value = kat;
+          filled.push("Kategori: " + kat);
+        }
+      }
+      if (data.jenis === "Duit Masuk" || data.jenis === "Duit Keluar") {
+        document.getElementById("jenis").value = data.jenis;
+        filled.push(data.jenis);
+      }
 
-      hint.textContent = filled.length
+      const amaran = semakBerganda(data);
+      let msg = filled.length
         ? "✅ Gemini auto-isi: " + filled.join(", ") + ". Semak sebelum simpan."
         : "⚠️ Gemini tak jumpa data jelas. Isi manual.";
+      if (amaran) {
+        msg += "\n" + amaran;
+        hint.classList.add("warn");
+      }
+      hint.textContent = msg;
     } catch (e) {
       console.error(e);
-      hint.textContent = "⚠️ Gemini gagal: " + (e.message || e) + ". Pastikan Apps Script deploy New version + key diisi.";
+      hint.classList.remove("warn");
+      hint.textContent = "⚠️ Gemini gagal: " + (e.message || e);
     }
   }
 
@@ -767,7 +808,7 @@
     const preview = document.getElementById("buktiPreview");
     document.getElementById("buktiUrl").value = "";
     preview.style.display = "none";
-    document.getElementById("ocrHint").classList.remove("show");
+    document.getElementById("ocrHint").classList.remove("show", "warn");
     if (!file) return;
     if (file.size > 10 * 1024 * 1024) { msg.textContent = "❌ Max 10MB"; return; }
     preview.src = URL.createObjectURL(file);
@@ -825,7 +866,7 @@
       this.reset();
       document.getElementById("buktiUrl").value = "";
       document.getElementById("buktiPreview").style.display = "none";
-      document.getElementById("ocrHint").classList.remove("show");
+      document.getElementById("ocrHint").classList.remove("show", "warn");
       document.getElementById("tarikh").value = new Date().toISOString().slice(0, 10);
       document.getElementById("masa").value = new Date().toTimeString().slice(0, 5);
       passwordInput.value = "";
