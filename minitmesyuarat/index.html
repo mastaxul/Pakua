@@ -5,34 +5,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>PAK – Penjana Minit Mesyuarat</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="icon" type="image/png" href="https://i.ibb.co/DD7QKDFV/2-D42-C2-F9-9-A7-A-4921-8-E6-E-CA17-A6-A873-E0.jpg">
+<link rel="icon" type="image/jpeg" href="https://i.ibb.co/DD7QKDFV/2-D42-C2-F9-9-A7-A-4921-8-E6-E-CA17-A6-A873-E0.jpg">
 <style>
-:root{
-  --bg:#0d0d0d;--panel:#1a1a1a;--card:#222;--red:#c41e3a;--green:#2e7d32;
-  --purple:#6a1b9a;--text:#f5f5f5;--muted:#999;--border:#333;
-}
+:root{--bg:#0d0d0d;--panel:#1a1a1a;--card:#222;--red:#c41e3a;--green:#2e7d32;--purple:#6a1b9a;--text:#f5f5f5;--muted:#999;--border:#333}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.45;min-height:100vh}
+body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.45;min-height:100vh;padding:env(safe-area-inset-top,0) env(safe-area-inset-right,0) env(safe-area-inset-bottom,0) env(safe-area-inset-left,0)}
 button,input,select,textarea{font:inherit}
 .hidden{display:none!important}
 .app-header{background:var(--panel);border-bottom:3px solid var(--red);padding:12px 16px;position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .app-header h1{font-size:1rem;color:#c9b6ff}
 .btn{border:none;border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer;color:#fff;background:var(--red)}
 .btn:disabled{opacity:.45;cursor:not-allowed}
-.btn-sec{background:#333}
-.btn-green{background:var(--green)}
-.btn-purple{background:var(--purple)}
+.btn-sec{background:#333}.btn-green{background:var(--green)}.btn-purple{background:var(--purple)}.btn-dark{background:#555}
 .btn-sm{padding:6px 10px;font-size:.85rem;border-radius:8px}
 .wrap{max-width:1100px;margin:0 auto;padding:16px 12px 40px}
 .grid-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:16px 0}
 .stat{background:#fff;color:#222;border-radius:12px;padding:14px}
-.stat .lbl{font-size:.78rem;color:#666}
-.stat .val{font-size:1.35rem;font-weight:800;margin-top:4px}
+.stat .lbl{font-size:.78rem;color:#666}.stat .val{font-size:1.35rem;font-weight:800;margin-top:4px}
 .menu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:18px}
 .menu-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 14px;text-align:center;cursor:pointer}
 .menu-card:active{transform:scale(.98)}
-.menu-card .ico{font-size:1.6rem;margin-bottom:8px}
-.menu-card .ttl{font-weight:700}
+.menu-card .ico{font-size:1.6rem;margin-bottom:8px}.menu-card .ttl{font-weight:700}
 .panel{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:14px}
 .panel h2{font-size:1.05rem;margin-bottom:12px;color:#c9b6ff}
 label{display:block;font-size:.85rem;color:var(--muted);margin:8px 0 4px}
@@ -45,27 +38,22 @@ textarea{min-height:70px;resize:vertical}
 table{width:100%;border-collapse:collapse;font-size:.85rem;background:#fff;color:#222;border-radius:10px;overflow:hidden}
 th,td{padding:8px;border-bottom:1px solid #eee;text-align:left;vertical-align:top}
 th{background:#f3e5f5;color:#4a148c}
+td input,td select{background:#fff;color:#222;border-color:#ccc;padding:6px}
 .badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.75rem;font-weight:700}
-.b-belum{background:#eceff1;color:#455a64}
-.b-dalam{background:#e3f2fd;color:#1565c0}
-.b-selesai{background:#e8f5e9;color:#2e7d32}
+.b-belum{background:#eceff1;color:#455a64}.b-dalam{background:#e3f2fd;color:#1565c0}.b-selesai{background:#e8f5e9;color:#2e7d32}
 .agenda-card{background:#1e1e1e;border:1px solid #444;border-radius:12px;padding:12px;margin-bottom:10px}
 .agenda-card h3{font-size:.95rem;margin-bottom:8px}
 .list-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px 16px;border-radius:10px;z-index:100;display:none;max-width:90vw;text-align:center}
+.toast{position:fixed;bottom:calc(20px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px 16px;border-radius:10px;z-index:100;display:none;max-width:90vw;text-align:center}
 .toast.show{display:block}
 .preview-wrap{background:#555;padding:16px;border-radius:12px;overflow:auto}
-.doc-a4{
-  width:210mm;max-width:100%;min-height:297mm;margin:0 auto;background:#fff;color:#111;
-  padding:18mm 16mm;font-family:'Times New Roman',Times,serif;font-size:11pt;line-height:1.4;
-  box-shadow:0 4px 24px rgba(0,0,0,.4)
-}
+.doc-a4{width:210mm;max-width:100%;min-height:297mm;margin:0 auto;background:#fff;color:#111;padding:18mm 16mm;font-family:'Times New Roman',Times,serif;font-size:11pt;line-height:1.4;box-shadow:0 4px 24px rgba(0,0,0,.4)}
 .doc-a4 h1{text-align:center;font-size:14pt;margin:8px 0}
 .doc-a4 h2{font-size:12pt;margin:14px 0 6px;border-bottom:1px solid #333;padding-bottom:3px}
 .doc-a4 .org{text-align:center;font-size:10pt}
 .doc-a4 .logo{display:block;margin:0 auto 6px;max-height:60px}
-.doc-a4 table{width:100%;border-collapse:collapse;margin:8px 0;font-size:10pt}
-.doc-a4 th,.doc-a4 td{border:1px solid #333;padding:4px 6px}
+.doc-a4 table{width:100%;border-collapse:collapse;margin:8px 0;font-size:10pt;border-radius:0}
+.doc-a4 th,.doc-a4 td{border:1px solid #333;padding:4px 6px;background:#fff;color:#111}
 .doc-a4 .sign{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:36px}
 .doc-a4 .sign .box{text-align:center;min-height:90px}
 .doc-a4 .agenda-item{margin:12px 0}
@@ -73,7 +61,7 @@ th{background:#f3e5f5;color:#4a148c}
 @media print{
   body *{visibility:hidden}
   #printArea,#printArea *{visibility:visible}
-  #printArea{position:absolute;left:0;top:0;width:100%}
+  #printArea{position:absolute;left:0;top:0;width:100%;padding:0;background:#fff}
   .doc-a4{box-shadow:none;width:100%;padding:12mm}
   .no-print{display:none!important}
 }
@@ -82,16 +70,16 @@ th{background:#f3e5f5;color:#4a148c}
 <body>
 
 <header class="app-header no-print">
-  <div><h1>PAK · Penjana Minit Mesyuarat</h1></div>
+  <h1>PAK · Penjana Minit Mesyuarat</h1>
   <div style="display:flex;gap:8px;flex-wrap:wrap">
     <button class="btn btn-sec btn-sm" type="button" data-nav="dashboard">Dashboard</button>
     <button class="btn btn-sm" type="button" data-nav="borang">+ Minit Baharu</button>
   </div>
 </header>
 
-<div class="wrap no-print">
+<div class="wrap">
 
-  <section id="page-dashboard">
+  <section id="page-dashboard" class="no-print">
     <h2 style="margin-top:8px">Dashboard</h2>
     <p style="color:var(--muted);font-size:.9rem">Pertubuhan Aktivis Keusahawanan (PAK)</p>
     <div class="grid-stats">
@@ -105,11 +93,11 @@ th{background:#f3e5f5;color:#4a148c}
       <div class="menu-card" data-nav="rekod"><div class="ico">📂</div><div class="ttl">Rekod Minit</div></div>
       <div class="menu-card" data-nav="ahli"><div class="ico">👥</div><div class="ttl">Senarai Ahli</div></div>
       <div class="menu-card" data-nav="tindakan"><div class="ico">✅</div><div class="ttl">Tindakan Susulan</div></div>
-      <div class="menu-card" data-nav="tetapan"><div class="ico">⚙️</div><div class="ttl">Tetapan</div></div>
+      <div class="menu-card" data-nav="tetapan"><div class="ico">⚙️</div><div class="ttl">Tetapan &amp; Backup</div></div>
     </div>
   </section>
 
-  <section id="page-borang" class="hidden">
+  <section id="page-borang" class="hidden no-print">
     <div class="toolbar">
       <button class="btn btn-sec btn-sm" type="button" data-nav="dashboard">← Kembali</button>
       <button class="btn btn-sm" type="button" id="btnPreview">Pratonton</button>
@@ -120,26 +108,26 @@ th{background:#f3e5f5;color:#4a148c}
     <div class="panel">
       <h2>Maklumat Mesyuarat</h2>
       <div class="row2">
-        <div><label>Nama organisasi</label><input id="fOrg"></div>
-        <div><label>No. Minit (auto)</label><input id="fNoMinit" readonly></div>
+        <div><label for="fOrg">Nama organisasi</label><input id="fOrg"></div>
+        <div><label for="fNoMinit">No. Minit (dijana bila simpan)</label><input id="fNoMinit" readonly></div>
       </div>
       <div class="row2">
-        <div><label>Nama mesyuarat *</label><input id="fNama" placeholder="cth: Mesyuarat Jawatankuasa"></div>
-        <div><label>Bil. mesyuarat</label><input id="fBil" type="number" min="1" value="1"></div>
+        <div><label for="fNama">Nama mesyuarat *</label><input id="fNama" placeholder="cth: Mesyuarat Jawatankuasa"></div>
+        <div><label for="fBil">Bil. mesyuarat</label><input id="fBil" type="number" min="1" value="1"></div>
       </div>
       <div class="row3">
-        <div><label>Tahun</label><input id="fTahun" type="number"></div>
-        <div><label>Tarikh *</label><input id="fTarikh" type="date"></div>
-        <div><label>Hari</label><input id="fHari" readonly></div>
+        <div><label for="fTahun">Tahun</label><input id="fTahun" type="number"></div>
+        <div><label for="fTarikh">Tarikh *</label><input id="fTarikh" type="date"></div>
+        <div><label for="fHari">Hari</label><input id="fHari" readonly></div>
       </div>
       <div class="row3">
-        <div><label>Masa mula</label><input id="fMula" type="time"></div>
-        <div><label>Masa tamat</label><input id="fTamat" type="time"></div>
-        <div><label>Tempat</label><input id="fTempat"></div>
+        <div><label for="fMula">Masa mula</label><input id="fMula" type="time"></div>
+        <div><label for="fTamat">Masa tamat</label><input id="fTamat" type="time"></div>
+        <div><label for="fTempat">Tempat</label><input id="fTempat"></div>
       </div>
       <div class="row2">
-        <div><label>Pengerusi *</label><input id="fPengerusi"></div>
-        <div><label>Setiausaha *</label><input id="fSetiausaha"></div>
+        <div><label for="fPengerusi">Pengerusi *</label><input id="fPengerusi"></div>
+        <div><label for="fSetiausaha">Setiausaha *</label><input id="fSetiausaha"></div>
       </div>
     </div>
 
@@ -158,15 +146,26 @@ th{background:#f3e5f5;color:#4a148c}
     </div>
 
     <div class="panel">
+      <h2>Pembukaan &amp; Pengesahan</h2>
+      <label for="fLepas">Pengesahan minit mesyuarat lepas</label>
+      <textarea id="fLepas" placeholder="cth: Minit mesyuarat lepas dibacakan, disahkan dan dicadangkan oleh ... disokong oleh ..."></textarea>
+    </div>
+
+    <div class="panel">
       <h2>Agenda</h2>
-      <p style="color:var(--muted);font-size:.85rem;margin-bottom:8px">
-        Tulis nota ringkas dalam Perbincangan, kemudian tekan 🤖 Kemas — AI akan panjangkan &amp; formalkan ayat.
-      </p>
+      <p style="color:var(--muted);font-size:.85rem;margin-bottom:8px">Tulis nota ringkas dalam Perbincangan, kemudian tekan 🤖 Kemas. Nota asal disimpan, boleh Undo.</p>
       <div class="toolbar">
         <button class="btn btn-purple btn-sm" type="button" id="btnKemasSemua">🤖 Kemas semua Perbincangan</button>
       </div>
       <div id="agendaList"></div>
       <button class="btn btn-sm" type="button" id="btnAddAgenda">+ Tambah Agenda</button>
+    </div>
+
+    <div class="panel">
+      <h2>Hal-hal Lain &amp; Penutup</h2>
+      <label for="fLain">Hal-hal lain</label><textarea id="fLain"></textarea>
+      <label for="fPenutup">Penutup</label>
+      <textarea id="fPenutup" placeholder="Kosongkan untuk teks lalai (mesyuarat ditangguhkan pada masa tamat)"></textarea>
     </div>
 
     <div class="toolbar">
@@ -187,12 +186,12 @@ th{background:#f3e5f5;color:#4a148c}
     <div class="preview-wrap" id="printArea"></div>
   </section>
 
-  <section id="page-rekod" class="hidden">
+  <section id="page-rekod" class="hidden no-print">
     <div class="toolbar">
       <button class="btn btn-sec btn-sm" type="button" data-nav="dashboard">← Kembali</button>
       <input type="search" id="rekodCari" placeholder="Cari..." style="max-width:200px">
-      <select id="rekodTahun"><option value="all">Semua tahun</option></select>
-      <select id="rekodBulan">
+      <select id="rekodTahun" style="max-width:140px"><option value="all">Semua tahun</option></select>
+      <select id="rekodBulan" style="max-width:140px">
         <option value="all">Semua bulan</option>
         <option value="01">Jan</option><option value="02">Feb</option><option value="03">Mac</option>
         <option value="04">Apr</option><option value="05">Mei</option><option value="06">Jun</option>
@@ -208,10 +207,26 @@ th{background:#f3e5f5;color:#4a148c}
     </div>
   </section>
 
-  <section id="page-ahli" class="hidden">
+  <section id="page-ahli" class="hidden no-print">
     <div class="toolbar">
       <button class="btn btn-sec btn-sm" type="button" data-nav="dashboard">← Kembali</button>
-      <button class="btn btn-sm" type="button" id="btnAhliBaru">+ Ahli Baharu</button>
+    </div>
+    <div class="panel">
+      <h2 id="ahliTitle">Ahli Baharu</h2>
+      <div class="row3">
+        <div><label for="mNama">Nama penuh *</label><input id="mNama"></div>
+        <div><label for="mNo">No. ahli</label><input id="mNo"></div>
+        <div><label for="mJaw">Jawatan</label><input id="mJaw"></div>
+      </div>
+      <div class="row3">
+        <div><label for="mTel">Telefon</label><input id="mTel" type="tel"></div>
+        <div><label for="mEmail">E-mel</label><input id="mEmail" type="email"></div>
+        <div><label for="mStatus">Status</label><select id="mStatus"><option>Aktif</option><option>Tidak Aktif</option></select></div>
+      </div>
+      <div class="toolbar">
+        <button class="btn btn-green btn-sm" type="button" id="btnAhliSave">Simpan Ahli</button>
+        <button class="btn btn-sec btn-sm" type="button" id="btnAhliReset">Kosongkan</button>
+      </div>
     </div>
     <div style="overflow-x:auto">
       <table>
@@ -221,7 +236,7 @@ th{background:#f3e5f5;color:#4a148c}
     </div>
   </section>
 
-  <section id="page-tindakan" class="hidden">
+  <section id="page-tindakan" class="hidden no-print">
     <div class="toolbar">
       <button class="btn btn-sec btn-sm" type="button" data-nav="dashboard">← Kembali</button>
     </div>
@@ -233,24 +248,35 @@ th{background:#f3e5f5;color:#4a148c}
     </div>
   </section>
 
-  <section id="page-tetapan" class="hidden">
+  <section id="page-tetapan" class="hidden no-print">
     <div class="toolbar">
       <button class="btn btn-sec btn-sm" type="button" data-nav="dashboard">← Kembali</button>
       <button class="btn btn-green btn-sm" type="button" id="btnSaveSet">Simpan Tetapan</button>
     </div>
     <div class="panel">
       <h2>Organisasi</h2>
-      <label>Nama organisasi</label><input id="sOrg">
-      <label>Alamat</label><textarea id="sAlamat"></textarea>
+      <label for="sOrg">Nama organisasi</label><input id="sOrg">
+      <label for="sAlamat">Alamat</label><textarea id="sAlamat"></textarea>
       <div class="row2">
-        <div><label>Telefon</label><input id="sTel"></div>
-        <div><label>E-mel</label><input id="sEmail" type="email"></div>
+        <div><label for="sTel">Telefon</label><input id="sTel"></div>
+        <div><label for="sEmail">E-mel</label><input id="sEmail" type="email"></div>
       </div>
-      <label>URL Logo</label><input id="sLogo" placeholder="https://...">
-      <label>Format no. minit ({TAHUN} {SEQ})</label><input id="sFormat" placeholder="PAK/MM/{TAHUN}/{SEQ}">
-      <label>Google Apps Script Web App URL (wajib untuk Gemini &amp; Sheet)</label>
+      <label for="sLogo">URL Logo</label><input id="sLogo" placeholder="https://...">
+      <label for="sFormat">Format no. minit ({TAHUN} {SEQ})</label><input id="sFormat" placeholder="PAK/MM/{TAHUN}/{SEQ}">
+      <label for="sGas">Google Apps Script Web App URL (untuk Gemini &amp; Sheet)</label>
       <input id="sGas" placeholder="https://script.google.com/macros/s/.../exec">
-      <p style="color:var(--muted);font-size:.8rem;margin-top:8px">Tanpa URL: data lokal sahaja. Dengan URL: simpan Sheet + 🤖 Kemas ayat.</p>
+      <label for="sToken">Token rahsia (mesti sama dengan yang disemak di GAS)</label>
+      <input id="sToken" type="password" autocomplete="off">
+      <p style="color:var(--muted);font-size:.8rem;margin-top:8px">Tanpa URL: data lokal sahaja. Token dihantar dalam setiap permintaan; server GAS mesti tolak jika token tak sepadan.</p>
+    </div>
+    <div class="panel">
+      <h2>Backup Data</h2>
+      <p style="color:var(--muted);font-size:.85rem">Data disimpan dalam browser ini sahaja. Eksport selalu sebagai backup.</p>
+      <div class="toolbar">
+        <button class="btn btn-sm" type="button" id="btnExport">⬇️ Eksport JSON</button>
+        <button class="btn btn-sec btn-sm" type="button" id="btnImport">⬆️ Import JSON</button>
+        <input type="file" id="fileImport" accept="application/json,.json" class="hidden">
+      </div>
     </div>
   </section>
 </div>
@@ -259,93 +285,81 @@ th{background:#f3e5f5;color:#4a148c}
 
 <script>
 (function () {
-  const LS = {
-    meetings: 'pak_minit_meetings',
-    members: 'pak_minit_members',
-    settings: 'pak_minit_settings',
-    draft: 'pak_minit_draft',
-    seq: 'pak_minit_seq'
-  };
-
+  const LS = {meetings:'pak_minit_meetings',members:'pak_minit_members',settings:'pak_minit_settings',draft:'pak_minit_draft',seq:'pak_minit_seq'};
   const defaultSettings = {
-    org: 'Pertubuhan Aktivis Keusahawanan (PAK)',
-    alamat: '',
-    tel: '',
-    email: '',
-    logo: 'https://i.ibb.co/DD7QKDFV/2-D42-C2-F9-9-A7-A-4921-8-E6-E-CA17-A6-A873-E0.jpg',
-    format: 'PAK/MM/{TAHUN}/{SEQ}',
-    gasUrl: ''
+    org:'Pertubuhan Aktivis Keusahawanan (PAK)',alamat:'',tel:'',email:'',
+    logo:'https://i.ibb.co/DD7QKDFV/2-D42-C2-F9-9-A7-A-4921-8-E6-E-CA17-A6-A873-E0.jpg',
+    format:'PAK/MM/{TAHUN}/{SEQ}',gasUrl:'',gasToken:''
   };
+  const BULAN = ['Januari','Februari','Mac','April','Mei','Jun','Julai','Ogos','September','Oktober','November','Disember'];
+  const HARI = ['Ahad','Isnin','Selasa','Rabu','Khamis','Jumaat','Sabtu'];
 
-  let settings = loadJSON(LS.settings, defaultSettings);
+  function loadJSON(k, def) { try { const v = JSON.parse(localStorage.getItem(k)); return v == null ? def : v; } catch (e) { return def; } }
+  function saveJSON(k, v) {
+    try { localStorage.setItem(k, JSON.stringify(v)); return true; }
+    catch (e) { toast('⚠️ Gagal simpan (storan penuh / mod private). Eksport backup!'); return false; }
+  }
+  let settings = Object.assign({}, defaultSettings, loadJSON(LS.settings, {}));
   let meetings = loadJSON(LS.meetings, []);
   let members = loadJSON(LS.members, []);
   let current = emptyMeeting();
   let editId = null;
+  let editMember = -1;
+  let busyAI = false;
 
-  function loadJSON(k, def) {
-    try { return JSON.parse(localStorage.getItem(k)) || def; } catch { return def; }
-  }
-  function saveJSON(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
+  const $ = id => document.getElementById(id);
+  function esc(s) { return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function nl(s) { return esc(s).replace(/\n/g, '<br>'); }
 
-  function esc(s) {
-    return String(s == null ? '' : s)
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
-  }
-
+  let toastTimer;
   function toast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2800);
+    const t = $('toast');
+    t.textContent = msg; t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  function fmtTarikh(iso) {
+    if (!iso) return '';
+    const p = iso.split('-');
+    if (p.length !== 3) return iso;
+    return parseInt(p[2], 10) + ' ' + BULAN[parseInt(p[1], 10) - 1] + ' ' + p[0];
+  }
+  function hariDariTarikh(iso) {
+    if (!iso) return '';
+    return HARI[new Date(iso + 'T12:00:00').getDay()];
   }
 
   function emptyMeeting() {
-    const y = new Date().getFullYear();
     return {
-      id: 'm_' + Date.now(),
-      noMinit: '',
-      org: settings.org,
-      nama: '',
-      bil: 1,
-      tahun: y,
-      tarikh: '',
-      hari: '',
-      mula: '',
-      tamat: '',
-      tempat: '',
-      pengerusi: '',
-      setiausaha: '',
-      hadir: [],
-      agenda: [],
-      status: 'Draf',
-      updatedAt: new Date().toISOString()
+      id:'m_' + Date.now(), noMinit:'', org:settings.org, nama:'', bil:1, tahun:new Date().getFullYear(),
+      tarikh:'', hari:'', mula:'', tamat:'', tempat:'', pengerusi:'', setiausaha:'',
+      lepas:'', lain:'', penutup:'', hadir:[], agenda:[], status:'Draf', updatedAt:new Date().toISOString()
     };
   }
 
-  function nextNoMinit(tahun) {
-    const seqKey = LS.seq + '_' + tahun;
-    let seq = parseInt(localStorage.getItem(seqKey) || '0', 10) + 1;
-    localStorage.setItem(seqKey, String(seq));
+  /* No. minit: dijana masa simpan sahaja; guna nombor tertinggi sedia ada supaya tiada lompang */
+  function janaNoMinit(tahun) {
     const fmt = settings.format || 'PAK/MM/{TAHUN}/{SEQ}';
+    let max = parseInt(localStorage.getItem(LS.seq + '_' + tahun) || '0', 10);
+    meetings.forEach(m => {
+      if (String(m.tahun) !== String(tahun)) return;
+      const mt = String(m.noMinit || '').match(/(\d+)\D*$/);
+      if (mt) max = Math.max(max, parseInt(mt[1], 10));
+    });
+    const seq = max + 1;
+    try { localStorage.setItem(LS.seq + '_' + tahun, String(seq)); } catch (e) {}
     return fmt.replace('{TAHUN}', tahun).replace('{SEQ}', String(seq).padStart(3, '0'));
-  }
-
-  function hariDariTarikh(iso) {
-    if (!iso) return '';
-    const d = new Date(iso + 'T12:00:00');
-    return ['Ahad','Isnin','Selasa','Rabu','Khamis','Jumaat','Sabtu'][d.getDay()];
   }
 
   function showPage(name) {
     ['dashboard','borang','preview','rekod','ahli','tindakan','tetapan'].forEach(p => {
-      const el = document.getElementById('page-' + p);
+      const el = $('page-' + p);
       if (el) el.classList.toggle('hidden', p !== name);
     });
     if (name === 'dashboard') refreshStats();
     if (name === 'rekod') renderRekod();
-    if (name === 'ahli') renderAhli();
+    if (name === 'ahli') { renderAhli(); resetAhliForm(); }
     if (name === 'tindakan') renderTodo();
     if (name === 'tetapan') fillSettings();
     if (name === 'borang') fillForm();
@@ -358,8 +372,6 @@ th{background:#f3e5f5;color:#4a148c}
       if (n === 'borang') {
         editId = null;
         current = emptyMeeting();
-        current.noMinit = nextNoMinit(current.tahun);
-        current.org = settings.org;
       }
       showPage(n);
     });
@@ -368,197 +380,154 @@ th{background:#f3e5f5;color:#4a148c}
   function refreshStats() {
     const y = new Date().getFullYear();
     const m = String(new Date().getMonth() + 1).padStart(2, '0');
-    document.getElementById('stTotal').textContent = meetings.length;
-    document.getElementById('stYear').textContent = meetings.filter(x => String(x.tahun) === String(y)).length;
-    document.getElementById('stMonth').textContent = meetings.filter(x => (x.tarikh || '').startsWith(y + '-' + m)).length;
+    $('stTotal').textContent = meetings.length;
+    $('stYear').textContent = meetings.filter(x => String(x.tahun) === String(y)).length;
+    $('stMonth').textContent = meetings.filter(x => (x.tarikh || '').startsWith(y + '-' + m)).length;
     let todo = 0;
-    meetings.forEach(mt => (mt.agenda || []).forEach(a => {
-      if (a.tindakan && a.statusTindakan !== 'Selesai') todo++;
-    }));
-    document.getElementById('stTodo').textContent = todo;
+    meetings.forEach(mt => (mt.agenda || []).forEach(a => { if (a.tindakan && a.statusTindakan !== 'Selesai') todo++; }));
+    $('stTodo').textContent = todo;
   }
+
+  const F = {fOrg:'org',fNoMinit:'noMinit',fNama:'nama',fTempat:'tempat',fPengerusi:'pengerusi',fSetiausaha:'setiausaha',fMula:'mula',fTamat:'tamat',fTarikh:'tarikh',fLepas:'lepas',fLain:'lain',fPenutup:'penutup'};
 
   function fillForm() {
     const c = current;
-    document.getElementById('fOrg').value = c.org || settings.org;
-    document.getElementById('fNoMinit').value = c.noMinit || '';
-    document.getElementById('fNama').value = c.nama || '';
-    document.getElementById('fBil').value = c.bil || 1;
-    document.getElementById('fTahun').value = c.tahun || new Date().getFullYear();
-    document.getElementById('fTarikh').value = c.tarikh || '';
-    document.getElementById('fHari').value = c.hari || hariDariTarikh(c.tarikh);
-    document.getElementById('fMula').value = c.mula || '';
-    document.getElementById('fTamat').value = c.tamat || '';
-    document.getElementById('fTempat').value = c.tempat || '';
-    document.getElementById('fPengerusi').value = c.pengerusi || '';
-    document.getElementById('fSetiausaha').value = c.setiausaha || '';
+    Object.keys(F).forEach(id => { $(id).value = c[F[id]] || ''; });
+    if (!c.org) $('fOrg').value = settings.org;
+    $('fNoMinit').value = c.noMinit || '(dijana bila simpan)';
+    $('fBil').value = c.bil || 1;
+    $('fTahun').value = c.tahun || new Date().getFullYear();
+    $('fHari').value = c.hari || hariDariTarikh(c.tarikh);
     renderHadir();
     renderAgenda();
   }
 
   function readForm() {
-    current.org = document.getElementById('fOrg').value.trim();
-    current.noMinit = document.getElementById('fNoMinit').value.trim();
-    current.nama = document.getElementById('fNama').value.trim();
-    current.bil = parseInt(document.getElementById('fBil').value, 10) || 1;
-    current.tahun = parseInt(document.getElementById('fTahun').value, 10) || new Date().getFullYear();
-    current.tarikh = document.getElementById('fTarikh').value;
-    current.hari = document.getElementById('fHari').value;
-    current.mula = document.getElementById('fMula').value;
-    current.tamat = document.getElementById('fTamat').value;
-    current.tempat = document.getElementById('fTempat').value.trim();
-    current.pengerusi = document.getElementById('fPengerusi').value.trim();
-    current.setiausaha = document.getElementById('fSetiausaha').value.trim();
+    Object.keys(F).forEach(id => {
+      if (id === 'fNoMinit') return;
+      current[F[id]] = $(id).value.trim();
+    });
+    current.bil = parseInt($('fBil').value, 10) || 1;
+    current.tahun = parseInt($('fTahun').value, 10) || new Date().getFullYear();
+    current.hari = $('fHari').value;
     current.updatedAt = new Date().toISOString();
   }
 
-  document.getElementById('fTarikh').addEventListener('change', function () {
-    document.getElementById('fHari').value = hariDariTarikh(this.value);
+  $('fTarikh').addEventListener('change', function () {
+    $('fHari').value = hariDariTarikh(this.value);
+    if (this.value) $('fTahun').value = this.value.slice(0, 4);
     autoSaveDraft();
   });
-
-  ['fOrg','fNama','fBil','fTahun','fMula','fTamat','fTempat','fPengerusi','fSetiausaha'].forEach(id => {
-    document.getElementById(id).addEventListener('input', autoSaveDraft);
+  Object.keys(F).concat(['fBil','fTahun']).forEach(id => {
+    if (id !== 'fNoMinit') $(id).addEventListener('input', autoSaveDraft);
   });
 
   function autoSaveDraft() {
     readForm();
-    saveJSON(LS.draft, current);
+    saveJSON(LS.draft, { m: current, editId: editId });
   }
 
-  /* ===== GEMINI ===== */
-  async function panggilAI(mode, teks, konteks) {
+  /* ===== GAS / Gemini ===== */
+  function gasBody(obj) { return JSON.stringify(Object.assign({ token: settings.gasToken || '' }, obj)); }
+
+  async function panggilAI(mode, teks, konteks, senyap) {
     const url = (settings.gasUrl || '').trim();
-    if (!url) {
-      alert('Sila isi Google Apps Script URL dalam Tetapan dahulu (untuk Gemini).');
-      return null;
-    }
-    if (!teks || !String(teks).trim()) {
-      toast('Tiada teks untuk dikemaskan');
-      return null;
-    }
-    toast('🤖 Gemini sedang kemas & panjangkan ayat…');
+    if (!url) { toast('Isi Google Apps Script URL dalam Tetapan dahulu.'); return { err: 'Tiada URL GAS' }; }
     try {
       const res = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({
-          action: 'aiBantuMinit',
-          mode: mode,
-          teks: teks,
-          konteks: konteks || {}
-        })
+        method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: gasBody({ action: 'aiBantuMinit', mode: mode, teks: teks, konteks: konteks || {} })
       });
       const json = await res.json();
       if (!json.success) throw new Error(json.error || 'Gagal');
-      return json.teks || '';
+      return { teks: json.teks || '' };
     } catch (e) {
-      alert('Gemini gagal: ' + (e.message || e));
-      return null;
+      if (!senyap) toast('Gemini gagal: ' + (e.message || e));
+      return { err: e.message || String(e) };
     }
   }
 
-  async function kemasPerbincanganSatu(index) {
-    const a = current.agenda[index];
-    if (!a || !(a.perbincangan || '').trim()) {
-      toast('Petak Perbincangan kosong — tulis nota ringkas dulu');
-      return;
+  /* Simpan teks asal dalam a.asal supaya boleh Undo. Hasil dipadan ikut objek agenda, bukan index,
+     supaya taipan pengguna semasa menunggu tidak ditimpa. */
+  async function kemasObj(a) {
+    const asal = a.perbincangan;
+    const r = await panggilAI('kemasPerbincangan', asal, { nama: current.nama }, true);
+    if (r.teks) {
+      a.asal = asal;
+      if (a.perbincangan === asal) a.perbincangan = r.teks; // tidak berubah semasa menunggu
+      else { a.asal = null; return { err: 'Teks diubah semasa menunggu, hasil dibuang' }; }
     }
-    const hasil = await panggilAI('kemasPerbincangan', a.perbincangan, { nama: current.nama });
-    if (hasil) {
-      current.agenda[index].perbincangan = hasil;
-      renderAgenda();
-      autoSaveDraft();
-      toast('✅ Perbincangan dikemaskan');
-    }
+    return r;
   }
 
-  async function kemasSemuaPerbincangan() {
-    const list = current.agenda || [];
-    let bil = 0;
-    for (let i = 0; i < list.length; i++) {
-      if (!(list[i].perbincangan || '').trim()) continue;
-      const hasil = await panggilAI('kemasPerbincangan', list[i].perbincangan, { nama: current.nama });
-      if (hasil) {
-        current.agenda[i].perbincangan = hasil;
-        bil++;
-      }
-    }
-    renderAgenda();
-    autoSaveDraft();
-    toast(bil ? ('✅ ' + bil + ' petak dikemaskan') : 'Tiada petak diisi');
+  async function kemasSatu(i) {
+    const a = current.agenda[i];
+    if (busyAI) return;
+    if (!a || !(a.perbincangan || '').trim()) { toast('Petak Perbincangan kosong, tulis nota ringkas dulu'); return; }
+    busyAI = true; toast('🤖 Gemini sedang kemas ayat…');
+    const r = await kemasObj(a);
+    busyAI = false;
+    renderAgenda(); autoSaveDraft();
+    toast(r.teks ? '✅ Dikemaskan (boleh Undo)' : '⚠️ ' + (r.err || 'Gagal'));
   }
 
-  document.getElementById('btnKemasSemua').onclick = kemasSemuaPerbincangan;
+  async function kemasSemua() {
+    if (busyAI) return;
+    const btn = $('btnKemasSemua');
+    const list = (current.agenda || []).filter(a => (a.perbincangan || '').trim());
+    if (!list.length) { toast('Tiada petak Perbincangan diisi'); return; }
+    busyAI = true; btn.disabled = true;
+    let ok = 0, gagal = 0, lastErr = '';
+    for (let n = 0; n < list.length; n++) {
+      toast('🤖 Mengemas ' + (n + 1) + '/' + list.length + '…');
+      const r = await kemasObj(list[n]);
+      if (r.teks) ok++; else { gagal++; lastErr = r.err; }
+    }
+    busyAI = false; btn.disabled = false;
+    renderAgenda(); autoSaveDraft();
+    toast('✅ ' + ok + ' berjaya' + (gagal ? ', ⚠️ ' + gagal + ' gagal (' + lastErr + ')' : ''));
+  }
+  $('btnKemasSemua').onclick = kemasSemua;
 
-  /* HADIR */
+  /* ===== HADIR ===== */
   function renderHadir() {
-    const tb = document.getElementById('hadirBody');
+    const tb = $('hadirBody');
     tb.innerHTML = '';
     let h = 0, th = 0, thb = 0;
     (current.hadir || []).forEach((r, i) => {
-      if (r.status === 'Hadir') h++;
-      else if (r.status === 'Tidak Hadir Bersebab') thb++;
-      else th++;
+      if (r.status === 'Hadir') h++; else if (r.status === 'Tidak Hadir Bersebab') thb++; else th++;
       const tr = document.createElement('tr');
       tr.innerHTML =
         '<td><input data-h="nama" data-i="' + i + '" value="' + esc(r.nama) + '"></td>' +
         '<td><input data-h="jawatan" data-i="' + i + '" value="' + esc(r.jawatan) + '"></td>' +
         '<td><select data-h="status" data-i="' + i + '">' +
-        ['Hadir','Tidak Hadir','Tidak Hadir Bersebab'].map(s =>
-          '<option' + (r.status === s ? ' selected' : '') + '>' + s + '</option>').join('') +
-        '</select></td>' +
-        '<td><button type="button" class="btn btn-sec btn-sm" data-del-h="' + i + '">Padam</button></td>';
+        ['Hadir','Tidak Hadir','Tidak Hadir Bersebab'].map(s => '<option' + (r.status === s ? ' selected' : '') + '>' + s + '</option>').join('') +
+        '</select></td><td><button type="button" class="btn btn-sec btn-sm" data-del-h="' + i + '">Padam</button></td>';
       tb.appendChild(tr);
     });
-    document.getElementById('hadirCount').textContent =
-      '(Hadir: ' + h + ' · Tidak hadir: ' + th + ' · Bersebab: ' + thb + ')';
-
+    $('hadirCount').textContent = '(Hadir: ' + h + ' · Tidak hadir: ' + th + ' · Bersebab: ' + thb + ')';
     tb.querySelectorAll('[data-h]').forEach(inp => {
-      inp.addEventListener('change', () => {
-        const i = +inp.getAttribute('data-i');
-        const k = inp.getAttribute('data-h');
-        current.hadir[i][k] = inp.value;
-        autoSaveDraft();
-        if (k === 'status') renderHadir();
-      });
-      inp.addEventListener('input', () => {
-        const i = +inp.getAttribute('data-i');
-        const k = inp.getAttribute('data-h');
-        if (k !== 'status') current.hadir[i][k] = inp.value;
-      });
+      const upd = () => { current.hadir[+inp.dataset.i][inp.dataset.h] = inp.value; autoSaveDraft(); };
+      inp.addEventListener('input', upd);
+      inp.addEventListener('change', () => { upd(); if (inp.dataset.h === 'status') renderHadir(); });
     });
     tb.querySelectorAll('[data-del-h]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        current.hadir.splice(+btn.getAttribute('data-del-h'), 1);
-        renderHadir();
-        autoSaveDraft();
-      });
+      btn.onclick = () => { current.hadir.splice(+btn.dataset.delH, 1); renderHadir(); autoSaveDraft(); };
     });
   }
-
-  document.getElementById('btnAddHadir').onclick = () => {
-    current.hadir.push({ nama: '', jawatan: '', status: 'Hadir' });
-    renderHadir();
-    autoSaveDraft();
-  };
-
-  document.getElementById('btnPickAhli').onclick = () => {
+  $('btnAddHadir').onclick = () => { current.hadir.push({ nama:'', jawatan:'', status:'Hadir' }); renderHadir(); autoSaveDraft(); };
+  $('btnPickAhli').onclick = () => {
     if (!members.length) { toast('Tiada ahli. Tambah di Senarai Ahli.'); return; }
     const aktif = members.filter(m => m.status === 'Aktif');
     (aktif.length ? aktif : members).forEach(m => {
-      if (!current.hadir.some(h => h.nama === m.nama)) {
-        current.hadir.push({ nama: m.nama, jawatan: m.jawatan || '', status: 'Hadir' });
-      }
+      if (!current.hadir.some(h => h.nama === m.nama)) current.hadir.push({ nama:m.nama, jawatan:m.jawatan || '', status:'Hadir' });
     });
-    renderHadir();
-    autoSaveDraft();
-    toast('Ahli dimuatkan');
+    renderHadir(); autoSaveDraft(); toast('Ahli dimuatkan');
   };
 
-  /* AGENDA */
+  /* ===== AGENDA ===== */
   function renderAgenda() {
-    const box = document.getElementById('agendaList');
+    const box = $('agendaList');
     box.innerHTML = '';
     (current.agenda || []).forEach((a, i) => {
       const div = document.createElement('div');
@@ -568,258 +537,172 @@ th{background:#f3e5f5;color:#4a148c}
         '<label>Tajuk</label><input data-a="tajuk" data-i="' + i + '" value="' + esc(a.tajuk) + '">' +
         '<label>Perbincangan (boleh tulis ringkas)</label>' +
         '<textarea data-a="perbincangan" data-i="' + i + '">' + esc(a.perbincangan) + '</textarea>' +
-        '<button type="button" class="btn btn-purple btn-sm" data-kemas-p="' + i + '" style="margin:6px 0 8px">🤖 Kemas Perbincangan</button>' +
+        '<div class="list-actions" style="margin:6px 0 8px"><button type="button" class="btn btn-purple btn-sm" data-kemas-p="' + i + '">🤖 Kemas Perbincangan</button>' +
+        (a.asal ? '<button type="button" class="btn btn-sec btn-sm" data-undo="' + i + '">↩️ Undo</button>' : '') + '</div>' +
         '<label>Keputusan</label><textarea data-a="keputusan" data-i="' + i + '">' + esc(a.keputusan) + '</textarea>' +
         '<label>Tindakan</label><textarea data-a="tindakan" data-i="' + i + '">' + esc(a.tindakan) + '</textarea>' +
-        '<div class="row2"><div><label>Pegawai bertanggungjawab</label>' +
-        '<input data-a="pic" data-i="' + i + '" value="' + esc(a.pic) + '"></div>' +
-        '<div><label>Tarikh akhir</label>' +
-        '<input type="date" data-a="tarikhAkhir" data-i="' + i + '" value="' + esc(a.tarikhAkhir) + '"></div></div>' +
+        '<div class="row2"><div><label>Pegawai bertanggungjawab</label><input data-a="pic" data-i="' + i + '" value="' + esc(a.pic) + '"></div>' +
+        '<div><label>Tarikh akhir</label><input type="date" data-a="tarikhAkhir" data-i="' + i + '" value="' + esc(a.tarikhAkhir) + '"></div></div>' +
         '<label>Status tindakan</label><select data-a="statusTindakan" data-i="' + i + '">' +
-        ['Belum Mula','Dalam Tindakan','Selesai'].map(s =>
-          '<option' + (a.statusTindakan === s ? ' selected' : '') + '>' + s + '</option>').join('') +
-        '</select>' +
-        '<div class="list-actions">' +
-        '<button type="button" class="btn btn-sec btn-sm" data-up="' + i + '">Naik</button>' +
+        ['Belum Mula','Dalam Tindakan','Selesai'].map(s => '<option' + (a.statusTindakan === s ? ' selected' : '') + '>' + s + '</option>').join('') + '</select>' +
+        '<div class="list-actions"><button type="button" class="btn btn-sec btn-sm" data-up="' + i + '">Naik</button>' +
         '<button type="button" class="btn btn-sec btn-sm" data-down="' + i + '">Turun</button>' +
-        '<button type="button" class="btn btn-sm" data-del-a="' + i + '" style="background:#555">Hapus</button>' +
-        '</div>';
+        '<button type="button" class="btn btn-dark btn-sm" data-del-a="' + i + '">Hapus</button></div>';
       box.appendChild(div);
     });
-
     box.querySelectorAll('[data-a]').forEach(el => {
-      const handler = () => {
-        const i = +el.getAttribute('data-i');
-        current.agenda[i][el.getAttribute('data-a')] = el.value;
-        autoSaveDraft();
-      };
-      el.addEventListener('input', handler);
-      el.addEventListener('change', handler);
+      const h = () => { current.agenda[+el.dataset.i][el.dataset.a] = el.value; autoSaveDraft(); };
+      el.addEventListener('input', h); el.addEventListener('change', h);
     });
-    box.querySelectorAll('[data-kemas-p]').forEach(btn => {
-      btn.onclick = () => kemasPerbincanganSatu(+btn.getAttribute('data-kemas-p'));
+    box.querySelectorAll('[data-kemas-p]').forEach(b => { b.onclick = () => kemasSatu(+b.dataset.kemasP); });
+    box.querySelectorAll('[data-undo]').forEach(b => {
+      b.onclick = () => { const a = current.agenda[+b.dataset.undo]; a.perbincangan = a.asal; a.asal = null; renderAgenda(); autoSaveDraft(); toast('Dipulihkan'); };
     });
-    box.querySelectorAll('[data-del-a]').forEach(btn => {
-      btn.onclick = () => {
-        current.agenda.splice(+btn.getAttribute('data-del-a'), 1);
-        renderAgenda();
-        autoSaveDraft();
-      };
+    box.querySelectorAll('[data-del-a]').forEach(b => {
+      b.onclick = () => { current.agenda.splice(+b.dataset.delA, 1); renderAgenda(); autoSaveDraft(); };
     });
-    box.querySelectorAll('[data-up]').forEach(btn => {
-      btn.onclick = () => {
-        const i = +btn.getAttribute('data-up');
-        if (i <= 0) return;
-        const t = current.agenda[i - 1];
-        current.agenda[i - 1] = current.agenda[i];
-        current.agenda[i] = t;
-        renderAgenda();
-        autoSaveDraft();
-      };
-    });
-    box.querySelectorAll('[data-down]').forEach(btn => {
-      btn.onclick = () => {
-        const i = +btn.getAttribute('data-down');
-        if (i >= current.agenda.length - 1) return;
-        const t = current.agenda[i + 1];
-        current.agenda[i + 1] = current.agenda[i];
-        current.agenda[i] = t;
-        renderAgenda();
-        autoSaveDraft();
-      };
-    });
+    const swap = (i, j) => { if (j < 0 || j >= current.agenda.length) return; const t = current.agenda[i]; current.agenda[i] = current.agenda[j]; current.agenda[j] = t; renderAgenda(); autoSaveDraft(); };
+    box.querySelectorAll('[data-up]').forEach(b => { b.onclick = () => swap(+b.dataset.up, +b.dataset.up - 1); });
+    box.querySelectorAll('[data-down]').forEach(b => { b.onclick = () => swap(+b.dataset.down, +b.dataset.down + 1); });
   }
-
-  document.getElementById('btnAddAgenda').onclick = () => {
-    current.agenda.push({
-      tajuk: '', perbincangan: '', keputusan: '', tindakan: '',
-      pic: '', tarikhAkhir: '', statusTindakan: 'Belum Mula'
-    });
-    renderAgenda();
-    autoSaveDraft();
+  $('btnAddAgenda').onclick = () => {
+    current.agenda.push({ tajuk:'', perbincangan:'', keputusan:'', tindakan:'', pic:'', tarikhAkhir:'', statusTindakan:'Belum Mula', asal:null });
+    renderAgenda(); autoSaveDraft();
   };
 
   function validate() {
     readForm();
     if (!current.tarikh) { alert('Tarikh mesyuarat diperlukan.'); return false; }
+    if (!current.nama) { alert('Nama mesyuarat diperlukan.'); return false; }
     if (!current.pengerusi) { alert('Pengerusi diperlukan.'); return false; }
     if (!current.setiausaha) { alert('Setiausaha diperlukan.'); return false; }
-    if (!current.nama) { alert('Nama mesyuarat diperlukan.'); return false; }
     if (!current.hadir.length) { alert('Sekurang-kurangnya seorang ahli perlu ditambah.'); return false; }
     return true;
   }
 
   async function saveMeeting() {
     if (!validate()) return;
+    if (!current.noMinit) current.noMinit = janaNoMinit(current.tahun);
+    $('fNoMinit').value = current.noMinit;
     current.status = 'Disimpan';
     current.updatedAt = new Date().toISOString();
-    if (editId) {
-      const idx = meetings.findIndex(m => m.id === editId);
-      if (idx >= 0) meetings[idx] = JSON.parse(JSON.stringify(current));
-    } else {
-      meetings.unshift(JSON.parse(JSON.stringify(current)));
-      editId = current.id;
-    }
-    saveJSON(LS.meetings, meetings);
-    localStorage.removeItem(LS.draft);
+    const copy = JSON.parse(JSON.stringify(current));
+    const idx = meetings.findIndex(m => m.id === current.id);
+    if (idx >= 0) meetings[idx] = copy; else meetings.unshift(copy);
+    editId = current.id;
+    if (!saveJSON(LS.meetings, meetings)) return;
+    try { localStorage.removeItem(LS.draft); } catch (e) {}
     toast('Minit disimpan (peranti ini)');
     if (settings.gasUrl) {
       try {
-        await fetch(settings.gasUrl, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: 'saveMeeting', data: current })
-        });
-        toast('Disimpan + sync Sheet…');
-      } catch (e) { console.warn(e); }
+        await fetch(settings.gasUrl, { method:'POST', mode:'no-cors', headers:{ 'Content-Type':'text/plain;charset=utf-8' }, body: gasBody({ action:'saveMeeting', data:current }) });
+        toast('Disimpan. Dihantar ke Sheet (tidak dapat disahkan, semak Sheet)');
+      } catch (e) { toast('Disimpan lokal. Hantar ke Sheet gagal: ' + e.message); }
     }
     refreshStats();
   }
+  ['btnSave','btnSave2','btnSave3'].forEach(id => { $(id).onclick = saveMeeting; });
 
-  document.getElementById('btnSave').onclick = saveMeeting;
-  document.getElementById('btnSave2').onclick = saveMeeting;
-  document.getElementById('btnSave3').onclick = saveMeeting;
-
+  /* ===== DOKUMEN ===== */
   function buildDocHTML(m) {
-    const logo = settings.logo ? '<img class="logo" src="' + esc(settings.logo) + '" alt="Logo">' : '';
-    let hadirRows = (m.hadir || []).map((h, i) =>
-      '<tr><td>' + (i + 1) + '</td><td>' + esc(h.nama) + '</td><td>' + esc(h.jawatan) + '</td><td>' + esc(h.status) + '</td></tr>'
-    ).join('');
-    let agendaHtml = (m.agenda || []).map((a, i) =>
-      '<div class="agenda-item"><strong>' + (i + 1) + '. ' + esc(a.tajuk || '(Tanpa tajuk)') + '</strong>' +
-      '<p><em>Perbincangan:</em><br>' + esc(a.perbincangan).replace(/\n/g, '<br>') + '</p>' +
-      '<p><em>Keputusan:</em><br>' + esc(a.keputusan).replace(/\n/g, '<br>') + '</p>' +
-      (a.tindakan ? '<p><em>Tindakan:</em><br>' + esc(a.tindakan).replace(/\n/g, '<br>') +
-        (a.pic ? '<br>PIC: ' + esc(a.pic) : '') +
-        (a.tarikhAkhir ? ' · Tarikh akhir: ' + esc(a.tarikhAkhir) : '') + '</p>' : '') +
-      '</div>'
-    ).join('');
-
+    const logo = settings.logo ? '<img class="logo" src="' + esc(settings.logo) + '" alt="Logo" style="display:block;margin:0 auto 6px;max-height:60px">' : '';
+    const hadirRows = (m.hadir || []).map((h, i) => '<tr><td>' + (i + 1) + '</td><td>' + esc(h.nama) + '</td><td>' + esc(h.jawatan) + '</td><td>' + esc(h.status) + '</td></tr>').join('');
+    const agendaHtml = (m.agenda || []).map((a, i) =>
+      '<div class="agenda-item"><strong>' + (i + 4) + '. ' + esc(a.tajuk || '(Tanpa tajuk)') + '</strong>' +
+      '<p><em>Perbincangan:</em><br>' + nl(a.perbincangan) + '</p>' +
+      '<p><em>Keputusan:</em><br>' + nl(a.keputusan) + '</p>' +
+      (a.tindakan ? '<p><em>Tindakan:</em><br>' + nl(a.tindakan) + (a.pic ? '<br>PIC: ' + esc(a.pic) : '') + (a.tarikhAkhir ? ' · Tarikh akhir: ' + esc(fmtTarikh(a.tarikhAkhir)) : '') + '</p>' : '') +
+      '</div>').join('');
+    const n = (m.agenda || []).length + 4;
+    const penutup = m.penutup || ('Mesyuarat ditangguhkan pada ' + (m.tamat || '________') + '. Pengerusi mengucapkan terima kasih kepada semua yang hadir.');
     return '<div class="doc-a4">' + logo +
-      '<div class="org"><strong>' + esc(m.org || settings.org) + '</strong><br>' +
-      esc(settings.alamat) +
-      (settings.tel ? '<br>Tel: ' + esc(settings.tel) : '') +
-      (settings.email ? ' · ' + esc(settings.email) : '') + '</div>' +
+      '<div class="org"><strong>' + esc(m.org || settings.org) + '</strong><br>' + esc(settings.alamat) +
+      (settings.tel ? '<br>Tel: ' + esc(settings.tel) : '') + (settings.email ? ' · ' + esc(settings.email) : '') + '</div>' +
       '<h1>MINIT MESYUARAT<br>' + esc(m.nama) + '</h1>' +
-      '<p class="muted">No. Minit: <strong>' + esc(m.noMinit) + '</strong> &nbsp;|&nbsp; Bil: ' + esc(m.bil) +
-      ' &nbsp;|&nbsp; Tahun: ' + esc(m.tahun) + '</p>' +
-      '<table><tr><th>Tarikh</th><td>' + esc(m.tarikh) + ' (' + esc(m.hari) + ')</td></tr>' +
+      '<p class="muted" style="text-align:center">No. Minit: <strong>' + esc(m.noMinit) + '</strong> | Bil: ' + esc(m.bil) + ' | Tahun: ' + esc(m.tahun) + '</p>' +
+      '<table><tr><th style="width:25%">Tarikh</th><td>' + esc(fmtTarikh(m.tarikh)) + ' (' + esc(m.hari) + ')</td></tr>' +
       '<tr><th>Masa</th><td>' + esc(m.mula) + ' – ' + esc(m.tamat) + '</td></tr>' +
       '<tr><th>Tempat</th><td>' + esc(m.tempat) + '</td></tr>' +
       '<tr><th>Pengerusi</th><td>' + esc(m.pengerusi) + '</td></tr>' +
       '<tr><th>Setiausaha</th><td>' + esc(m.setiausaha) + '</td></tr></table>' +
-      '<h2>KEHADIRAN</h2>' +
-      '<table><thead><tr><th>Bil</th><th>Nama</th><th>Jawatan</th><th>Status</th></tr></thead><tbody>' +
-      hadirRows + '</tbody></table>' +
+      '<h2>1. KEHADIRAN</h2>' +
+      '<table><thead><tr><th>Bil</th><th>Nama</th><th>Jawatan</th><th>Status</th></tr></thead><tbody>' + hadirRows + '</tbody></table>' +
+      '<h2>2. PEMBUKAAN</h2><p>Pengerusi memulakan mesyuarat pada ' + esc(m.mula || '________') + ' dan mengalu-alukan kehadiran semua ahli.</p>' +
+      '<h2>3. PENGESAHAN MINIT MESYUARAT LEPAS</h2><p>' + (m.lepas ? nl(m.lepas) : 'Tiada / tidak berkenaan.') + '</p>' +
       '<h2>AGENDA</h2>' + agendaHtml +
-      '<div class="sign">' +
-      '<div class="box"><strong>DISEDIAKAN OLEH</strong><br>Setiausaha<br><br><br>................................<br>' +
-      esc(m.setiausaha) + '<br>Tarikh: _______________</div>' +
-      '<div class="box"><strong>DISAHKAN OLEH</strong><br>Pengerusi<br><br><br>................................<br>' +
-      esc(m.pengerusi) + '<br>Tarikh: _______________</div>' +
-      '</div>' +
-      '<p class="muted" style="margin-top:24px;text-align:center;font-size:9pt">' +
-      esc(m.noMinit) + ' · ' + esc(m.tarikh) + '</p></div>';
+      '<h2>' + n + '. HAL-HAL LAIN</h2><p>' + (m.lain ? nl(m.lain) : 'Tiada.') + '</p>' +
+      '<h2>' + (n + 1) + '. PENUTUP</h2><p>' + nl(penutup) + '</p>' +
+      '<table style="border:none;margin-top:36px"><tr>' +
+      '<td style="border:none;text-align:center;width:50%;vertical-align:top"><strong>DISEDIAKAN OLEH</strong><br>Setiausaha<br><br><br>................................<br>' + esc(m.setiausaha) + '<br>Tarikh: _______________</td>' +
+      '<td style="border:none;text-align:center;width:50%;vertical-align:top"><strong>DISAHKAN OLEH</strong><br>Pengerusi<br><br><br>................................<br>' + esc(m.pengerusi) + '<br>Tarikh: _______________</td>' +
+      '</tr></table>' +
+      '<p class="muted" style="margin-top:24px;text-align:center;font-size:9pt">' + esc(m.noMinit) + ' · ' + esc(fmtTarikh(m.tarikh)) + '</p></div>';
   }
 
-  function openPreview() {
-    if (!validate()) return;
-    document.getElementById('printArea').innerHTML = buildDocHTML(current);
-    showPage('preview');
-  }
+  function showDoc(m) { $('printArea').innerHTML = buildDocHTML(m); showPage('preview'); }
+  function openPreview() { if (validate()) showDoc(current); }
+  $('btnPreview').onclick = openPreview;
+  $('btnPreview2').onclick = openPreview;
+  $('btnBackEdit').onclick = () => showPage('borang');
+  $('btnPrint').onclick = () => window.print();
+  $('btnPdf').onclick = () => { toast('Pilih "Save as PDF" pada dialog cetak'); setTimeout(() => window.print(), 400); };
 
-  document.getElementById('btnPreview').onclick = openPreview;
-  document.getElementById('btnPreview2').onclick = openPreview;
-  document.getElementById('btnBackEdit').onclick = () => showPage('borang');
-  document.getElementById('btnPrint').onclick = () => window.print();
-  document.getElementById('btnPdf').onclick = () => {
-    toast('Guna Cetak → Save as PDF');
-    setTimeout(() => window.print(), 400);
-  };
-  document.getElementById('btnWord').onclick = () => {
-    const html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><title>Minit</title></head><body>' +
-      document.getElementById('printArea').innerHTML + '</body></html>';
+  $('btnWord').onclick = () => {
+    const css = 'body{font-family:"Times New Roman",serif;font-size:11pt}h1{text-align:center;font-size:14pt}h2{font-size:12pt;border-bottom:1px solid #333}' +
+      'table{width:100%;border-collapse:collapse}th,td{border:1px solid #333;padding:4px 6px;text-align:left;vertical-align:top}.org{text-align:center;font-size:10pt}.muted{color:#444;font-size:10pt}';
+    const html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><title>Minit</title><style>' + css + '</style></head><body>' + buildDocHTML(current) + '</body></html>';
     const blob = new Blob(['\ufeff', html], { type: 'application/msword' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = (current.noMinit || 'minit').replace(/\//g, '-') + '.doc';
+    a.download = (current.noMinit || 'minit').replace(/[\/\\]/g, '-') + '.doc';
     a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
   };
-  document.getElementById('btnCopy').onclick = async () => {
-    try {
-      await navigator.clipboard.writeText(document.getElementById('printArea').innerText);
-      toast('Teks disalin');
-    } catch { alert('Salin manual dari pratonton'); }
+  $('btnCopy').onclick = async () => {
+    try { await navigator.clipboard.writeText($('printArea').innerText); toast('Teks disalin'); }
+    catch (e) { alert('Salin manual dari pratonton'); }
   };
 
+  /* ===== REKOD ===== */
   function renderRekod() {
-    const ySel = document.getElementById('rekodTahun');
+    const ySel = $('rekodTahun');
     const years = [...new Set(meetings.map(m => String(m.tahun)))].sort().reverse();
     const cur = ySel.value || 'all';
-    ySel.innerHTML = '<option value="all">Semua tahun</option>' +
-      years.map(y => '<option value="' + y + '">' + y + '</option>').join('');
+    ySel.innerHTML = '<option value="all">Semua tahun</option>' + years.map(y => '<option value="' + y + '">' + y + '</option>').join('');
     ySel.value = years.includes(cur) ? cur : 'all';
-
-    const q = (document.getElementById('rekodCari').value || '').toLowerCase();
-    const y = ySel.value;
-    const m = document.getElementById('rekodBulan').value;
+    const q = ($('rekodCari').value || '').toLowerCase();
+    const y = ySel.value, mo = $('rekodBulan').value;
     const rows = meetings.filter(r => {
       if (y !== 'all' && String(r.tahun) !== y) return false;
-      if (m !== 'all' && !(r.tarikh || '').includes('-' + m + '-')) return false;
-      if (q) {
-        const hay = [r.noMinit, r.nama, r.pengerusi, r.tempat].join(' ').toLowerCase();
-        if (!hay.includes(q)) return false;
-      }
+      if (mo !== 'all' && (r.tarikh || '').split('-')[1] !== mo) return false;
+      if (q && ![r.noMinit, r.nama, r.pengerusi, r.tempat].join(' ').toLowerCase().includes(q)) return false;
       return true;
     });
-
-    document.getElementById('rekodBody').innerHTML = rows.map(r =>
-      '<tr><td>' + esc(r.noMinit) + '</td><td>' + esc(r.nama) + '</td><td>' + esc(r.tarikh) +
-      '</td><td>' + esc(r.pengerusi) + '</td><td>' + esc(r.status) + '</td><td>' +
+    $('rekodBody').innerHTML = rows.map(r =>
+      '<tr><td>' + esc(r.noMinit) + '</td><td>' + esc(r.nama) + '</td><td>' + esc(fmtTarikh(r.tarikh)) + '</td><td>' + esc(r.pengerusi) + '</td><td>' + esc(r.status) + '</td><td>' +
       '<button type="button" class="btn btn-sm btn-sec" data-view="' + esc(r.id) + '">Lihat</button> ' +
       '<button type="button" class="btn btn-sm" data-edit="' + esc(r.id) + '">Edit</button> ' +
       '<button type="button" class="btn btn-sm btn-purple" data-dup="' + esc(r.id) + '">Salin</button> ' +
-      '<button type="button" class="btn btn-sm" style="background:#555" data-del="' + esc(r.id) + '">Padam</button>' +
-      '</td></tr>'
+      '<button type="button" class="btn btn-sm btn-dark" data-del="' + esc(r.id) + '">Padam</button></td></tr>'
     ).join('') || '<tr><td colspan="6" style="text-align:center;color:#888">Tiada rekod</td></tr>';
 
-    document.querySelectorAll('[data-view]').forEach(b => {
-      b.onclick = () => {
-        const m = meetings.find(x => x.id === b.getAttribute('data-view'));
-        if (!m) return;
-        current = JSON.parse(JSON.stringify(m));
-        document.getElementById('printArea').innerHTML = buildDocHTML(current);
-        showPage('preview');
-      };
-    });
-    document.querySelectorAll('[data-edit]').forEach(b => {
-      b.onclick = () => {
-        const m = meetings.find(x => x.id === b.getAttribute('data-edit'));
-        if (!m) return;
-        current = JSON.parse(JSON.stringify(m));
-        editId = m.id;
-        showPage('borang');
-      };
-    });
-    document.querySelectorAll('[data-dup]').forEach(b => {
-      b.onclick = () => duplicateMeeting(b.getAttribute('data-dup'));
-    });
-    document.querySelectorAll('[data-del]').forEach(b => {
-      b.onclick = () => {
-        if (!confirm('Padam minit ini?')) return;
-        meetings = meetings.filter(x => x.id !== b.getAttribute('data-del'));
-        saveJSON(LS.meetings, meetings);
-        renderRekod();
-        refreshStats();
-        toast('Dipadam');
-      };
-    });
+    const find = id => meetings.find(x => x.id === id);
+    document.querySelectorAll('[data-view]').forEach(b => { b.onclick = () => {
+      const m = find(b.dataset.view); if (!m) return;
+      current = JSON.parse(JSON.stringify(m)); editId = m.id; showDoc(current);
+    }; });
+    document.querySelectorAll('[data-edit]').forEach(b => { b.onclick = () => {
+      const m = find(b.dataset.edit); if (!m) return;
+      current = JSON.parse(JSON.stringify(m)); editId = m.id; showPage('borang');
+    }; });
+    document.querySelectorAll('[data-dup]').forEach(b => { b.onclick = () => duplicateMeeting(b.dataset.dup); });
+    document.querySelectorAll('[data-del]').forEach(b => { b.onclick = () => {
+      if (!confirm('Padam minit ini?')) return;
+      meetings = meetings.filter(x => x.id !== b.dataset.del);
+      saveJSON(LS.meetings, meetings); renderRekod(); refreshStats(); toast('Dipadam');
+    }; });
   }
-
-  document.getElementById('rekodCari').addEventListener('input', renderRekod);
-  document.getElementById('rekodTahun').addEventListener('change', renderRekod);
-  document.getElementById('rekodBulan').addEventListener('change', renderRekod);
+  ['rekodCari','rekodTahun','rekodBulan'].forEach(id => { $(id).addEventListener(id === 'rekodCari' ? 'input' : 'change', renderRekod); });
 
   function duplicateMeeting(id) {
     const src = meetings.find(x => x.id === id);
@@ -827,117 +710,132 @@ th{background:#f3e5f5;color:#4a148c}
     current = JSON.parse(JSON.stringify(src));
     current.id = 'm_' + Date.now();
     current.tahun = new Date().getFullYear();
-    current.noMinit = nextNoMinit(current.tahun);
-    current.tarikh = '';
-    current.hari = '';
-    current.mula = '';
-    current.tamat = '';
+    current.bil = (parseInt(src.bil, 10) || 0) + 1;
+    current.noMinit = '';
+    current.tarikh = ''; current.hari = ''; current.mula = ''; current.tamat = '';
+    current.lepas = ''; current.lain = ''; current.penutup = '';
     current.status = 'Draf';
-    current.hadir = (current.hadir || []).map(h => ({ nama: h.nama, jawatan: h.jawatan, status: 'Hadir' }));
-    current.agenda = (current.agenda || []).map(a => ({
-      tajuk: a.tajuk, perbincangan: '', keputusan: '', tindakan: '',
-      pic: a.pic || '', tarikhAkhir: '', statusTindakan: 'Belum Mula'
-    }));
+    current.hadir = (current.hadir || []).map(h => ({ nama:h.nama, jawatan:h.jawatan, status:'Hadir' }));
+    current.agenda = (current.agenda || []).map(a => ({ tajuk:a.tajuk, perbincangan:'', keputusan:'', tindakan:'', pic:a.pic || '', tarikhAkhir:'', statusTindakan:'Belum Mula', asal:null }));
     editId = null;
     showPage('borang');
     toast('Salinan dijadikan draf baharu');
   }
-
-  document.getElementById('btnDupFrom').onclick = () => {
+  $('btnDupFrom').onclick = () => {
     if (!meetings.length) { toast('Tiada minit untuk disalin'); return; }
-    if (confirm('Salin minit terkini sebagai template?')) duplicateMeeting(meetings[0].id);
+    showPage('rekod');
+    toast('Tekan "Salin" pada minit yang dipilih');
   };
 
-  function renderAhli() {
-    document.getElementById('ahliBody').innerHTML = members.map((m, i) =>
-      '<tr><td>' + esc(m.nama) + '</td><td>' + esc(m.noAhli) + '</td><td>' + esc(m.jawatan) +
-      '</td><td>' + esc(m.telefon) + '</td><td>' + esc(m.email) + '</td><td>' + esc(m.status) +
-      '</td><td><button type="button" class="btn btn-sec btn-sm" data-del-m="' + i + '">Padam</button></td></tr>'
-    ).join('') || '<tr><td colspan="7" style="text-align:center;color:#888">Tiada ahli</td></tr>';
-    document.querySelectorAll('[data-del-m]').forEach(b => {
-      b.onclick = () => {
-        if (!confirm('Padam ahli?')) return;
-        members.splice(+b.getAttribute('data-del-m'), 1);
-        saveJSON(LS.members, members);
-        renderAhli();
-      };
-    });
+  /* ===== AHLI ===== */
+  function resetAhliForm() {
+    editMember = -1;
+    ['mNama','mNo','mJaw','mTel','mEmail'].forEach(id => { $(id).value = ''; });
+    $('mStatus').value = 'Aktif';
+    $('ahliTitle').textContent = 'Ahli Baharu';
   }
-
-  document.getElementById('btnAhliBaru').onclick = () => {
-    const nama = prompt('Nama penuh:');
-    if (!nama) return;
-    members.push({
-      nama: nama.trim(),
-      noAhli: prompt('No. ahli:') || '',
-      jawatan: prompt('Jawatan:') || '',
-      telefon: prompt('Telefon:') || '',
-      email: prompt('E-mel:') || '',
-      status: 'Aktif'
-    });
-    saveJSON(LS.members, members);
-    renderAhli();
+  function renderAhli() {
+    $('ahliBody').innerHTML = members.map((m, i) =>
+      '<tr><td>' + esc(m.nama) + '</td><td>' + esc(m.noAhli) + '</td><td>' + esc(m.jawatan) + '</td><td>' + esc(m.telefon) + '</td><td>' + esc(m.email) + '</td><td>' + esc(m.status) +
+      '</td><td><button type="button" class="btn btn-sm" data-edit-m="' + i + '">Edit</button> <button type="button" class="btn btn-dark btn-sm" data-del-m="' + i + '">Padam</button></td></tr>'
+    ).join('') || '<tr><td colspan="7" style="text-align:center;color:#888">Tiada ahli</td></tr>';
+    document.querySelectorAll('[data-edit-m]').forEach(b => { b.onclick = () => {
+      const i = +b.dataset.editM, m = members[i];
+      editMember = i;
+      $('mNama').value = m.nama; $('mNo').value = m.noAhli || ''; $('mJaw').value = m.jawatan || '';
+      $('mTel').value = m.telefon || ''; $('mEmail').value = m.email || ''; $('mStatus').value = m.status || 'Aktif';
+      $('ahliTitle').textContent = 'Edit Ahli'; window.scrollTo(0, 0);
+    }; });
+    document.querySelectorAll('[data-del-m]').forEach(b => { b.onclick = () => {
+      if (!confirm('Padam ahli?')) return;
+      members.splice(+b.dataset.delM, 1); saveJSON(LS.members, members); renderAhli(); resetAhliForm();
+    }; });
+  }
+  $('btnAhliSave').onclick = () => {
+    const nama = $('mNama').value.trim();
+    if (!nama) { toast('Nama diperlukan'); return; }
+    const rec = { nama:nama, noAhli:$('mNo').value.trim(), jawatan:$('mJaw').value.trim(), telefon:$('mTel').value.trim(), email:$('mEmail').value.trim(), status:$('mStatus').value };
+    if (editMember >= 0) members[editMember] = rec; else members.push(rec);
+    saveJSON(LS.members, members); renderAhli(); resetAhliForm(); toast('Ahli disimpan');
   };
+  $('btnAhliReset').onclick = resetAhliForm;
 
+  /* ===== TINDAKAN (boleh ubah status terus) ===== */
   function renderTodo() {
     const rows = [];
-    meetings.forEach(mt => {
-      (mt.agenda || []).forEach(a => {
-        if (!a.tindakan) return;
-        rows.push({
-          perkara: a.tajuk, tindakan: a.tindakan, pic: a.pic,
-          tarikh: a.tarikhAkhir, status: a.statusTindakan || 'Belum Mula', minit: mt.noMinit
-        });
-      });
-    });
-    document.getElementById('todoBody').innerHTML = rows.map((r, i) => {
-      let cls = 'b-belum';
-      if (r.status === 'Dalam Tindakan') cls = 'b-dalam';
-      if (r.status === 'Selesai') cls = 'b-selesai';
-      return '<tr><td>' + (i + 1) + '</td><td>' + esc(r.perkara) + '</td><td>' + esc(r.tindakan) +
-        '</td><td>' + esc(r.pic) + '</td><td>' + esc(r.tarikh) + '</td><td><span class="badge ' + cls + '">' +
-        esc(r.status) + '</span></td><td>' + esc(r.minit) + '</td></tr>';
-    }).join('') || '<tr><td colspan="7" style="text-align:center;color:#888">Tiada tindakan</td></tr>';
+    meetings.forEach((mt, mi) => (mt.agenda || []).forEach((a, ai) => { if (a.tindakan) rows.push({ mi:mi, ai:ai, a:a, minit:mt.noMinit }); }));
+    $('todoBody').innerHTML = rows.map((r, i) =>
+      '<tr><td>' + (i + 1) + '</td><td>' + esc(r.a.tajuk) + '</td><td>' + esc(r.a.tindakan) + '</td><td>' + esc(r.a.pic) + '</td><td>' + esc(fmtTarikh(r.a.tarikhAkhir)) + '</td>' +
+      '<td><select data-mi="' + r.mi + '" data-ai="' + r.ai + '">' +
+      ['Belum Mula','Dalam Tindakan','Selesai'].map(s => '<option' + ((r.a.statusTindakan || 'Belum Mula') === s ? ' selected' : '') + '>' + s + '</option>').join('') +
+      '</select></td><td>' + esc(r.minit) + '</td></tr>'
+    ).join('') || '<tr><td colspan="7" style="text-align:center;color:#888">Tiada tindakan</td></tr>';
+    $('todoBody').querySelectorAll('select').forEach(s => { s.onchange = () => {
+      meetings[+s.dataset.mi].agenda[+s.dataset.ai].statusTindakan = s.value;
+      saveJSON(LS.meetings, meetings); toast('Status dikemas kini');
+    }; });
   }
 
+  /* ===== TETAPAN & BACKUP ===== */
   function fillSettings() {
-    document.getElementById('sOrg').value = settings.org || '';
-    document.getElementById('sAlamat').value = settings.alamat || '';
-    document.getElementById('sTel').value = settings.tel || '';
-    document.getElementById('sEmail').value = settings.email || '';
-    document.getElementById('sLogo').value = settings.logo || '';
-    document.getElementById('sFormat').value = settings.format || 'PAK/MM/{TAHUN}/{SEQ}';
-    document.getElementById('sGas').value = settings.gasUrl || '';
+    $('sOrg').value = settings.org || ''; $('sAlamat').value = settings.alamat || ''; $('sTel').value = settings.tel || '';
+    $('sEmail').value = settings.email || ''; $('sLogo').value = settings.logo || '';
+    $('sFormat').value = settings.format || 'PAK/MM/{TAHUN}/{SEQ}'; $('sGas').value = settings.gasUrl || ''; $('sToken').value = settings.gasToken || '';
   }
-
-  document.getElementById('btnSaveSet').onclick = () => {
+  $('btnSaveSet').onclick = () => {
     settings = {
-      org: document.getElementById('sOrg').value.trim(),
-      alamat: document.getElementById('sAlamat').value.trim(),
-      tel: document.getElementById('sTel').value.trim(),
-      email: document.getElementById('sEmail').value.trim(),
-      logo: document.getElementById('sLogo').value.trim(),
-      format: document.getElementById('sFormat').value.trim() || 'PAK/MM/{TAHUN}/{SEQ}',
-      gasUrl: document.getElementById('sGas').value.trim()
+      org:$('sOrg').value.trim(), alamat:$('sAlamat').value.trim(), tel:$('sTel').value.trim(), email:$('sEmail').value.trim(),
+      logo:$('sLogo').value.trim(), format:$('sFormat').value.trim() || 'PAK/MM/{TAHUN}/{SEQ}',
+      gasUrl:$('sGas').value.trim(), gasToken:$('sToken').value.trim()
     };
-    saveJSON(LS.settings, settings);
-    toast('Tetapan disimpan');
+    if (saveJSON(LS.settings, settings)) toast('Tetapan disimpan');
   };
 
-  (function checkDraft() {
+  $('btnExport').onclick = () => {
+    const data = { versi:1, tarikh:new Date().toISOString(), settings:Object.assign({}, settings, { gasToken:'' }), members:members, meetings:meetings };
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type:'application/json' }));
+    a.download = 'pak-minit-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+    toast('Backup dieksport (token tidak disertakan)');
+  };
+  $('btnImport').onclick = () => $('fileImport').click();
+  $('fileImport').onchange = function () {
+    const f = this.files[0]; if (!f) return;
+    const rd = new FileReader();
+    rd.onload = () => {
+      try {
+        const d = JSON.parse(rd.result);
+        if (!Array.isArray(d.meetings) || !Array.isArray(d.members)) throw new Error('Format tidak sah');
+        if (!confirm('Import ' + d.meetings.length + ' minit & ' + d.members.length + ' ahli? Rekod sedia ada dengan ID sama akan diganti; selebihnya dikekalkan.')) return;
+        const map = new Map(meetings.map(m => [m.id, m]));
+        d.meetings.forEach(m => { if (m && m.id) map.set(m.id, m); });
+        meetings = [...map.values()];
+        d.members.forEach(m => { if (m && m.nama && !members.some(x => x.nama === m.nama)) members.push(m); });
+        if (d.settings && confirm('Guna juga tetapan organisasi dari fail?')) settings = Object.assign({}, settings, d.settings, { gasToken:settings.gasToken });
+        saveJSON(LS.meetings, meetings); saveJSON(LS.members, members); saveJSON(LS.settings, settings);
+        fillSettings(); toast('Import berjaya');
+      } catch (e) { alert('Import gagal: ' + e.message); }
+    };
+    rd.readAsText(f); this.value = '';
+  };
+
+  /* ===== MULA ===== */
+  (function init() {
     const d = loadJSON(LS.draft, null);
-    if (d && d.nama) {
+    const m = d && (d.m || d);
+    if (m && m.nama) {
       if (confirm('Draf sebelumnya ditemui. Sambung semula?')) {
-        current = d;
-        editId = null;
+        current = Object.assign(emptyMeeting(), m);
+        editId = d.editId || null;
         showPage('borang');
         return;
       }
-      localStorage.removeItem(LS.draft);
+      try { localStorage.removeItem(LS.draft); } catch (e) {}
     }
     showPage('dashboard');
   })();
-
 })();
 </script>
 </body>
