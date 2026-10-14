@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Borang Bantuan Kunjungan Kasih | PAK</title>
+  <meta name="robots" content="index, follow">
+  <link rel="icon" type="image/png" href="https://i.ibb.co/DD7QKDFV/2-D42-C2-F9-9-A7-A-4921-8-E6-E-CA17-A6-A873-E0.jpg">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --black: #0d0d0d; --dark: #1a1a1a; --red: #c41e3a;
+      --green: #2e7d32; --white: #f5f5f5; --light: #e0e0e0;
+    }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--black); color: var(--white); line-height: 1.5; min-height: 100vh;
+    }
+    header {
+      background: var(--dark); border-bottom: 3px solid var(--red);
+      padding: 14px 18px; position: sticky; top: 0; z-index: 20;
+    }
+    .nav-inner {
+      max-width: 640px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .nav-inner a { color: #fff; text-decoration: none; font-weight: 600; }
+    .nav-inner a:hover { color: var(--red); }
+
+    .wrap { max-width: 640px; margin: 0 auto; padding: 24px 16px 48px; }
+
+    .hero {
+      text-align: center; margin-bottom: 22px;
+      padding: 28px 16px; border-radius: 14px;
+      background: linear-gradient(135deg, #1a1a1a, #0d0d0d);
+      border: 1px solid #333;
+    }
+    .hero h1 { font-size: clamp(1.35rem, 4vw, 1.75rem); margin-bottom: 8px; }
+    .hero h1 span { color: var(--red); }
+    .hero p { color: #aaa; font-size: 0.95rem; }
+
+    .form-card {
+      background: var(--dark); border: 1px solid #444; border-radius: 14px; padding: 22px 18px;
+    }
+    label {
+      display: block; font-size: 0.88rem; color: var(--light); margin: 14px 0 6px; font-weight: 600;
+    }
+    label .req { color: var(--red); }
+    input, select, textarea {
+      width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #555;
+      background: #111; color: #fff; font-size: 1rem;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none; border-color: var(--red);
+    }
+    textarea { min-height: 72px; resize: vertical; }
+    .hint { font-size: 0.78rem; color: #888; margin-top: 4px; }
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 520px) { .row2 { grid-template-columns: 1fr; } }
+
+    .btn {
+      width: 100%; margin-top: 22px; padding: 14px; border: none; border-radius: 10px;
+      background: var(--red); color: #fff; font-weight: 700; font-size: 1.05rem; cursor: pointer;
+    }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn:hover:not(:disabled) { filter: brightness(1.08); }
+
+    #msg {
+      text-align: center; margin-top: 14px; min-height: 24px; font-size: 0.95rem;
+    }
+    #msg.ok { color: #81c784; }
+    #msg.err { color: #ef9a9a; }
+
+    footer {
+      text-align: center; padding: 20px; color: #777; font-size: 0.85rem; border-top: 1px solid #333;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="nav-inner">
+    <a href="/">← Laman Utama</a>
+    <span style="font-weight:700;color:#c9b6ff;">PAK</span>
+  </div>
+</header>
+
+<div class="wrap">
+  <section class="hero">
+    <h1>Borang <span>Bantuan Kunjungan Kasih</span></h1>
+    <p>Pertubuhan Aktivis Keusahawanan (PAK) · Pakua Selangor</p>
+  </section>
+
+  <div class="form-card">
+    <form id="borangKunjungan">
+      <label>Nama penuh <span class="req">*</span></label>
+      <input type="text" id="nama" required autocomplete="name" placeholder="Nama seperti dalam IC">
+
+      <label>No. Kad Pengenalan <span class="req">*</span></label>
+      <input type="text" id="ic" required inputmode="numeric" placeholder="000000-10-0000" maxlength="14">
+      <p class="hint">Format: 000000-10-0000 (12 digit + sempang)</p>
+
+      <label>Alamat <span class="req">*</span></label>
+      <textarea id="alamat" required placeholder="No. rumah, jalan, poskod, daerah..."></textarea>
+
+      <label>Kampung <span class="req">*</span></label>
+      <input type="text" id="kampung" required placeholder="Nama kampung / kawasan">
+
+      <div class="row2">
+        <div>
+          <label>Jantina <span class="req">*</span></label>
+          <select id="jantina" required>
+            <option value="">-- Pilih --</option>
+            <option>Lelaki</option>
+            <option>Perempuan</option>
+          </select>
+        </div>
+        <div>
+          <label>Umur <span class="req">*</span></label>
+          <input type="number" id="umur" required min="1" max="120" placeholder="cth: 45">
+        </div>
+      </div>
+
+      <div class="row2">
+        <div>
+          <label>Bangsa <span class="req">*</span></label>
+          <select id="bangsa" required>
+            <option value="">-- Pilih --</option>
+            <option>Melayu</option>
+            <option>Cina</option>
+            <option>India</option>
+            <option>Bumiputera Sabah</option>
+            <option>Bumiputera Sarawak</option>
+            <option>Lain-lain</option>
+          </select>
+        </div>
+        <div>
+          <label>Agama <span class="req">*</span></label>
+          <select id="agama" required>
+            <option value="">-- Pilih --</option>
+            <option>Islam</option>
+            <option>Buddha</option>
+            <option>Hindu</option>
+            <option>Kristian</option>
+            <option>Lain-lain</option>
+          </select>
+        </div>
+      </div>
+
+      <label>Kelayakan <span class="req">*</span></label>
+      <select id="kelayakan" required>
+        <option value="">-- Pilih --</option>
+        <option>Tiada formal</option>
+        <option>Sekolah rendah</option>
+        <option>PMR / PT3</option>
+        <option>SPM</option>
+        <option>STPM / Diploma</option>
+        <option>Ijazah</option>
+        <option>Lain-lain</option>
+      </select>
+
+      <label>No. telefon (HP) <span class="req">*</span></label>
+      <input type="tel" id="telefon" required inputmode="tel" placeholder="01XXXXXXXX" maxlength="12">
+      <p class="hint">Contoh: 01155555238 (bermula 01, 10–11 digit)</p>
+
+      <button type="submit" class="btn" id="btnHantar">Hantar Borang</button>
+    </form>
+    <p id="msg"></p>
+  </div>
+</div>
+
+<footer>
+  <p>© 2026 Pertubuhan Aktivis Keusahawanan (PAK) · Pakua Malaysia Selangor</p>
+</footer>
+
+<script>
+  // ========== TAMPAL URL WEB APP APPS SCRIPT DI SINI ==========
+  const API_URL = "https://script.google.com/macros/s/XXXX/exec";
+  // ===========================================================
+
+  const icInput = document.getElementById("ic");
+  const telInput = document.getElementById("telefon");
+  const msg = document.getElementById("msg");
+  const btn = document.getElementById("btnHantar");
+
+  // Auto format IC: 000000-10-0000
+  icInput.addEventListener("input", function () {
+    let d = this.value.replace(/\D/g, "").slice(0, 12);
+    if (d.length > 8) {
+      this.value = d.slice(0, 6) + "-" + d.slice(6, 8) + "-" + d.slice(8);
+    } else if (d.length > 6) {
+      this.value = d.slice(0, 6) + "-" + d.slice(6);
+    } else {
+      this.value = d;
+    }
+  });
+
+  // HP: digit sahaja
+  telInput.addEventListener("input", function () {
+    this.value = this.value.replace(/\D/g, "").slice(0, 11);
+  });
+
+  function validIC(v) {
+    return /^\d{6}-\d{2}-\d{4}$/.test(v);
+  }
+
+  function validHP(v) {
+    return /^01\d{8,9}$/.test(v);
+  }
+
+  document.getElementById("borangKunjungan").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    msg.className = "";
+    msg.textContent = "";
+
+    const payload = {
+      action: "simpanKunjungan",
+      nama: document.getElementById("nama").value.trim(),
+      ic: document.getElementById("ic").value.trim(),
+      alamat: document.getElementById("alamat").value.trim(),
+      kampung: document.getElementById("kampung").value.trim(),
+      jantina: document.getElementById("jantina").value,
+      bangsa: document.getElementById("bangsa").value,
+      agama: document.getElementById("agama").value,
+      umur: document.getElementById("umur").value,
+      kelayakan: document.getElementById("kelayakan").value,
+      telefon: document.getElementById("telefon").value.trim()
+    };
+
+    if (!validIC(payload.ic)) {
+      msg.className = "err";
+      msg.textContent = "⚠️ No. IC mesti format 000000-10-0000";
+      icInput.focus();
+      return;
+    }
+    if (!validHP(payload.telefon)) {
+      msg.className = "err";
+      msg.textContent = "⚠️ No. HP mesti bermula 01 dan 10–11 digit";
+      telInput.focus();
+      return;
+    }
+    if (!API_URL || API_URL.indexOf("XXXX") >= 0) {
+      msg.className = "err";
+      msg.textContent = "⚠️ API_URL belum diisi. Deploy Apps Script dulu.";
+      return;
+    }
+
+    btn.disabled = true;
+    msg.textContent = "⏳ Menghantar...";
+
+    try {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload)
+      });
+      const json = await res.json();
+      if (!json.success) throw new Error(json.error || "Gagal simpan");
+
+      msg.className = "ok";
+      msg.textContent = "✅ Borang berjaya dihantar. Terima kasih.";
+      this.reset();
+    } catch (err) {
+      msg.className = "err";
+      msg.textContent = "❌ Gagal: " + (err.message || err);
+    }
+    btn.disabled = false;
+  });
+</script>
+</body>
+</html>
