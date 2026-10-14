@@ -56,6 +56,9 @@
       background: #111; border: 1px solid #555;
     }
     .captcha-box strong { color: #ffcdd2; }
+    .preview {
+      display: none; max-width: 160px; margin-top: 8px; border-radius: 8px; border: 1px solid #444;
+    }
     .btn {
       width: 100%; margin-top: 22px; padding: 14px; border: none; border-radius: 10px;
       background: var(--red); color: #fff; font-weight: 700; font-size: 1.05rem; cursor: pointer;
@@ -147,6 +150,12 @@
       <input type="tel" id="telefon" required inputmode="tel" placeholder="01XXXXXXXX" maxlength="12">
       <p class="hint">Contoh: 01155555238 (bermula 01)</p>
 
+      <label>Gambar (pilihan)</label>
+      <input type="file" id="gambarFile" accept="image/*">
+      <p class="hint">Max ~4MB selepas compress. Upload selamat (API key dalam Apps Script).</p>
+      <img id="gambarPreview" class="preview" alt="Pratonton gambar">
+      <input type="hidden" id="gambarUrl">
+
       <div class="captcha-box">
         <label>Captcha anti-bot <span class="req">*</span></label>
         <p style="margin:6px 0 10px;font-size:0.95rem;">
@@ -167,9 +176,7 @@
 </footer>
 
 <script>
-  // ========== TAMPAL URL WEB APP APPS SCRIPT ==========
   const API_URL = "https://script.google.com/macros/s/AKfycbzyf3NTQYIIMAnyaHDr1y3idBJ7qxV3AY9iU1O92k4lcFH-BkHBvg6F2L2Tt04LJ6CK/exec";
-  // ====================================================
 
   const namaInput = document.getElementById("nama");
   const alamatInput = document.getElementById("alamat");
@@ -177,13 +184,15 @@
   const icInput = document.getElementById("ic");
   const umurInput = document.getElementById("umur");
   const telInput = document.getElementById("telefon");
+  const gambarFile = document.getElementById("gambarFile");
+  const gambarPreview = document.getElementById("gambarPreview");
+  const gambarUrlInput = document.getElementById("gambarUrl");
   const msg = document.getElementById("msg");
   const btn = document.getElementById("btnHantar");
 
   let captchaHasil = 0;
 
   function titleCaseLive(str) {
-    // Huruf besar pada huruf pertama setiap perkataan (selepas space)
     return str.replace(/(^|\s)(\S)/g, function (_, sp, ch) {
       return sp + ch.toUpperCase();
     });
@@ -205,7 +214,6 @@
   applyTitleCaseOnInput(alamatInput);
   applyTitleCaseOnInput(kampungInput);
 
-  // Format IC + kira umur
   icInput.addEventListener("input", function () {
     let d = this.value.replace(/\D/g, "").slice(0, 12);
     if (d.length > 8) {
@@ -252,8 +260,8 @@
   });
 
   function buatCaptcha() {
-    const a = Math.floor(Math.random() * 8) + 2; // 2–9
-    const b = Math.floor(Math.random() * 8) + 1; // 1–8
+    const a = Math.floor(Math.random() * 8) + 2;
+    const b = Math.floor(Math.random() * 8) + 1;
     captchaHasil = a + b;
     document.getElementById("captchaSoalan").textContent = a + " + " + b;
     document.getElementById("captchaJawapan").value = "";
@@ -266,6 +274,90 @@
   function validHP(v) {
     return /^01\d{8,9}$/.test(v);
   }
+
+  function kecilkanGambar(file, maxSisi, kualiti) {
+    maxSisi = maxSisi || 1280;
+    kualiti = kualiti || 0.82;
+    return new Promise(function (resolve) {
+      var img = new Image();
+      var url = URL.createObjectURL(file);
+      img.onload = function () {
+        var skala = Math.min(1, maxSisi / Math.max(img.width, img.height));
+        var c = document.createElement("canvas");
+        c.width = Math.round(img.width * skala);
+        c.height = Math.round(img.height * skala);
+        c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+        URL.revokeObjectURL(url);
+        c.toBlob(function (b) {
+          resolve(b ? new File([b], "gambar.jpg", { type: "image/jpeg" }) : file);
+        }, "image/jpeg", kualiti);
+      };
+      img.onerror = function () {
+        URL.revokeObjectURL(url);
+        resolve(file);
+      };
+      img.src = url;
+    });
+  }
+
+  function fileToBase64(file) {
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onload = function () {
+        resolve(String(reader.result || "").split(",")[1] || "");
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  gambarFile.addEventListener("change", async function () {
+    var asal = this.files[0];
+    gambarUrlInput.value = "";
+    gambarPreview.style.display = "none";
+    if (!asal) return;
+
+    if (asal.size > 8 * 1024 * 1024) {
+      msg.className = "err";
+      msg.textContent = "❌ Gambar terlalu besar (max 8MB sebelum compress)";
+      this.value = "";
+      return;
+    }
+
+    msg.className = "";
+    msg.textContent = "⏳ Memproses & upload gambar...";
+    btn.disabled = true;
+
+    try {
+      var file = await kecilkanGambar(asal);
+      gambarPreview.src = URL.createObjectURL(file);
+      gambarPreview.style.display = "block";
+
+      var base64 = await fileToBase64(file);
+      var res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({
+          action: "uploadGambar",
+          base64: base64,
+          mime: file.type || "image/jpeg"
+        })
+      });
+      var json = await res.json();
+      if (!json.success) throw new Error(json.error || "Upload gagal");
+
+      gambarUrlInput.value = json.url || "";
+      msg.className = "ok";
+      msg.textContent = "✅ Gambar dimuat naik";
+    } catch (err) {
+      msg.className = "err";
+      msg.textContent = "❌ Gambar: " + (err.message || err);
+      gambarFile.value = "";
+      gambarPreview.style.display = "none";
+      gambarUrlInput.value = "";
+    }
+    btn.disabled = false;
+  });
 
   document.getElementById("borangKunjungan").addEventListener("submit", async function (e) {
     e.preventDefault();
@@ -291,7 +383,8 @@
       agama: document.getElementById("agama").value,
       umur: umurInput.value,
       kelayakan: document.getElementById("kelayakan").value.trim(),
-      telefon: telInput.value.trim()
+      telefon: telInput.value.trim(),
+      gambarUrl: gambarUrlInput.value.trim()
     };
 
     if (!validIC(payload.ic)) {
@@ -312,11 +405,6 @@
       telInput.focus();
       return;
     }
-    if (!API_URL || API_URL.indexOf("XXXX") >= 0) {
-      msg.className = "err";
-      msg.textContent = "⚠️ API_URL belum diisi.";
-      return;
-    }
 
     btn.disabled = true;
     msg.textContent = "⏳ Menghantar...";
@@ -334,6 +422,8 @@
       msg.textContent = "✅ Borang berjaya dihantar. Terima kasih.";
       this.reset();
       umurInput.value = "";
+      gambarUrlInput.value = "";
+      gambarPreview.style.display = "none";
       buatCaptcha();
     } catch (err) {
       msg.className = "err";
