@@ -10,7 +10,7 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
       --black: #0d0d0d; --dark: #1a1a1a; --red: #c41e3a;
-      --green: #2e7d32; --white: #f5f5f5; --light: #e0e0e0;
+      --white: #f5f5f5; --light: #e0e0e0;
     }
     body {
       font-family: 'Segoe UI', system-ui, sans-serif;
@@ -26,19 +26,14 @@
     }
     .nav-inner a { color: #fff; text-decoration: none; font-weight: 600; }
     .nav-inner a:hover { color: var(--red); }
-
     .wrap { max-width: 640px; margin: 0 auto; padding: 24px 16px 48px; }
-
     .hero {
-      text-align: center; margin-bottom: 22px;
-      padding: 28px 16px; border-radius: 14px;
-      background: linear-gradient(135deg, #1a1a1a, #0d0d0d);
-      border: 1px solid #333;
+      text-align: center; margin-bottom: 22px; padding: 28px 16px; border-radius: 14px;
+      background: linear-gradient(135deg, #1a1a1a, #0d0d0d); border: 1px solid #333;
     }
     .hero h1 { font-size: clamp(1.35rem, 4vw, 1.75rem); margin-bottom: 8px; }
     .hero h1 span { color: var(--red); }
     .hero p { color: #aaa; font-size: 0.95rem; }
-
     .form-card {
       background: var(--dark); border: 1px solid #444; border-radius: 14px; padding: 22px 18px;
     }
@@ -50,27 +45,25 @@
       width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #555;
       background: #111; color: #fff; font-size: 1rem;
     }
-    input:focus, select:focus, textarea:focus {
-      outline: none; border-color: var(--red);
-    }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--red); }
+    input[readonly] { background: #1a1a1a; color: #ccc; }
     textarea { min-height: 72px; resize: vertical; }
     .hint { font-size: 0.78rem; color: #888; margin-top: 4px; }
     .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     @media (max-width: 520px) { .row2 { grid-template-columns: 1fr; } }
-
+    .captcha-box {
+      margin-top: 18px; padding: 14px; border-radius: 10px;
+      background: #111; border: 1px solid #555;
+    }
+    .captcha-box strong { color: #ffcdd2; }
     .btn {
       width: 100%; margin-top: 22px; padding: 14px; border: none; border-radius: 10px;
       background: var(--red); color: #fff; font-weight: 700; font-size: 1.05rem; cursor: pointer;
     }
     .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-    .btn:hover:not(:disabled) { filter: brightness(1.08); }
-
-    #msg {
-      text-align: center; margin-top: 14px; min-height: 24px; font-size: 0.95rem;
-    }
+    #msg { text-align: center; margin-top: 14px; min-height: 24px; font-size: 0.95rem; }
     #msg.ok { color: #81c784; }
     #msg.err { color: #ef9a9a; }
-
     footer {
       text-align: center; padding: 20px; color: #777; font-size: 0.85rem; border-top: 1px solid #333;
     }
@@ -92,13 +85,13 @@
   </section>
 
   <div class="form-card">
-    <form id="borangKunjungan">
+    <form id="borangKunjungan" autocomplete="on">
       <label>Nama penuh <span class="req">*</span></label>
-      <input type="text" id="nama" required autocomplete="name" placeholder="Nama seperti dalam IC">
+      <input type="text" id="nama" required placeholder="Nama seperti dalam IC">
 
       <label>No. Kad Pengenalan <span class="req">*</span></label>
       <input type="text" id="ic" required inputmode="numeric" placeholder="000000-10-0000" maxlength="14">
-      <p class="hint">Format: 000000-10-0000 (12 digit + sempang)</p>
+      <p class="hint">Format: 000000-10-0000 · Umur dikira automatik</p>
 
       <label>Alamat <span class="req">*</span></label>
       <textarea id="alamat" required placeholder="No. rumah, jalan, poskod, daerah..."></textarea>
@@ -117,7 +110,7 @@
         </div>
         <div>
           <label>Umur <span class="req">*</span></label>
-          <input type="number" id="umur" required min="1" max="120" placeholder="cth: 45">
+          <input type="number" id="umur" required readonly min="1" max="120" placeholder="Auto dari IC">
         </div>
       </div>
 
@@ -147,21 +140,21 @@
         </div>
       </div>
 
-      <label>Kelayakan <span class="req">*</span></label>
-      <select id="kelayakan" required>
-        <option value="">-- Pilih --</option>
-        <option>Tiada formal</option>
-        <option>Sekolah rendah</option>
-        <option>PMR / PT3</option>
-        <option>SPM</option>
-        <option>STPM / Diploma</option>
-        <option>Ijazah</option>
-        <option>Lain-lain</option>
-      </select>
+      <label>Kelayakan</label>
+      <input type="text" id="kelayakan" placeholder="(Kosongkan atau isi sendiri)">
 
       <label>No. telefon (HP) <span class="req">*</span></label>
       <input type="tel" id="telefon" required inputmode="tel" placeholder="01XXXXXXXX" maxlength="12">
-      <p class="hint">Contoh: 01155555238 (bermula 01, 10–11 digit)</p>
+      <p class="hint">Contoh: 01155555238 (bermula 01)</p>
+
+      <div class="captcha-box">
+        <label>Captcha anti-bot <span class="req">*</span></label>
+        <p style="margin:6px 0 10px;font-size:0.95rem;">
+          Berapa <strong id="captchaSoalan">?</strong> ?
+        </p>
+        <input type="number" id="captchaJawapan" required placeholder="Jawapan" inputmode="numeric">
+        <p class="hint">Selesaikan soalan matematik di atas</p>
+      </div>
 
       <button type="submit" class="btn" id="btnHantar">Hantar Borang</button>
     </form>
@@ -174,16 +167,45 @@
 </footer>
 
 <script>
-  // ========== TAMPAL URL WEB APP APPS SCRIPT DI SINI ==========
+  // ========== TAMPAL URL WEB APP APPS SCRIPT ==========
   const API_URL = "https://script.google.com/macros/s/AKfycbzyf3NTQYIIMAnyaHDr1y3idBJ7qxV3AY9iU1O92k4lcFH-BkHBvg6F2L2Tt04LJ6CK/exec";
-  // ===========================================================
+  // ====================================================
 
+  const namaInput = document.getElementById("nama");
+  const alamatInput = document.getElementById("alamat");
+  const kampungInput = document.getElementById("kampung");
   const icInput = document.getElementById("ic");
+  const umurInput = document.getElementById("umur");
   const telInput = document.getElementById("telefon");
   const msg = document.getElementById("msg");
   const btn = document.getElementById("btnHantar");
 
-  // Auto format IC: 000000-10-0000
+  let captchaHasil = 0;
+
+  function titleCaseLive(str) {
+    // Huruf besar pada huruf pertama setiap perkataan (selepas space)
+    return str.replace(/(^|\s)(\S)/g, function (_, sp, ch) {
+      return sp + ch.toUpperCase();
+    });
+  }
+
+  function applyTitleCaseOnInput(el) {
+    el.addEventListener("input", function () {
+      const pos = this.selectionStart;
+      const before = this.value;
+      const after = titleCaseLive(before);
+      if (before !== after) {
+        this.value = after;
+        try { this.setSelectionRange(pos, pos); } catch (e) {}
+      }
+    });
+  }
+
+  applyTitleCaseOnInput(namaInput);
+  applyTitleCaseOnInput(alamatInput);
+  applyTitleCaseOnInput(kampungInput);
+
+  // Format IC + kira umur
   icInput.addEventListener("input", function () {
     let d = this.value.replace(/\D/g, "").slice(0, 12);
     if (d.length > 8) {
@@ -193,17 +215,54 @@
     } else {
       this.value = d;
     }
+    kiraUmurDariIC(d);
   });
 
-  // HP: digit sahaja
+  function kiraUmurDariIC(digit12) {
+    if (digit12.length < 6) {
+      umurInput.value = "";
+      return;
+    }
+    const yy = parseInt(digit12.slice(0, 2), 10);
+    const mm = parseInt(digit12.slice(2, 4), 10);
+    const dd = parseInt(digit12.slice(4, 6), 10);
+    if (mm < 1 || mm > 12 || dd < 1 || dd > 31) {
+      umurInput.value = "";
+      return;
+    }
+    const now = new Date();
+    const tahunPenuh = yy <= (now.getFullYear() % 100) ? 2000 + yy : 1900 + yy;
+    const lahir = new Date(tahunPenuh, mm - 1, dd);
+    if (lahir.getMonth() !== mm - 1 || lahir.getDate() !== dd) {
+      umurInput.value = "";
+      return;
+    }
+    let umur = now.getFullYear() - lahir.getFullYear();
+    const m = now.getMonth() - lahir.getMonth();
+    if (m < 0 || (m === 0 && now.getDate() < lahir.getDate())) umur--;
+    if (umur < 1 || umur > 120) {
+      umurInput.value = "";
+      return;
+    }
+    umurInput.value = umur;
+  }
+
   telInput.addEventListener("input", function () {
     this.value = this.value.replace(/\D/g, "").slice(0, 11);
   });
 
+  function buatCaptcha() {
+    const a = Math.floor(Math.random() * 8) + 2; // 2–9
+    const b = Math.floor(Math.random() * 8) + 1; // 1–8
+    captchaHasil = a + b;
+    document.getElementById("captchaSoalan").textContent = a + " + " + b;
+    document.getElementById("captchaJawapan").value = "";
+  }
+  buatCaptcha();
+
   function validIC(v) {
     return /^\d{6}-\d{2}-\d{4}$/.test(v);
   }
-
   function validHP(v) {
     return /^01\d{8,9}$/.test(v);
   }
@@ -213,23 +272,37 @@
     msg.className = "";
     msg.textContent = "";
 
+    const jawapan = parseInt(document.getElementById("captchaJawapan").value, 10);
+    if (jawapan !== captchaHasil) {
+      msg.className = "err";
+      msg.textContent = "⚠️ Captcha salah. Cuba lagi.";
+      buatCaptcha();
+      return;
+    }
+
     const payload = {
       action: "simpanKunjungan",
-      nama: document.getElementById("nama").value.trim(),
-      ic: document.getElementById("ic").value.trim(),
-      alamat: document.getElementById("alamat").value.trim(),
-      kampung: document.getElementById("kampung").value.trim(),
+      nama: namaInput.value.trim(),
+      ic: icInput.value.trim(),
+      alamat: alamatInput.value.trim(),
+      kampung: kampungInput.value.trim(),
       jantina: document.getElementById("jantina").value,
       bangsa: document.getElementById("bangsa").value,
       agama: document.getElementById("agama").value,
-      umur: document.getElementById("umur").value,
-      kelayakan: document.getElementById("kelayakan").value,
-      telefon: document.getElementById("telefon").value.trim()
+      umur: umurInput.value,
+      kelayakan: document.getElementById("kelayakan").value.trim(),
+      telefon: telInput.value.trim()
     };
 
     if (!validIC(payload.ic)) {
       msg.className = "err";
       msg.textContent = "⚠️ No. IC mesti format 000000-10-0000";
+      icInput.focus();
+      return;
+    }
+    if (!payload.umur) {
+      msg.className = "err";
+      msg.textContent = "⚠️ Umur tidak dapat dikira. Semak No. IC.";
       icInput.focus();
       return;
     }
@@ -241,7 +314,7 @@
     }
     if (!API_URL || API_URL.indexOf("XXXX") >= 0) {
       msg.className = "err";
-      msg.textContent = "⚠️ API_URL belum diisi. Deploy Apps Script dulu.";
+      msg.textContent = "⚠️ API_URL belum diisi.";
       return;
     }
 
@@ -260,9 +333,12 @@
       msg.className = "ok";
       msg.textContent = "✅ Borang berjaya dihantar. Terima kasih.";
       this.reset();
+      umurInput.value = "";
+      buatCaptcha();
     } catch (err) {
       msg.className = "err";
       msg.textContent = "❌ Gagal: " + (err.message || err);
+      buatCaptcha();
     }
     btn.disabled = false;
   });
